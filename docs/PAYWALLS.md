@@ -2,7 +2,7 @@
 
 Fetched for subscription product/price rows: **2026-11-05 (Africa/Johannesburg)**.  
 No logins purchased; prices are as shown on each outlet’s public subscribe/membership page (or noted when the page 404s / is JS-gated / secondary).  
-Sampled-items-blocked counts are from the MediaWatch SA draft corpus so far (News24 pilot + any later hits). Other outlets: 0 until sampled.
+Sampled-items-blocked counts are from the MediaWatch SA draft corpus so far (News24 + Daily Investor + Newsday pilots). Other outlets: 0 until sampled.
 
 | outlet | paywall_type | subscription_product | price_as_shown | subscribe_url | price_fetched | sampled_items_blocked | notes |
 |---|---|---|---|---|---|---|---|
@@ -26,7 +26,8 @@ Sampled-items-blocked counts are from the MediaWatch SA draft corpus so far (New
 | Moneyweb | metered (Insider Gold) | Moneyweb Insider Gold; Insider Pro | Insider Gold **R70/mo** or **R700/yr** (save R140 vs monthly); group **R560/user/yr** (5+) | https://www.moneyweb.co.za/moneyweb-insider-gold/ | 2026-11-05 | 0 | Clear product page. |
 | GroundUp | none (donation) | Donations via Payfast | Donor amounts (e.g. suggested), not a paywall | https://groundup.org.za/donate/ | 2026-11-05 | 0 | Free to read; NPC funding model. |
 | BizNews | soft / Premium members-only layer | BizNews Premium | Price **not shown** on `/premium` this fetch; secondary/register flows historically ~**R120/mo** or promo “fiver” — **unverified on page** | https://www.biznews.com/premium | 2026-11-05 | 0 | `/subscribe` and `/register/monthly` 404. Later login run. |
-| Daily Investor | registration soft-wall (not paid) | Premium access free for registered users | **Free** after register | https://dailyinvestor.com/subscribe | 2026-11-05 | 0 | Explicitly: “Premium access to Daily Investor is free for all registered users.” |
+| Daily Investor | registration soft-wall (not paid) | Premium access free for registered users | **Free** after register | https://dailyinvestor.com/subscribe | 2026-11-05 | **0** (pilot: full bodies via curl; no login) | Explicitly: “Premium access to Daily Investor is free for all registered users.” Broad Media brand. Pilot May–Oct 2026 coded without register. |
+| Newsday | none observed (free to read) | n/a — `/subscribe/` and `/premium/` **404** | n/a | https://newsday.co.za/ ; About https://newsday.co.za/about/ | 2026-11-05 | **0** | Full article bodies served without login this pass. FAIR Press Council stamp. Register/Login/Support-us chrome present but no paid product page found. |
 
 ## Priority for a later login/subscribe run (owner decision)
 
@@ -38,6 +39,8 @@ Highest yield for MediaWatch SA coding depth right now:
 4. **Moneyweb Insider Gold (R70/mo)** — cheap, clear page, useful for markets/AGOA economics.
 5. **Daily Maverick Insider** — membership; most news free so lower urgency for body text.
 6. **M&G / BizNews / BusinessLIVE** — re-fetch live price pages before buying (current public price pages broken or JS-gated).
+
+**Not a paid-login priority:** Daily Investor (free after register) and Newsday (fully free this pass) — register-only if a future soft-wall blocks a body.
 
 ## Method notes
 

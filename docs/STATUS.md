@@ -26,7 +26,7 @@ News24 EiC **Adriaan Basson** (@AdriaanBasson) and Assistant Editor **Pieter du 
 
 ### Workspace search (related files)
 
-- **Present seed:** `mediawatch-sa/seed/agoa-sa-bias-casebook-2026-11-05.md` (export from `/workspace/agoa-sa/foundation.md` Media bias notes + Bias casebook).  
+- **Present seed:** `mediawatch-sa/seed/agoa-sa-bias-casebook-2026-11-05.md` (AGOA SA casebook).  
 - **Seed sources:** AGOA SA casebook (credited); private seed material is kept out of this repo.
 - **Cassian refs elsewhere (not bias-meter data):** `/workspace/ktb/cassian-brief-2026-11-02.md`, `/workspace/cavus/cassian-asks.md` — not imported.  
 - **Cassian's News24 bias meter:** **not found** under `seed/` or obvious `/workspace` paths this pass.
@@ -96,3 +96,9 @@ Named people are journalists/editors in public roles; X handles only where API-v
 - No logins / no publish / no post. Owner will subscribe later once priorities clear.
 - Appended 8 FOR findings (Ramaphosa×4, Schreiber, DA secondary, Takealot/Naspers×2) + 3 fair-good-news controls; findings total **54** (FOR 20 / AGAINST 34).
 - Method: BrandStory labeled but coded as commercial FOR Naspers ecosystem; presidential bylines coded soft FOR with strong steelman; “SA exhales” / bold-reset / AGOA meta kept as controls.
+
+## Daily Investor + Newsday pilots (draft, 2026-11-05 SAST)
+- publications.csv + people.csv + docs/PAYWALLS.md updated for both outlets.
+- data/dailyinvestor_pilot_findings.json|.csv (19 findings)
+- data/newsday_pilot_findings.json|.csv (23 findings)
+- Window May–Oct 2026; draft only — no login/publish/push.

@@ -142,7 +142,7 @@ Schema files: `data/schema.sql`, `data/schema.json`.
 
 ## 4. Worked example — News24 editors, 4 Nov 2026 (AfriMAGA / "blue wave")
 
-**Credit:** analysis and claim labels for du Toit's post reuse **AGOA SA casebook, Case 1** (`seed/agoa-sa-bias-casebook-2026-11-05.md`, live source `/workspace/agoa-sa/foundation.md` §§ Media bias notes / Bias casebook). X text and timestamps below were **re-verified** on 5 Nov 2026 via built-in X public reads + fxtwitter.
+**Credit:** analysis and claim labels for du Toit's post reuse **AGOA SA casebook, Case 1** (`seed/agoa-sa-bias-casebook-2026-11-05.md`). X text and timestamps below were **re-verified** on 5 Nov 2026 via built-in X public reads + fxtwitter.
 
 ### Handles (verified)
 
