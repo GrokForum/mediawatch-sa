@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mediawatch.sa.local/schema/v0.1-draft",
+  "title": "MediaWatch SA",
+  "description": "publication > person > article|public_post > finding. Cavus defaults 5 Nov 2026. target_inferred for AfriMAGA tagging.",
+  "type": "object",
+  "properties": {
+    "publications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "language"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "owner_group": {
+            "type": "string"
+          },
+          "owner_fact_label": {
+            "$ref": "#/$defs/fact_label"
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "EN",
+              "AF",
+              "multi"
+            ]
+          },
+          "editor_in_chief": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "editor_source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "editor_checked_on": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "archive_only",
+              "closed"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "role"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "publication_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "x_handle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "x_user_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "x_handle_source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "x_handle_checked_on": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "articles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "publication_id",
+          "url",
+          "published_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "publication_id": {
+            "type": "string"
+          },
+          "author_person_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "headline": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "published_at": {
+            "type": "string"
+          },
+          "byline_raw": {
+            "type": "string"
+          },
+          "section": {
+            "type": "string"
+          },
+          "fetched_at": {
+            "type": "string"
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "unverified",
+              "seed_lead"
+            ]
+          }
+        }
+      }
+    },
+    "public_posts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "person_id",
+          "platform",
+          "url",
+          "text",
+          "posted_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "person_id": {
+            "type": "string"
+          },
+          "publication_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "platform": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "text": {
+            "type": "string"
+          },
+          "posted_at": {
+            "type": "string"
+          },
+          "metrics_json": {
+            "type": "object"
+          },
+          "repost_of_post_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quoted_post_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fetched_at": {
+            "type": "string"
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "unverified",
+              "seed_lead"
+            ]
+          },
+          "credit": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "publication_id",
+          "actor",
+          "direction",
+          "driver",
+          "quote",
+          "url",
+          "published_at",
+          "fact_label",
+          "steelman_for",
+          "steelman_against",
+          "weight",
+          "signed_score"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "article_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "public_post_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publication_id": {
+            "type": "string"
+          },
+          "person_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "actor": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "FOR",
+              "AGAINST"
+            ]
+          },
+          "driver": {
+            "type": "string",
+            "enum": [
+              "loaded_label",
+              "one_sided_sourcing",
+              "missing_right_of_reply",
+              "omission",
+              "framing",
+              "headline_body_gap",
+              "factual_error",
+              "correction"
+            ]
+          },
+          "quote": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string"
+          },
+          "fact_label": {
+            "$ref": "#/$defs/fact_label"
+          },
+          "steelman_for": {
+            "type": "string"
+          },
+          "steelman_against": {
+            "type": "string"
+          },
+          "evidence_notes": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "signed_score": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2
+          },
+          "methodology_version": {
+            "type": "string"
+          },
+          "coder": {
+            "type": "string"
+          },
+          "credit": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "target_inferred": {
+            "type": "boolean",
+            "description": "True when AfriMAGA/loaded label mapped to org via explicit context"
+          },
+          "target_context_quote": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Context line proving who AfriMAGA refers to"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fact_label": {
+      "type": "string",
+      "enum": [
+        "Proven",
+        "Established",
+        "Alleged",
+        "Disputed",
+        "Not established"
+      ]
+    }
+  }
+}

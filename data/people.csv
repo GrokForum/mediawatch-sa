@@ -1,0 +1,13 @@
+id,full_name,role,publication_id,x_handle,x_user_id,x_handle_source_url,x_handle_checked_on,notes
+adriaan_basson,Adriaan Basson,Editor-in-chief,news24,AdriaanBasson,189506833,https://x.com/AdriaanBasson (X API get_users_by_username 2026-11-05; bio: News24 editor-in-chief),2026-11-05,Public role only. X bio Proven via API.
+pieter_du_toit,Pieter du Toit,Assistant Editor: Investigations,news24,PieterDuToit,32115555,https://x.com/PieterDuToit (X API 2026-11-05; bio names News24),2026-11-05,Public role only. Subject of AGOA SA Case 1.
+jillian_green,Jillian Green,Editor-in-chief,daily_maverick,,,,2026-11-05,X handle not verified this pass — leave blank until public source confirmed.
+lance_witten,Lance Witten,Editor (IOL) / Editor-in-chief,iol,,,,2026-11-05,X handle not verified this pass.
+henriette_loubser,Henriëtte Loubser,Editor-in-chief (Netwerk24 and Afrikaans News),netwerk24,,,,2026-11-05,X handle not verified this pass.
+makhudu_sefara,Makhudu Sefara,Editor (Sunday Times / TimesLIVE),sunday_times,,,,2026-11-05,Also TimesLIVE; X not verified this pass.
+japhet_ncube,Japhet Ncube,Editor-in-chief,mail_guardian,,,,2026-11-05,X handle not verified this pass.
+luke_feltham,Luke Feltham,Editor-in-chief,business_day,,,,2026-11-05,Appointed Nov 2025; X not verified this pass.
+alec_hogg,Alec Hogg,Founder and Editor,biznews,,,,2026-11-05,X handle widely public but not API-verified this pass — blank until checked.
+barbara_october,Barbara October,Editor,groundup,,,,2026-11-05,X handle not verified this pass.
+ryk_van_niekerk,Ryk van Niekerk,Managing Editor,moneyweb,,,,2026-11-05,X handle not verified this pass.
+nisa_allie,Nisa Allie,Editor-in-chief,enca,,,,2026-11-05,Role per LinkedIn; confirm on eNCA site. X not verified.

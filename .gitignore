@@ -1,0 +1,3 @@
+seed/
+data/fetched_articles/
+*.env
