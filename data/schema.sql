@@ -1,4 +1,4 @@
--- MediaWatch SA schema v0.1-draft
+-- MediaWatch SA schema v0.4-draft (primary scores + secondary lean_scores)
 -- Hierarchy: publication > person > (article | public_post) > finding
 -- Times stored as UTC ISO-8601; display in Africa/Johannesburg (SAST, UTC+2).
 
@@ -85,7 +85,8 @@ CREATE TABLE findings (
   steelman_against TEXT NOT NULL,
   evidence_notes  TEXT,
   weight          REAL NOT NULL,
-  signed_score    REAL NOT NULL,
+  signed_score    REAL,                       -- NULL when accountability_exempt
+  CHECK (signed_score IS NULL OR (signed_score BETWEEN -2 AND 2)),
   methodology_version TEXT NOT NULL DEFAULT '0.1-draft',
   coder           TEXT,
   credit          TEXT,
@@ -120,3 +121,50 @@ CREATE INDEX idx_findings_pub_actor ON findings(publication_id, actor);
 CREATE INDEX idx_findings_person_actor ON findings(person_id, actor);
 CREATE INDEX idx_articles_pub ON articles(publication_id);
 CREATE INDEX idx_posts_person ON public_posts(person_id);
+
+-- Secondary meter (left/right lean) — NEVER mix with primary `scores`
+CREATE TABLE lean_score_runs (
+  id              TEXT PRIMARY KEY,
+  left_right_method_version TEXT NOT NULL DEFAULT '0.1-draft',
+  actor_axis_map_hash TEXT,                   -- hash/version of data/actor_axis_map.csv
+  run_at          TEXT NOT NULL,
+  notes           TEXT,
+  draft           INTEGER NOT NULL DEFAULT 1 CHECK (draft IN (0,1))
+);
+
+CREATE TABLE lean_scores (
+  id              TEXT PRIMARY KEY,
+  lean_score_run_id TEXT NOT NULL REFERENCES lean_score_runs(id),
+  entity_type     TEXT NOT NULL CHECK (entity_type IN ('publication','person')),
+  entity_id       TEXT NOT NULL,              -- publication_id | person_id
+  sample_frame    TEXT,                       -- NULL = pooled; else keyword|neutral_random|counter_pull
+  lean_economic   REAL,                       -- −2..+2; NULL when findings_only
+  lean_social     REAL,
+  lean_composite  REAL,
+  n_included      INTEGER NOT NULL,
+  n_skipped       INTEGER NOT NULL DEFAULT 0,
+  flag            TEXT NOT NULL CHECK (flag IN ('findings_only','provisional','full')),
+  share_contested_placements REAL,
+  secondary_view_banner TEXT NOT NULL DEFAULT
+    'Secondary view: left/right lean (reader convenience). The primary measure is for/against named actors.',
+  caveat          TEXT NOT NULL DEFAULT
+    'The left/right split is contested in South Africa.',
+  direct_lean_label_signals_json TEXT,        -- optional documented signals; not folded into lean_* by default
+  CHECK (lean_economic IS NULL OR (lean_economic BETWEEN -2 AND 2)),
+  CHECK (lean_social IS NULL OR (lean_social BETWEEN -2 AND 2)),
+  CHECK (lean_composite IS NULL OR (lean_composite BETWEEN -2 AND 2))
+);
+
+CREATE TABLE actor_axis_map (
+  actor           TEXT PRIMARY KEY,
+  economic_axis   REAL,                       -- NULL = unmapped / excluded
+  social_axis     REAL,
+  placement_contested TEXT NOT NULL CHECK (placement_contested IN ('no','partial','yes','n/a')),
+  rationale       TEXT NOT NULL,
+  sources         TEXT NOT NULL,
+  CHECK (economic_axis IS NULL OR (economic_axis BETWEEN -2 AND 2)),
+  CHECK (social_axis IS NULL OR (social_axis BETWEEN -2 AND 2))
+);
+
+CREATE INDEX idx_lean_scores_entity ON lean_scores(entity_type, entity_id);
+

@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "title": "External references (draft)",
+    "updated_at_sast": "2026-11-05T12:09:29+02:00",
+    "notes": "Outside seeds and third-party bias meters. Lean/left-right/Ground News-style axes are logged as references only and are NOT imported into scores. A call becomes a finding only after re-verify against a real source with quote+URL+date, tagged sample_frame=external_seed."
+  },
+  "references": [
+    {
+      "id": "REF-CASSIAN-N24-SEED-01",
+      "source_name": "Cassian (via Cavus)",
+      "source_type": "dm_extract_seed",
+      "seed_path": "seed/cassian-news24-bias-meter.md",
+      "subjects": [
+        "Adriaan Basson",
+        "Pieter du Toit",
+        "Kyle Cowan"
+      ],
+      "publication_id": "news24",
+      "claim_summary": "Naspers IEC gifts to ANC and DA amount to a character/structural conflict of interest for a news group that claims to hold power to account. Explicitly NOT asserted as a direct causal link to AfriForum packaging.",
+      "checkable_example": null,
+      "has_quote": false,
+      "has_url": false,
+      "has_date": false,
+      "mapped_to_finding": false,
+      "reason_not_mapped": "No article quote, URL, or dated gift disclosure cited in the seed extract.",
+      "our_note": "Structural COI awareness aligns with logging Media24/Naspers as owner_group in publications.csv; we also do not assert a causal link from ownership to AfriForum packaging. Kept as reference only.",
+      "lean_labels_present": false,
+      "imported_to_scores": false,
+      "seed_locator_note": "Internal message identifiers and timestamps from the DM extract are kept only in the gitignored seed file, not in this public file."
+    },
+    {
+      "id": "REF-CASSIAN-N24-SEED-02",
+      "source_name": "Cassian (via Cavus)",
+      "source_type": "dm_extract_seed",
+      "seed_path": "seed/cassian-news24-bias-meter.md",
+      "claim_summary": "Proposes Ground News–style axes adapted for SA: political lean, factuality record, target asymmetry, framing, ownership/COI awareness, blind spots; scale Left of SA media centre | Lean left | Centre | Lean right | Right of centre; factuality High/Mixed/Low.",
+      "checkable_example": null,
+      "has_quote": false,
+      "has_url": false,
+      "has_date": false,
+      "mapped_to_finding": false,
+      "reason_not_mapped": "Axis/scale proposal only; methodology forbids importing left/right lean labels into scores.",
+      "our_note": "Rejected for scoring. MediaWatch SA uses FOR/AGAINST named actors + drivers only. Factuality via Press Ombud/court/corrections can still enter as factual_error/correction findings when adjudicated.",
+      "lean_labels_present": true,
+      "imported_to_scores": false
+    },
+    {
+      "id": "REF-CASSIAN-N24-SEED-03",
+      "source_name": "Cassian (via Cavus)",
+      "source_type": "dm_extract_seed",
+      "seed_path": "seed/cassian-news24-bias-meter.md",
+      "claim_summary": "Names Basson, du Toit, and Cowan as bias-meter subjects; method = bylines corpus, Press Council, columns, investigations; social accusations secondary.",
+      "checkable_example": null,
+      "has_quote": false,
+      "has_url": false,
+      "has_date": false,
+      "mapped_to_finding": false,
+      "reason_not_mapped": "Subject list and method note without concrete article/post examples.",
+      "our_note": "Basson and du Toit already in people.csv and News24 pilot. Cowan added this pass with a neutral May–Oct 2026 sample under method (not external_seed, because Cassian cited no example).",
+      "lean_labels_present": false,
+      "imported_to_scores": false
+    }
+  ],
+  "mapping_stats": {
+    "cassian_calls_reviewed": 3,
+    "mapped_to_findings": 0,
+    "kept_as_references_only": 3,
+    "lean_axes_imported": 0
+  }
+}
