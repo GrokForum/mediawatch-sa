@@ -85,13 +85,13 @@ Applied to the count of **included** (mapped) findings for that entity × frame:
 
 | Flag | *n* included | Display |
 |------|-------------|---------|
-| `findings_only` | *n* < 5 | Show contribution rows; **suppress** numeric lean |
+| `findings_only` | *n* < 5 | Show contribution rows; **lean_economic / lean_social / lean_composite are stored as null** (not a hidden number) |
 | `provisional` | 5 ≤ *n* < 10 | Show lean + provisional badge + *n* |
 | `full` | *n* ≥ 10 | Show lean + *n* (still secondary; still caveated) |
 
 ### Sample-frame split (same as primary)
 
-Compute lean **pooled** and **per `sample_frame`** (`keyword` / `neutral_random` / `counter_pull`). Keyword-heavy pools are disclosed; do not market a keyword-only lean as representative.
+Compute lean **pooled** and **per `sample_frame`** (`keyword` / `neutral_random` / `counter_pull` / `purposive` / `external_seed`). Keyword-heavy pools are disclosed; do not market a keyword-only lean as representative.
 
 ### Contested-placement share
 

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Draft secondary lean scores",
-    "updated_at_sast": "2026-11-05T12:11:57+02:00",
+    "updated_at_sast": "2026-11-15T20:50:00+02:00",
     "methodology": "docs/LEFT_RIGHT_METHOD.md",
     "actor_axis_map": "data/actor_axis_map.csv",
     "formula": "contribution_axis = signed_score * actor_axis_value / 2; lean_axis = clamp(mean(contributions), -2, +2); lean_composite = mean(lean_economic, lean_social). FOR shifts toward actor placement; AGAINST shifts away (via signed_score sign).",
@@ -19,7 +19,9 @@
       "lean_composite": "mean of economic and social lean; negative≈left, positive≈right on this draft map"
     },
     "draft": true,
-    "accountability_exempt_treatment": "Findings with signed_score null (accountability_exempt) are included in n_included with contribution 0 when the actor is mapped. This preserves the draft figures reported on 5 Nov 2026. Reviewers may prefer excluding them from n; that would slightly move pooled leans away from zero (e.g. News24 composite about −0.25 → about −0.26) without changing the display flag."
+    "accountability_exempt_treatment": "Findings with signed_score null (accountability_exempt) are included in n_included with contribution 0 when the actor is mapped, preserving the treatment used on 5 Nov 2026.",
+    "findings_only_treatment": "When flag is findings_only (n_included < 5), lean_economic, lean_social and lean_composite are stored as null. Raw means are not stored; they can be recomputed from audit_contributions. Numeric lean is not shown.",
+    "cowan_frame_note": "Cowan sample relabelled 15 Nov 2026: KC-01 counter_pull; other coded Cowan findings purposive. Not a neutral_random draw."
   },
   "lean_scores": [
     {
@@ -39,11 +41,11 @@
       "by_sample_frame": {
         "counter_pull": {
           "n_included": 9,
-          "n_skipped": 3,
+          "n_skipped": 4,
           "flag": "provisional",
           "lean_economic": 0.153,
           "lean_social": 0.014,
-          "lean_composite": 0.083,
+          "lean_composite": 0.084,
           "share_contested_placements": 0.889
         },
         "keyword": {
@@ -52,16 +54,25 @@
           "flag": "full",
           "lean_economic": -0.232,
           "lean_social": -0.561,
-          "lean_composite": -0.396,
+          "lean_composite": -0.397,
           "share_contested_placements": 0.914
         },
         "neutral_random": {
-          "n_included": 7,
-          "n_skipped": 2,
-          "flag": "provisional",
-          "lean_economic": 0.268,
-          "lean_social": -0.161,
-          "lean_composite": 0.054,
+          "n_included": 4,
+          "n_skipped": 0,
+          "flag": "findings_only",
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
+          "share_contested_placements": 1.0
+        },
+        "purposive": {
+          "n_included": 3,
+          "n_skipped": 1,
+          "flag": "findings_only",
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         }
       },
@@ -655,7 +666,7 @@
           "contrib_economic": -0.5,
           "contrib_social": -0.75,
           "placement_contested": "yes",
-          "sample_frame": "neutral_random"
+          "sample_frame": "purposive"
         },
         {
           "finding_id": "F-N24-KC-03",
@@ -667,7 +678,7 @@
           "contrib_economic": -0.5,
           "contrib_social": -0.75,
           "placement_contested": "yes",
-          "sample_frame": "neutral_random"
+          "sample_frame": "purposive"
         },
         {
           "finding_id": "F-N24-KC-04",
@@ -679,49 +690,7 @@
           "contrib_economic": -0.25,
           "contrib_social": -0.75,
           "placement_contested": "yes",
-          "sample_frame": "neutral_random"
-        }
-      ],
-      "audit_skipped_sample": [
-        {
-          "id": "F-N24-EF-01",
-          "actor": "unspecified (right-wing actors)",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-AB-X-12",
-          "actor": "unspecified (AfriMAGA)",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-PDT-X-04",
-          "actor": "unspecified (AfriMAGA)",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-CTR-PDT-01",
-          "actor": "unspecified (the right)",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-FAV-TAKEALOT-01",
-          "actor": "Takealot / Naspers",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-FAV-TAKEALOT-02",
-          "actor": "Takealot / Naspers",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-KC-01",
-          "actor": "City Power",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-KC-05",
-          "actor": "IDAC",
-          "reason": "unmapped_or_unspecified"
+          "sample_frame": "purposive"
         }
       ]
     },
@@ -753,9 +722,9 @@
           "n_included": 2,
           "n_skipped": 0,
           "flag": "findings_only",
-          "lean_economic": 0.0,
-          "lean_social": 0.0,
-          "lean_composite": 0.0,
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         }
       },
@@ -991,8 +960,7 @@
           "placement_contested": "yes",
           "sample_frame": "counter_pull"
         }
-      ],
-      "audit_skipped_sample": []
+      ]
     },
     {
       "entity_type": "publication",
@@ -1015,16 +983,16 @@
           "flag": "full",
           "lean_economic": 0.466,
           "lean_social": 0.319,
-          "lean_composite": 0.392,
+          "lean_composite": 0.393,
           "share_contested_placements": 0.8
         },
         "neutral_random": {
           "n_included": 3,
           "n_skipped": 0,
           "flag": "findings_only",
-          "lean_economic": 0.375,
-          "lean_social": 0.146,
-          "lean_composite": 0.26,
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         }
       },
@@ -1308,8 +1276,7 @@
           "placement_contested": "partial",
           "sample_frame": "counter_pull"
         }
-      ],
-      "audit_skipped_sample": []
+      ]
     },
     {
       "entity_type": "person",
@@ -1330,9 +1297,9 @@
           "n_included": 2,
           "n_skipped": 0,
           "flag": "findings_only",
-          "lean_economic": 0.25,
-          "lean_social": 0.0,
-          "lean_composite": 0.125,
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         },
         "keyword": {
@@ -1348,9 +1315,9 @@
           "n_included": 2,
           "n_skipped": 0,
           "flag": "findings_only",
-          "lean_economic": 0.75,
-          "lean_social": 0.25,
-          "lean_composite": 0.5,
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         }
       },
@@ -1574,13 +1541,6 @@
           "placement_contested": "partial",
           "sample_frame": "counter_pull"
         }
-      ],
-      "audit_skipped_sample": [
-        {
-          "id": "F-N24-AB-X-12",
-          "actor": "unspecified (AfriMAGA)",
-          "reason": "unmapped_or_unspecified"
-        }
       ]
     },
     {
@@ -1602,9 +1562,9 @@
           "n_included": 2,
           "n_skipped": 1,
           "flag": "findings_only",
-          "lean_economic": -0.125,
-          "lean_social": -0.125,
-          "lean_composite": -0.125,
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         },
         "keyword": {
@@ -1873,18 +1833,6 @@
           "placement_contested": "partial",
           "sample_frame": "counter_pull"
         }
-      ],
-      "audit_skipped_sample": [
-        {
-          "id": "F-N24-PDT-X-04",
-          "actor": "unspecified (AfriMAGA)",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-CTR-PDT-01",
-          "actor": "unspecified (the right)",
-          "reason": "unmapped_or_unspecified"
-        }
       ]
     },
     {
@@ -1896,19 +1844,28 @@
         "n_included": 3,
         "n_skipped": 2,
         "flag": "findings_only",
-        "lean_economic": -0.417,
-        "lean_social": -0.75,
-        "lean_composite": -0.583,
+        "lean_economic": null,
+        "lean_social": null,
+        "lean_composite": null,
         "share_contested_placements": 1.0
       },
       "by_sample_frame": {
-        "neutral_random": {
-          "n_included": 3,
-          "n_skipped": 2,
+        "counter_pull": {
+          "n_included": 0,
+          "n_skipped": 1,
           "flag": "findings_only",
-          "lean_economic": -0.417,
-          "lean_social": -0.75,
-          "lean_composite": -0.583,
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
+          "share_contested_placements": null
+        },
+        "purposive": {
+          "n_included": 3,
+          "n_skipped": 1,
+          "flag": "findings_only",
+          "lean_economic": null,
+          "lean_social": null,
+          "lean_composite": null,
           "share_contested_placements": 1.0
         }
       },
@@ -1926,7 +1883,7 @@
           "contrib_economic": -0.5,
           "contrib_social": -0.75,
           "placement_contested": "yes",
-          "sample_frame": "neutral_random"
+          "sample_frame": "purposive"
         },
         {
           "finding_id": "F-N24-KC-03",
@@ -1938,7 +1895,7 @@
           "contrib_economic": -0.5,
           "contrib_social": -0.75,
           "placement_contested": "yes",
-          "sample_frame": "neutral_random"
+          "sample_frame": "purposive"
         },
         {
           "finding_id": "F-N24-KC-04",
@@ -1950,19 +1907,7 @@
           "contrib_economic": -0.25,
           "contrib_social": -0.75,
           "placement_contested": "yes",
-          "sample_frame": "neutral_random"
-        }
-      ],
-      "audit_skipped_sample": [
-        {
-          "id": "F-N24-KC-01",
-          "actor": "City Power",
-          "reason": "unmapped_or_unspecified"
-        },
-        {
-          "id": "F-N24-KC-05",
-          "actor": "IDAC",
-          "reason": "unmapped_or_unspecified"
+          "sample_frame": "purposive"
         }
       ]
     }

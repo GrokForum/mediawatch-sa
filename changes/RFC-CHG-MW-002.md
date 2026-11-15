@@ -151,6 +151,8 @@ After a future build merge: revert that later RFC's commit(s) on `main` (GitHub 
 
 ## Open questions for the owner
 
+There are **six** open questions:
+
 1. Is a Python static generator acceptable, or do you want a no-build HTML+JS bundle?
 2. Should the first public build include Daily Investor and Newsday as well as News24, or News24 only until the unofficial driver labels on DI/Newsday are recoded?
 3. What size of **neutral_random** sample is enough to show the lean meter (a number, or "not on the first public version")?

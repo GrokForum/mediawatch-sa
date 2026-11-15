@@ -36,26 +36,37 @@
 
 | Gap | Action this pass |
 |-----|------------------|
-| **Kyle Cowan** absent from `people.csv` and pilot | Added (public role + `@CowansView` API-verified). Neutral sample **n=7** May–Oct 2026 pieces; **5 findings**, **3 balanced_controls**. |
+| **Kyle Cowan** absent from `people.csv` and pilot | Added (public role + `@CowansView` API-verified). **11** items fetched in a May–Oct 2026 investigations sweep; **7** coded (**5 findings**, **3 balanced_controls**). **Not a random draw** — no pre-registered neutral_random rule. KC-01 is `counter_pull` (Press Council pass); the other six coded pieces are `purposive`. Four exclusions are listed below. |
 | Systematic **Press Ombud** pass on investigations | Started via City Power ruling (partial uphold: allegation presented as fact). |
 | **Target asymmetry** / **blind spots** as formal axes | Not adopted as scores; can be narrative audit later from sample_frame splits. |
 | Concrete Cassian **examples** (quote/URL/date) | None in seed → nothing to re-verify into `external_seed` findings. |
 
-## Early read — Kyle Cowan (provisional; n&lt;10)
+## Early read — Kyle Cowan (findings only; n&lt;5 mapped)
+
+**Draw rule (honest):** 11 items were fetched; 7 were coded. There was **no** pre-registered random or fortnightly-neutral rule for this set (that rule applies only to the News24 politics skew-fix sample). Frames: F-N24-KC-01 = `counter_pull` (Press Council pass); the other six coded pieces = `purposive`.
 
 Window sample (Wayback OG + one Ombud primary):
 
-| Piece | Date | Coding |
-|-------|------|--------|
-| City Power / Mangena | 24 May 2026 | **AGAINST City Power** via `factual_error` (−2): Ombud found disinformation-campaign-as-fact (and two related claims) breached Press Code 1.3/3.3; apology ordered. Other complaints dismissed. |
-| AfriForum “money machine” | 25 Jul 2026 | **AGAINST AfriForum** via `framing` (−1): “money machine” / “splurges” headline diction. Overlaps Basson X amplification already in pilot. |
-| Orania R108m “take over” | 5 Sep 2026 | **AGAINST AfriForum** and **Solidarity** via `framing` (−1 each). |
-| IDAC 700 days | 18 Jul 2026 | **AGAINST IDAC** via `framing` (−1, borderline): OG “credibility crisis” language; body locked. |
-| Mashatile son-in-law payback | 2 Sep 2026 | **balanced_control** (accountability) — payback after exposé; private debtor not scored. |
-| SSA / EFF declassified | 25 Oct 2026 | **balanced_control** (accountability) — document-led state-capture reporting from available text. |
-| Reporting notes (Thebe) | 14 Jun 2026 | **balanced_control** (method note) — interview about prior story, no driver in OG. |
+| Piece | Date | Frame | Coding |
+|-------|------|-------|--------|
+| City Power spokesperson article | 24 May 2026 | counter_pull | **AGAINST City Power** via `factual_error` (−2): Ombud found disinformation-campaign-as-fact (and two related claims) breached Press Code 1.3/3.3; apology ordered. Other complaints dismissed. |
+| AfriForum “money machine” | 26 Jul 2026 (page date; date-only) | purposive | **AGAINST AfriForum** via `framing` (−1): “money machine” / “splurges” headline diction. Overlaps Basson X amplification already in pilot. |
+| Orania R108m “take over” | 6 Sep 2026 (page date; date-only) | purposive | **AGAINST AfriForum** and **Solidarity** via `framing` (−1 each). |
+| IDAC 700 days | 18 Jul 2026 | purposive | **AGAINST IDAC** via `framing` (−1, borderline): OG “credibility crisis” language; body locked. |
+| Mashatile son-in-law payback | 2 Sep 2026 | purposive | **balanced_control** (accountability) — payback after exposé; private debtor not scored and not named here. |
+| SSA / EFF declassified | 25 Oct 2026 | purposive | **balanced_control** (accountability) — document-led state-capture reporting from available text. |
+| Reporting notes (Thebe) | 14 Jun 2026 | purposive | **balanced_control** (method note) — interview about prior story, no driver in OG. |
 
-**Pattern (early, paywall-limited):** Cowan’s investigations hit **both** AfriForum/Solidarity financials **and** ANC-orbit / state-institution accountability (Mashatile fund, SSA, IDAC, City Power). That undercuts any simple “one-camp attack dog” story from headlines alone. The City Power Ombud hit is a real adjudicated miss on allegation-vs-fact discipline. Full-body recovery would be needed before person×actor scores (still under provisional n).
+**Fetched and not coded (4):**
+
+| Item | Why excluded |
+|------|----------------|
+| `mashatile_settle` (10 Oct 2026) | Later follow-up on the same deputy-president housing-fund matter already coded as BC-N24-KC-01; not an independent piece. Private debtor not named. |
+| `notes_r15bn` | Reporting Notes companion to the AfriForum spend story already coded as F-N24-KC-02; method piece, not a separate findings-bearing article. |
+| `zuma_spy` | Fetched in the same sweep and not coded (neither finding nor control). No contemporaneous exclusion note was kept; no reason is invented here. |
+| `city_power_press_ombud_PCSA000747` | Second City Power file: the Press Council ruling, used as evidence for F-N24-KC-01, not a Cowan article and not a separate coded piece. |
+
+**Pattern (early, paywall-limited):** Cowan’s investigations hit **both** AfriForum/Solidarity financials **and** ANC-orbit / state-institution accountability (Mashatile fund, SSA, IDAC, City Power). That undercuts any simple “one-camp attack dog” story from headlines alone. The City Power Ombud hit is a real adjudicated miss on allegation-vs-fact discipline. Mapped *n* on Cowan is under 5, so person lean is findings-only (numeric lean stored as null).
 
 ## Pilot overlap map (Basson / du Toit)
 
@@ -74,7 +85,7 @@ Window sample (Wayback OG + one Ombud primary):
 1. Seed is a **brief/axes** extract, not a coded meter with exhibits — mapping yield = 0 findings.
 2. News24 **hard paywall** → most Cowan coding from OG/Wayback shells; City Power is the exception via Ombud text.
 3. Wrong X handle `@kylecowan` is an unrelated US account; correct public handle is **`@CowansView`** (API-verified 5 Nov 2026).
-4. Private persons in investigations (e.g. debtors, spokespeople) are not scored as actors; institutional/public-figure actors only.
+4. Private persons in investigations (e.g. debtors, junior staff) are not scored as actors and are referred to only by role; institutional and public-figure actors only.
 5. Draft only; seed remains gitignored; **no git push**.
 
 ## Files touched

@@ -98,13 +98,12 @@ Pre-change SHA: `0d88905a569e2f997bbdf7146eb398749ae93c24`.
 
 ## Seen, not touched
 
-- Daily Investor and Newsday pilots (already on `main`) use driver strings outside the methodology enum: `selective_framing`, `outcome_credit`, `platforming`, `source_selection`, `omission_or_emphasis`, `threat_framing`, `markets_frame`, `legal_jeopardy_frame`, `neutral_report`. Some rows use `accountability_status: control`. Schema validation of those two files fails on these labels. Recoding them onto the official driver list is a separate change.
-- `docs/FREE_ACCESS.md` "Practical coding rule" numbering skips item 3 (goes 1, 2, 4).
+- Daily Investor and Newsday pilots (already on `main`) use driver strings outside the methodology enum: `selective_framing`, `outcome_credit`, `platforming`, `source_selection`, `omission_or_emphasis`, `threat_framing`, `markets_frame`, `legal_jeopardy_frame`, `neutral_report`. Recoding those drivers onto the official list is a separate change. (`accountability_status: control` on F-DI-16, F-ND-06 and F-ND-22 is now in the schema enum and defined in METHODOLOGY §8c. The *values* were already in those published pilots; the *validation failures* were introduced in the first CHG-MW-001 commit, when the enum was added without `control`. That claim of “pre-existing failures” in an earlier draft of this RFC was wrong and is corrected here.)
 - News24 findings and meta still carry `methodology_version: 0.3-draft` because primary coding rules did not change; the document is 0.4-draft for the secondary meter.
-- Historical "Gaps" in `docs/STATUS.md` still say the Cassian seed was missing; later sections and this RFC supersede that.
-- `data/external_references.json` REF-02 `our_note` still says lean labels are not imported into scores; that remains true for Cassian's scale and for primary scores. Secondary lean is documented elsewhere and does not use Cassian as input.
+- Historical "Gaps" in `docs/STATUS.md` still say some early items were missing; later sections and this RFC supersede that.
 - `index.html` placeholder, HTTPS/CNAME, and the unused SQLite instantiation.
-- Stale `/workspace/mediawatch-sa` and `/workspace/ktb` / `/workspace/cavus` path mentions already on `main` in `docs/STATUS.md` and `docs/METHODOLOGY.md` (no `/workspace/agoa-sa` paths).
+- Article IDs such as `A-N24-KC-2026-07-25-MONEY` and `A-N24-KC-2026-09-05-ORANIA` keep the URL-slug date; `published_at` is the page date (26 Jul / 6 Sep) with `published_at_precision=date`. The IDAC page date (19 Jul vs stored 18 Jul) was not in the review-fix list and is unchanged.
+- Scripts already on `main` still use `Path("/workspace/mediawatch-sa/data")` (inside this project, not an outside-bot path).
 
 ---
 
@@ -115,6 +114,7 @@ Pre-change SHA: `0d88905a569e2f997bbdf7146eb398749ae93c24`.
 ### Removed
 
 - `dm_ids` and `dm_times_sast` in `data/external_references.json` (internal identifiers and times from a gitignored DM extract). Not required in a public file. Locators stay only in `seed/cassian-news24-bias-meter.md` (gitignored).
+- The name of a junior City Power employee (a private person) that had appeared in F-N24-KC-01 evidence notes as part of a dismissed-complaint list. Replaced with “naming of a City Power employee.” No other committed file still carries that name.
 
 ### GitHub timeline scrub — confirmed clear
 
@@ -123,7 +123,7 @@ On 5 Nov 2026 a third-party personal GitHub timeline was wrongly counted as a re
 ### Reviewed and retained
 
 - Journalists, editors and public figures in their public role (names, public X handles / user IDs API-verified from public profiles, bylines, Press Ombud officers).
-- Exact Ombud-cited quote in F-N24-KC-01 naming City Power spokesperson Mangena and News24 journalist Khaya Koko. Necessary exact-line evidence from a published Press Council ruling; the scored actor is the institution City Power, not the private individual.
+- Exact Ombud-cited quote in F-N24-KC-01 naming the City Power **spokesperson** (a public-role official, and a different person from the junior employee above) and News24 journalist Khaya Koko. The spokesperson is also in the published headline and the canonical URL, which cannot be altered. The scored actor remains the institution City Power. The junior employee’s name is not in that quote and was not redacted as if it were the spokesperson.
 - Mashatile "son-in-law" item kept only as the published News24 headline and canonical URL; the private debtor is **not named** in our files and is **not scored** as an actor.
 - SAAI president Theo De Jager named in a public caption in a public-role context.
 
@@ -137,7 +137,30 @@ On 5 Nov 2026 a third-party personal GitHub timeline was wrongly counted as a re
 
 ---
 
+## Review fixes (15 Nov 2026, after Cavus PASS_WITH_CONCERNS)
+
+A second commit on this branch addresses the review. It does not amend the first two commits. Pre-change SHA for the *branch* remains `0d88905a569e2f997bbdf7146eb398749ae93c24`. Rollback of **only** the review-fix commit is revert of that commit (parent `9515e9ce65d41e74bc090d49237c196d6eb7ecdd`).
+
+1. Junior City Power employee: name removed from evidence notes and the tree; referred to only by role. Spokesperson in the Ombud quote is a different, public-role person (see POPIA).
+2. Cowan sample documented honestly: 11 fetched, 7 coded; four exclusions listed; KC-01 = `counter_pull`; other coded pieces = `purposive` (new sample_frame; no random rule was invented). Lean/frame splits recomputed; News24 `neutral_random` is now findings-only (*n*=4).
+3. `control` added to the schema enum and defined in METHODOLOGY §8c. The earlier “pre-existing failures” wording in this RFC is corrected above.
+4. F-N24-KC-05 quote extended to the full OG sentence ending “into police Crime Intelligence,” verified against the Wayback OG.
+5. `lean_*` stored as **null** when `flag=findings_only` (Cowan and other sub-*n* groupings). No hidden raw number.
+6. REF-02 wording updated for the two meters.
+7. `docs/FREE_ACCESS.md` list restored to 1–5 (missing step 3 is republication search).
+8. CHG-MW-002 rollback SHA in `docs/STATUS.md` is `d3ca635` (or revert `9515e9c`), not `0d88905`.
+9. METHODOLOGY §0: “maintains two measures; lean hidden until owner GO.”
+10. `schema.sql` findings table: nullable `sample_frame` and `accountability_status` (and `published_at_precision`).
+11. KC-02–KC-04 `published_at` set to the page dates 26 Jul and 6 Sep, with `published_at_precision=date`.
+12. Other bots’ `/workspace/…` paths removed from `docs/STATUS.md`; hub path in STATUS and METHODOLOGY is now relative `plan.md`.
+13. `people.csv` du Toit note is public-role only; no internal AGOA casebook reference.
+
+**Status remains: PENDING REVIEW (Cavus, Cassian) and owner GO.**
+
+---
+
 ## Sign-off
+
 
 Four-eyes review is for Cavus and Cassian (expert, shadow, charter, drift). This RFC is not self-signed SUCCEEDED.
 

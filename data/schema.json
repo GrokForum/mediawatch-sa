@@ -176,6 +176,18 @@
               "unverified",
               "seed_lead"
             ]
+          },
+          "published_at_precision": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "date",
+              "datetime",
+              null
+            ],
+            "description": "Precision of published_at. 'date' = calendar date only (no reliable time)."
           }
         }
       }
@@ -387,9 +399,10 @@
               "neutral_random",
               "counter_pull",
               "external_seed",
+              "purposive",
               null
             ],
-            "description": "How the item entered the sample."
+            "description": "How the item entered the sample. purposive = judgement / byline corpus with no pre-registered random rule."
           },
           "accountability_status": {
             "type": [
@@ -402,9 +415,22 @@
               "accountability_exempt",
               "accountability",
               "neutral_method",
+              "control",
               null
             ],
-            "description": "§8b accountability coding. accountability_exempt ⇒ signed_score may be null."
+            "description": "§8b/§8c coding. accountability_exempt ⇒ signed_score may be null. control = balance/contrast finding retained in the sample (see METHODOLOGY)."
+          },
+          "published_at_precision": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "date",
+              "datetime",
+              null
+            ],
+            "description": "Precision of published_at. 'date' = calendar date only (no reliable time)."
           }
         }
       }
@@ -554,7 +580,8 @@
             "null"
           ],
           "minimum": -2,
-          "maximum": 2
+          "maximum": 2,
+          "description": "−2…+2; MUST be null when flag is findings_only."
         },
         "lean_social": {
           "type": [
@@ -562,7 +589,8 @@
             "null"
           ],
           "minimum": -2,
-          "maximum": 2
+          "maximum": 2,
+          "description": "−2…+2; MUST be null when flag is findings_only."
         },
         "lean_composite": {
           "type": [
@@ -570,7 +598,8 @@
             "null"
           ],
           "minimum": -2,
-          "maximum": 2
+          "maximum": 2,
+          "description": "−2…+2; MUST be null when flag is findings_only."
         },
         "share_contested_placements": {
           "type": [
