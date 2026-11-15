@@ -164,7 +164,7 @@ There are **six** open questions:
 
 ## What this RFC does not do
 
-No site code, no replacement of `index.html`, no Pages or DNS change, no commit to `main`. The plan itself is published only as part of the CHG-MW-001 branch: Branch pushed at `f74158a9fbe9d5a8b864895d668c567525c10164` and opened as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1) on 15 Nov 2026 20:50 SAST (pushed and opened by Cavus under the reviewed flow). Nothing merged to `main`; later commits stay local until the owner's GO on that exact head. `seed/` and `data/fetched_articles/` stay uncommitted.
+No site code, no replacement of `index.html`, no Pages or DNS change, no commit to `main`. The plan itself is published only as part of the CHG-MW-001 branch: Branch pushed at `f74158a9fbe9d5a8b864895d668c567525c10164` and opened as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1) on 15 Nov 2026 20:50 SAST (pushed and opened by Cavus under the reviewed flow). Nothing merged to `main`; Later pushes to this branch need the owner's GO on the exact head. The current head is the head of PR #1. `seed/` and `data/fetched_articles/` stay uncommitted.
 
 ---
 
