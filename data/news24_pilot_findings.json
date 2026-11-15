@@ -662,11 +662,12 @@
       "headline": "City Power spin doctor Mangena implicated in tender interference, dirty tricks campaign",
       "byline": "Kyle Cowan",
       "person_id": "kyle_cowan",
-      "published_at": "2026-05-24T00:00:00+00:00",
-      "published_at_sast": "2026-05-24T02:00:00+02:00",
+      "published_at": "2026-05-24",
+      "published_at_sast": "2026-05-24",
       "access": "partial_wayback_og_plus_press_ombud",
       "sample_frame": "counter_pull",
-      "note": "Paywalled body. Coded from Wayback OG + Press Council Acting Ombud ruling PCSA 000747 (15 Sep 2026) which quotes the disputed sentences."
+      "note": "Paywalled body. Coded from Wayback OG + Press Council Acting Ombud ruling PCSA 000747 (15 Sep 2026) which quotes the disputed sentences. Page date 24 May 2026 verified on Wayback 20260702182307 (slug date 23 May). Date-only.",
+      "published_at_precision": "date"
     },
     {
       "id": "A-N24-KC-2026-06-14-THEBE-NOTES",
@@ -688,11 +689,12 @@
       "headline": "Inside IDAC’s first 700 days: Missteps, plea deals and SA’s biggest corruption cases",
       "byline": "Kyle Cowan",
       "person_id": "kyle_cowan",
-      "published_at": "2026-07-18T00:00:00+00:00",
-      "published_at_sast": "2026-07-18T02:00:00+02:00",
+      "published_at": "2026-07-19",
+      "published_at_sast": "2026-07-19",
       "access": "partial_wayback_og",
       "sample_frame": "purposive",
-      "note": "Wayback paywall shell; OG teaser only."
+      "note": "Wayback paywall shell; OG teaser only. Page date 19 Jul 2026 verified on Wayback 20260722120532 (slug date 18 Jul). Date-only.",
+      "published_at_precision": "date"
     },
     {
       "id": "A-N24-KC-2026-07-25-MONEY",
@@ -3043,8 +3045,8 @@
       "signed_score": -2.0,
       "quote": "News24 can further reveal that Mangena and his colleagues are behind a coordinated disinformation campaign aimed at discrediting a News24 investigative journalist, Khaya Koko, who has, for the past two years, reported on corruption at City Power",
       "url": "https://www.news24.com/investigations/city-power-spin-doctor-mangena-implicated-in-tender-interference-dirty-tricks-campaign-20260523-1011",
-      "published_at": "2026-05-24T00:00:00+00:00",
-      "published_at_sast": "2026-05-24T02:00:00+02:00",
+      "published_at": "2026-05-24",
+      "published_at_sast": "2026-05-24",
       "fact_label": "Proven",
       "byline": "Kyle Cowan",
       "target_inferred": false,
@@ -3056,7 +3058,8 @@
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
       "credit": "",
-      "created_at": "2026-11-05T12:09:29+02:00"
+      "created_at": "2026-11-05T12:09:29+02:00",
+      "published_at_precision": "date"
     },
     {
       "id": "F-N24-KC-02",
@@ -3166,8 +3169,8 @@
       "signed_score": -1.0,
       "quote": "Less than 700 days after becoming a permanent entity, IDAC is facing a credibility crisis amid extreme pressure stemming from its handling of a single investigation into police Crime Intelligence.",
       "url": "https://www.news24.com/investigations/inside-idacs-first-700-days-missteps-plea-deals-and-sas-biggest-corruption-cases-20260718-1042",
-      "published_at": "2026-07-18T00:00:00+00:00",
-      "published_at_sast": "2026-07-18T02:00:00+02:00",
+      "published_at": "2026-07-19",
+      "published_at_sast": "2026-07-19",
       "fact_label": "Not established",
       "byline": "Kyle Cowan",
       "target_inferred": false,
@@ -3179,7 +3182,8 @@
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
       "credit": "",
-      "created_at": "2026-11-05T12:09:29+02:00"
+      "created_at": "2026-11-05T12:09:29+02:00",
+      "published_at_precision": "date"
     }
   ]
 }

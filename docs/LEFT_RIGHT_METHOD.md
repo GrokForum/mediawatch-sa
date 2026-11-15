@@ -77,6 +77,8 @@ lean_social    = clamp( mean(contribution_social),   −2, +2 )
 lean_composite = clamp( mean(lean_economic, lean_social), −2, +2 )
 ```
 
+**Rounding:** compute both axis means and the composite from **unrounded** values (`lean_composite` is the mean of the unrounded axis means). Round each displayed lean to **3 decimal places only at output**. Do not average already-rounded axis scores (that shifted News24 keyword from −0.396 to −0.397 and counter_pull from 0.083 to 0.084).
+
 On this draft map, **negative ≈ left**, **positive ≈ right**. Always show the banner and caveat with the number.
 
 ### Minimum-*n* (same as primary)
