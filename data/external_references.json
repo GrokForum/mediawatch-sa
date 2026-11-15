@@ -39,8 +39,8 @@
       "has_url": false,
       "has_date": false,
       "mapped_to_finding": false,
-      "reason_not_mapped": "Axis/scale proposal only; methodology forbids importing left/right lean labels into scores.",
-      "our_note": "Rejected for scoring. MediaWatch SA uses FOR/AGAINST named actors + drivers only. Factuality via Press Ombud/court/corrections can still enter as factual_error/correction findings when adjudicated.",
+      "reason_not_mapped": "Axis/scale proposal only. Cassian's Ground News–style lean is not imported into primary scores and is not used as input to the secondary lean meter.",
+      "our_note": "Not imported. MediaWatch SA's PRIMARY meter is FOR/AGAINST named actors + drivers. A SECONDARY left/right lean exists as reader convenience only (`docs/LEFT_RIGHT_METHOD.md`), derived solely from primary findings × `data/actor_axis_map.csv`. Cassian's scale is not a lean input. Factuality via Press Ombud/court/corrections can still enter as factual_error/correction findings when adjudicated.",
       "lean_labels_present": true,
       "imported_to_scores": false
     },
@@ -56,7 +56,7 @@
       "has_date": false,
       "mapped_to_finding": false,
       "reason_not_mapped": "Subject list and method note without concrete article/post examples.",
-      "our_note": "Basson and du Toit already in people.csv and News24 pilot. Cowan added this pass with a neutral May–Oct 2026 sample under method (not external_seed, because Cassian cited no example).",
+      "our_note": "Basson and du Toit already in people.csv and News24 pilot. Cowan added this pass with a purposive May–Oct 2026 byline sample (not a pre-registered random draw; not external_seed, because Cassian cited no example). City Power / KC-01 is counter_pull from the Press Council pass.",
       "lean_labels_present": false,
       "imported_to_scores": false
     }

@@ -38,7 +38,9 @@ CREATE TABLE articles (
   author_person_id TEXT REFERENCES people(id),
   headline        TEXT,
   url             TEXT NOT NULL UNIQUE,
-  published_at    TEXT NOT NULL,              -- UTC ISO-8601
+  published_at    TEXT NOT NULL,
+  published_at_precision TEXT CHECK (published_at_precision IS NULL OR published_at_precision IN
+                    ('date','datetime')),              -- date = calendar date only
   byline_raw      TEXT,
   section         TEXT,
   fetched_at      TEXT,
@@ -86,16 +88,22 @@ CREATE TABLE findings (
   evidence_notes  TEXT,
   weight          REAL NOT NULL,
   signed_score    REAL,                       -- NULL when accountability_exempt
-  CHECK (signed_score IS NULL OR (signed_score BETWEEN -2 AND 2)),
   methodology_version TEXT NOT NULL DEFAULT '0.1-draft',
   coder           TEXT,
   credit          TEXT,
   target_inferred INTEGER NOT NULL DEFAULT 0,  -- 1 if AfriMAGA/etc. mapped to org via context
   target_context_quote TEXT,                  -- required when target_inferred=1
+  sample_frame    TEXT CHECK (sample_frame IS NULL OR sample_frame IN
+                    ('keyword','neutral_random','counter_pull','external_seed','purposive')),
+  accountability_status TEXT CHECK (accountability_status IS NULL OR accountability_status IN
+                    ('bias','borderline','accountability_exempt','accountability','neutral_method','control')),
+  published_at_precision TEXT CHECK (published_at_precision IS NULL OR published_at_precision IN
+                    ('date','datetime')),
   created_at      TEXT NOT NULL,
   CHECK (article_id IS NOT NULL OR public_post_id IS NOT NULL),
   CHECK (target_inferred IN (0,1)),
-  CHECK (target_inferred = 0 OR (target_context_quote IS NOT NULL AND length(target_context_quote) > 0))
+  CHECK (target_inferred = 0 OR (target_context_quote IS NOT NULL AND length(target_context_quote) > 0)),
+  CHECK (signed_score IS NULL OR (signed_score BETWEEN -2 AND 2))
 );
 
 CREATE TABLE score_runs (
@@ -137,10 +145,10 @@ CREATE TABLE lean_scores (
   lean_score_run_id TEXT NOT NULL REFERENCES lean_score_runs(id),
   entity_type     TEXT NOT NULL CHECK (entity_type IN ('publication','person')),
   entity_id       TEXT NOT NULL,              -- publication_id | person_id
-  sample_frame    TEXT,                       -- NULL = pooled; else keyword|neutral_random|counter_pull
-  lean_economic   REAL,                       -- −2..+2; NULL when findings_only
-  lean_social     REAL,
-  lean_composite  REAL,
+  sample_frame    TEXT,                       -- NULL = pooled; else keyword|neutral_random|counter_pull|external_seed|purposive
+  lean_economic   REAL,                       -- −2..+2; NULL when findings_only (not stored-and-hidden)
+  lean_social     REAL,                       -- NULL when findings_only
+  lean_composite  REAL,                       -- NULL when findings_only
   n_included      INTEGER NOT NULL,
   n_skipped       INTEGER NOT NULL DEFAULT 0,
   flag            TEXT NOT NULL CHECK (flag IN ('findings_only','provisional','full')),
@@ -152,7 +160,9 @@ CREATE TABLE lean_scores (
   direct_lean_label_signals_json TEXT,        -- optional documented signals; not folded into lean_* by default
   CHECK (lean_economic IS NULL OR (lean_economic BETWEEN -2 AND 2)),
   CHECK (lean_social IS NULL OR (lean_social BETWEEN -2 AND 2)),
-  CHECK (lean_composite IS NULL OR (lean_composite BETWEEN -2 AND 2))
+  CHECK (lean_composite IS NULL OR (lean_composite BETWEEN -2 AND 2)),
+  CHECK (flag != 'findings_only' OR (
+           lean_economic IS NULL AND lean_social IS NULL AND lean_composite IS NULL))
 );
 
 CREATE TABLE actor_axis_map (

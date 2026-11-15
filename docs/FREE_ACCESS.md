@@ -75,6 +75,7 @@ This is a **legitimate licensed** route, not a bypass: access is tied to library
 
 1. Try Wayback (availability → fetch → **confirm body**, not just HTTP 200).  
 2. Check for an existing archive.today snapshot (read only).  
+3. Search for a verbatim republication on a free site (e.g. MSN, Politicsweb, Netwerk24, Maroela) — related coverage of the same event is not a substitute for the same copy.  
 4. Search the author’s public X posts near the pub date for gift/share links.  
 5. If still blocked: code from headline/OG/standfirst only, mark `access_limit`, register the URL in `paywall_register.csv`, and move on — **do not** buy a subscription for the owner and **do not** use bypass tooling.
 

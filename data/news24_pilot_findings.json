@@ -91,12 +91,40 @@
     },
     "kyle_cowan_sample": {
       "at_sast": "2026-11-05T12:09:29+02:00",
-      "n_articles": 7,
+      "updated_at_sast": "2026-11-15T20:50:00+02:00",
+      "n_fetched": 11,
+      "n_coded": 7,
       "n_findings": 5,
       "n_balanced_controls": 3,
-      "sample_frame": "neutral_random",
       "window": "2026-05-01..2026-10-31",
-      "note": "Cassian named Cowan as a subject but cited no checkable example; sample is our method coding, not sample_frame=external_seed. Bodies mostly paywalled; City Power finding re-verified via Press Ombud."
+      "draw_rule": "No pre-registered random or fortnightly-neutral rule was used for this Cowan set. Eleven items were fetched in a May–Oct 2026 investigations/byline sweep; seven were coded. The News24 politics fortnightly rule in meta.skew_fix does not apply here.",
+      "sample_frames": {
+        "F-N24-KC-01": "counter_pull — entered via the Press Council / Ombud pass (PCSA 000747), not a random draw",
+        "other_coded_six": "purposive — judgement sample of Cowan investigations in the window, to fill a named-journalist gap; not keyword and not external_seed (Cassian cited no checkable example)"
+      },
+      "excluded": [
+        {
+          "id": "mashatile_settle",
+          "url": "https://www.news24.com/investigations/mashatile-son-in-law-pays-gauteng-govt-r72m-to-settle-r126m-housing-loan-claim-20261010-0568",
+          "why": "Later follow-up (10 Oct 2026) on the same deputy-president housing-fund matter already coded as BC-N24-KC-01; excluded as a same-matter follow-up, not an independent piece. Private debtor not named and not scored."
+        },
+        {
+          "id": "notes_r15bn",
+          "url": "https://www.news24.com/investigations/reporting-notes-tracking-afriforums-r15bn-spend-20260726-1027",
+          "why": "Reporting Notes companion to the AfriForum spend investigation already coded as F-N24-KC-02; a method piece about how the annual reports were analysed, not a separate findings-bearing article."
+        },
+        {
+          "id": "zuma_spy",
+          "url": "https://www.news24.com/investigations/declassified-inside-the-trial-of-zumas-spy-after-media-civil-society-victory-for-access-20261022-1195",
+          "why": "Fetched in the same investigations sweep and not coded (neither as a finding nor as a balanced_control). No contemporaneous exclusion note was kept; this pass does not invent a reason beyond that."
+        },
+        {
+          "id": "city_power_press_ombud_PCSA000747",
+          "url": "https://presscouncilsa.org.za/2026/09/15/city-power-v-news24/",
+          "why": "Second City Power file: the Press Council ruling, not a Cowan article. Fetched as the primary evidence source for F-N24-KC-01; not a separate coded piece."
+        }
+      ],
+      "note": "Cassian named Cowan as a subject but cited no checkable example; coding is ours, not sample_frame=external_seed. Bodies mostly paywalled; City Power finding re-verified via Press Ombud."
     },
     "cassian_seed_pass": {
       "at_sast": "2026-11-05T12:09:29+02:00",
@@ -637,7 +665,7 @@
       "published_at": "2026-05-24T00:00:00+00:00",
       "published_at_sast": "2026-05-24T02:00:00+02:00",
       "access": "partial_wayback_og_plus_press_ombud",
-      "sample_frame": "neutral_random",
+      "sample_frame": "counter_pull",
       "note": "Paywalled body. Coded from Wayback OG + Press Council Acting Ombud ruling PCSA 000747 (15 Sep 2026) which quotes the disputed sentences."
     },
     {
@@ -650,7 +678,7 @@
       "published_at": "2026-06-14T00:00:00+00:00",
       "published_at_sast": "2026-06-14T02:00:00+02:00",
       "access": "partial_wayback_og",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "note": "Reporting-notes format; OG describes interview on AfriForum investment with ANC-linked Thebe Stockbroking."
     },
     {
@@ -663,7 +691,7 @@
       "published_at": "2026-07-18T00:00:00+00:00",
       "published_at_sast": "2026-07-18T02:00:00+02:00",
       "access": "partial_wayback_og",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "note": "Wayback paywall shell; OG teaser only."
     },
     {
@@ -673,11 +701,12 @@
       "headline": "Inside AfriForum’s money machine: How lobby group splurges on salaries, marketing",
       "byline": "Kyle Cowan",
       "person_id": "kyle_cowan",
-      "published_at": "2026-07-25T00:00:00+00:00",
-      "published_at_sast": "2026-07-25T02:00:00+02:00",
+      "published_at": "2026-07-26",
+      "published_at_sast": "2026-07-26",
       "access": "partial_wayback_og",
-      "sample_frame": "neutral_random",
-      "note": "Wayback paywall shell; OG teaser with R1.6bn / R2-of-R10 claim. Related Basson X amplification already in pilot."
+      "sample_frame": "purposive",
+      "note": "Wayback paywall shell; OG teaser with R1.6bn / R2-of-R10 claim. Related Basson X amplification already in pilot. Page date 26 Jul 2026 verified on Wayback 20260728214047 (slug date 25 Jul). Date-only.",
+      "published_at_precision": "date"
     },
     {
       "id": "A-N24-KC-2026-09-05-ORANIA",
@@ -686,11 +715,12 @@
       "headline": "A new Jerusalem: Solidarity, AfriForum spent R108m to ‘take over’ Orania",
       "byline": "Kyle Cowan",
       "person_id": "kyle_cowan",
-      "published_at": "2026-09-05T00:00:00+00:00",
-      "published_at_sast": "2026-09-05T02:00:00+02:00",
+      "published_at": "2026-09-06",
+      "published_at_sast": "2026-09-06",
       "access": "partial_wayback_og",
-      "sample_frame": "neutral_random",
-      "note": "Wayback paywall shell; OG teaser."
+      "sample_frame": "purposive",
+      "note": "Wayback paywall shell; OG teaser. Page date 6 Sep 2026 verified on Wayback 20260911204538 (slug date 5 Sep). Date-only.",
+      "published_at_precision": "date"
     },
     {
       "id": "A-N24-KC-2026-09-02-MASHATILE",
@@ -702,7 +732,7 @@
       "published_at": "2026-09-02T00:00:00+00:00",
       "published_at_sast": "2026-09-02T02:00:00+02:00",
       "access": "partial_wayback_og",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "note": "Wayback paywall shell; OG. Private debtor named in public deputy-president context — score public actor only."
     },
     {
@@ -715,7 +745,7 @@
       "published_at": "2026-10-25T00:00:00+00:00",
       "published_at_sast": "2026-10-25T02:00:00+02:00",
       "access": "partial_wayback_og",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "note": "Wayback paywall shell; OG. Declassified-state-capture accountability piece."
     }
   ],
@@ -1379,7 +1409,7 @@
       "id": "BC-N24-KC-01",
       "article_id": "A-N24-KC-2026-09-02-MASHATILE",
       "person_id": "kyle_cowan",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "accountability",
       "reason": "Headline+OG report a documented payback to a public housing fund after News24 exposé. Sourced accountability involving the deputy president's named son-in-law; no loaded_label / one-sided dispute framing visible in OG. Private debtor not scored as actor. Per § accountability rule → control, not AGAINST finding.",
       "url": "https://www.news24.com/investigations/mashatiles-son-in-law-pays-back-millions-to-gauteng-housing-fund-after-news24-expose-20260902-1079",
@@ -1390,7 +1420,7 @@
       "id": "BC-N24-KC-02",
       "article_id": "A-N24-KC-2026-10-25-SSA-EFF",
       "person_id": "kyle_cowan",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "accountability",
       "reason": "Declassified Project Mayibuye / SSA infiltration reporting from OG reads as document-led accountability on a state security abuse (and naming EFF/ANC as objects of the op). No pejorative coinage in headline beyond factual 'planted insiders'. Body not recovered — no driver fired from available text.",
       "url": "https://www.news24.com/investigations/declassified-ssa-planted-insiders-in-eff-to-spy-on-and-win-members-back-to-the-anc-20261025-1097",
@@ -1401,7 +1431,7 @@
       "id": "BC-N24-KC-03",
       "article_id": "A-N24-KC-2026-06-14-THEBE-NOTES",
       "person_id": "kyle_cowan",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "neutral_method",
       "reason": "Reporting-notes interview format about how an AfriForum/Thebe story was reported. OG does not itself advance a loaded claim beyond describing the prior investigation topic. No FOR/AGAINST driver from available text.",
       "url": "https://www.news24.com/investigations/reporting-notes-afriforum-financials-and-thebe-stockbroking-20260614-1147",
@@ -3000,7 +3030,7 @@
     },
     {
       "id": "F-N24-KC-01",
-      "sample_frame": "neutral_random",
+      "sample_frame": "counter_pull",
       "accountability_status": "bias",
       "person_id": "kyle_cowan",
       "publication_id": "news24",
@@ -3021,7 +3051,7 @@
       "target_context_quote": "",
       "steelman_for": "Investigative outlets may draw conclusions from accumulated evidence when defending a colleague against an alleged smear; the Ombud accepted related tender-interference reporting tied to the KMA report.",
       "steelman_against": "Acting Press Ombud (PCSA 000747, 14–15 Sep 2026) held that stating the disinformation campaign as fact breached Press Code 1.3 and 3.3 — it should have been presented as an allegation.",
-      "evidence_notes": "Re-verified against Press Council primary ruling https://presscouncilsa.org.za/2026/09/15/city-power-v-news24/ (Acting Ombud Johan Retief). Quote taken from Ombud's citation of the article (§68). Finding: statements that [City Power spokesperson] was behind a coordinated disinformation campaign (and two related CP-executive claims) were presented as fact without evidence the Ombud was shown. Sanction: apology/correction ordered. Other complaints (headline; Motsepe naming; [City Power spokesperson] association; reply) dismissed. Article body paywalled; evidentiary quote Proven via Ombud record. Private named staff treated via institutional actor City Power.",
+      "evidence_notes": "Re-verified against Press Council primary ruling https://presscouncilsa.org.za/2026/09/15/city-power-v-news24/ (Acting Ombud Johan Retief). Quote taken from Ombud's citation of the article (§68). Finding: statements that the City Power spokesperson was behind a coordinated disinformation campaign (and two related CP-executive claims) were presented as fact without evidence the Ombud was shown. Sanction: apology/correction ordered. Other complaints (headline; naming of a City Power employee; association with the spokesperson; reply) dismissed. Article body paywalled; evidentiary quote Proven via Ombud record. Private named staff treated via institutional actor City Power. A junior City Power employee's name that had appeared in an earlier note was removed and is referred to only by role.",
       "access_limit": "paywall_body; ombud_quotes_used",
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
@@ -3030,7 +3060,7 @@
     },
     {
       "id": "F-N24-KC-02",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "bias",
       "person_id": "kyle_cowan",
       "publication_id": "news24",
@@ -3043,8 +3073,8 @@
       "signed_score": -1.0,
       "quote": "Inside AfriForum’s money machine: How lobby group splurges on salaries, marketing",
       "url": "https://www.news24.com/investigations/inside-afriforums-money-machine-how-lobby-group-splurges-on-salaries-marketing-20260725-0886",
-      "published_at": "2026-07-25T00:00:00+00:00",
-      "published_at_sast": "2026-07-25T02:00:00+02:00",
+      "published_at": "2026-07-26",
+      "published_at_sast": "2026-07-26",
       "fact_label": "Proven",
       "byline": "Kyle Cowan",
       "target_inferred": false,
@@ -3056,11 +3086,12 @@
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
       "credit": "",
-      "created_at": "2026-11-05T12:09:29+02:00"
+      "created_at": "2026-11-05T12:09:29+02:00",
+      "published_at_precision": "date"
     },
     {
       "id": "F-N24-KC-03",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "bias",
       "person_id": "kyle_cowan",
       "publication_id": "news24",
@@ -3073,8 +3104,8 @@
       "signed_score": -1.0,
       "quote": "A new Jerusalem: Solidarity, AfriForum spent R108m to ‘take over’ Orania",
       "url": "https://www.news24.com/investigations/a-new-jerusalem-solidarity-afriforum-spent-r108m-to-take-over-orania-20260905-1046",
-      "published_at": "2026-09-05T00:00:00+00:00",
-      "published_at_sast": "2026-09-05T02:00:00+02:00",
+      "published_at": "2026-09-06",
+      "published_at_sast": "2026-09-06",
       "fact_label": "Proven",
       "byline": "Kyle Cowan",
       "target_inferred": false,
@@ -3086,11 +3117,12 @@
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
       "credit": "",
-      "created_at": "2026-11-05T12:09:29+02:00"
+      "created_at": "2026-11-05T12:09:29+02:00",
+      "published_at_precision": "date"
     },
     {
       "id": "F-N24-KC-04",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "bias",
       "person_id": "kyle_cowan",
       "publication_id": "news24",
@@ -3103,8 +3135,8 @@
       "signed_score": -1.0,
       "quote": "A new Jerusalem: Solidarity, AfriForum spent R108m to ‘take over’ Orania",
       "url": "https://www.news24.com/investigations/a-new-jerusalem-solidarity-afriforum-spent-r108m-to-take-over-orania-20260905-1046",
-      "published_at": "2026-09-05T00:00:00+00:00",
-      "published_at_sast": "2026-09-05T02:00:00+02:00",
+      "published_at": "2026-09-06",
+      "published_at_sast": "2026-09-06",
       "fact_label": "Proven",
       "byline": "Kyle Cowan",
       "target_inferred": false,
@@ -3116,11 +3148,12 @@
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
       "credit": "",
-      "created_at": "2026-11-05T12:09:29+02:00"
+      "created_at": "2026-11-05T12:09:29+02:00",
+      "published_at_precision": "date"
     },
     {
       "id": "F-N24-KC-05",
-      "sample_frame": "neutral_random",
+      "sample_frame": "purposive",
       "accountability_status": "borderline",
       "person_id": "kyle_cowan",
       "publication_id": "news24",
@@ -3131,7 +3164,7 @@
       "driver": "framing",
       "weight": 1.0,
       "signed_score": -1.0,
-      "quote": "Less than 700 days after becoming a permanent entity, IDAC is facing a credibility crisis amid extreme pressure stemming from its handling of a single investigation",
+      "quote": "Less than 700 days after becoming a permanent entity, IDAC is facing a credibility crisis amid extreme pressure stemming from its handling of a single investigation into police Crime Intelligence.",
       "url": "https://www.news24.com/investigations/inside-idacs-first-700-days-missteps-plea-deals-and-sas-biggest-corruption-cases-20260718-1042",
       "published_at": "2026-07-18T00:00:00+00:00",
       "published_at_sast": "2026-07-18T02:00:00+02:00",
@@ -3141,7 +3174,7 @@
       "target_context_quote": "",
       "steelman_for": "Scrutinising a new anti-corruption unit's early record, plea deals and missteps is core accountability journalism.",
       "steelman_against": "OG teaser asserts a 'credibility crisis' as settled characterisation from handling 'a single investigation' before body evidence is shown — steers judgment beyond countable case metrics.",
-      "evidence_notes": "OG Proven via Wayback 20260722120532. Body locked. Accountability rule considered: IDAC is a governing-adjacent investigative body; sourced performance review can be a control, but the available teaser uses crisis language that goes beyond dry metrics → borderline framing finding pending full body.",
+      "evidence_notes": "OG Proven via Wayback 20260722120532. Body locked. Accountability rule considered: IDAC is a governing-adjacent investigative body; sourced performance review can be a control, but the available teaser uses crisis language that goes beyond dry metrics → borderline framing finding pending full body. Quote extended to the full OG sentence ending “into police Crime Intelligence.” Verified against the Wayback 20260722120532 OG description in the working fetch.",
       "access_limit": "partial_wayback_og",
       "methodology_version": "0.3-draft",
       "coder": "mediawatch-sa-pilot",
