@@ -1,11 +1,13 @@
 # RFC-CHG-MW-001 — Catch-up: paywall recovery, Cassian cross-check, Cowan sample, two meters
 
 **Status:** PENDING REVIEW (Cavus, Cassian) and owner GO  
-**Environment:** DEV — local branch only, not published  
+**Environment:** DEV — feature branch, published on GitHub as a draft PR (not merged)  
 **Branch:** `dev/chg-mw-001-catchup` (Cavus-specified name; used instead of the it-project default `rfc/<ver>` pattern)  
 **Pre-change SHA (origin/main after sync):** `0d88905a569e2f997bbdf7146eb398749ae93c24`  
 **Date:** 15 Nov 2026 (Africa/Johannesburg)  
-**Repo:** https://github.com/GrokForum/mediawatch-sa (PUBLIC). Pushing publishes. No push, no PR, and nothing committed to `main` in this change.
+**Repo:** https://github.com/GrokForum/mediawatch-sa (PUBLIC). Pushing publishes. Nothing committed to `main` in this change.
+
+**Push log:** Branch pushed at `f74158a9fbe9d5a8b864895d668c567525c10164` and opened as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1) on 15 Nov 2026 20:50 SAST (pushed and opened by Cavus under the reviewed flow). Nothing merged to `main`; later commits stay local until the owner's GO on that exact head.
 
 ---
 
