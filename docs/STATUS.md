@@ -117,3 +117,4 @@ Seed `seed/cassian-news24-bias-meter.md` (gitignored): **0** calls mapped to fin
 | Date (Africa/Johannesburg) | RFC | Env | Result | Rollback SHA |
 |----------------------------|-----|-----|--------|--------------|
 | 2026-11-15 | CHG-MW-001 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `0d88905a569e2f997bbdf7146eb398749ae93c24` |
+| 2026-11-15 | CHG-MW-002 | DEV (plan only, same branch; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `0d88905a569e2f997bbdf7146eb398749ae93c24` |
