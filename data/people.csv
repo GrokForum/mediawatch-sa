@@ -1,6 +1,6 @@
 id,full_name,role,publication_id,x_handle,x_user_id,x_handle_source_url,x_handle_checked_on,notes
 adriaan_basson,Adriaan Basson,Editor-in-chief,news24,AdriaanBasson,189506833,https://x.com/AdriaanBasson (X API get_users_by_username 2026-11-05; bio: News24 editor-in-chief),2026-11-05,Public role only. X bio Proven via API.
-pieter_du_toit,Pieter du Toit,Assistant Editor: Investigations,news24,PieterDuToit,32115555,https://x.com/PieterDuToit (X API 2026-11-05; bio names News24),2026-11-05,Public role only. Subject of AGOA SA Case 1.
+pieter_du_toit,Pieter du Toit,Assistant Editor: Investigations,news24,PieterDuToit,32115555,https://x.com/PieterDuToit (X API 2026-11-05; bio names News24),2026-11-05,Public role only. News24 Assistant Editor: Investigations; X handle API-verified from public profile.
 kyle_cowan,Kyle Cowan,Investigative journalist,news24,CowansView,575423236,https://x.com/CowansView (X API get_users_by_username 2026-11-05; bio: Investigative journalist @News24),2026-11-05,Public role only. Named News24 investigations byline; also News24 team page (@CowansView).
 jillian_green,Jillian Green,Editor-in-chief,daily_maverick,,,,2026-11-05,X handle not verified this pass — leave blank until public source confirmed.
 lance_witten,Lance Witten,Editor (IOL) / Editor-in-chief,iol,,,,2026-11-05,X handle not verified this pass.
