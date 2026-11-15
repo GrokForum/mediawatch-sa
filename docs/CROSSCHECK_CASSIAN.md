@@ -49,10 +49,10 @@ Window sample (Wayback OG + one Ombud primary):
 
 | Piece | Date | Frame | Coding |
 |-------|------|-------|--------|
-| City Power spokesperson article | 24 May 2026 | counter_pull | **AGAINST City Power** via `factual_error` (−2): Ombud found disinformation-campaign-as-fact (and two related claims) breached Press Code 1.3/3.3; apology ordered. Other complaints dismissed. |
+| City Power spokesperson article | 24 May 2026 (page date; date-only) | counter_pull | **AGAINST City Power** via `factual_error` (−2): Ombud found disinformation-campaign-as-fact (and two related claims) breached Press Code 1.3/3.3; apology ordered. Other complaints dismissed. |
 | AfriForum “money machine” | 26 Jul 2026 (page date; date-only) | purposive | **AGAINST AfriForum** via `framing` (−1): “money machine” / “splurges” headline diction. Overlaps Basson X amplification already in pilot. |
 | Orania R108m “take over” | 6 Sep 2026 (page date; date-only) | purposive | **AGAINST AfriForum** and **Solidarity** via `framing` (−1 each). |
-| IDAC 700 days | 18 Jul 2026 | purposive | **AGAINST IDAC** via `framing` (−1, borderline): OG “credibility crisis” language; body locked. |
+| IDAC 700 days | 19 Jul 2026 (page date; date-only) | purposive | **AGAINST IDAC** via `framing` (−1, borderline): OG “credibility crisis” language; body locked. |
 | Mashatile son-in-law payback | 2 Sep 2026 | purposive | **balanced_control** (accountability) — payback after exposé; private debtor not scored and not named here. |
 | SSA / EFF declassified | 25 Oct 2026 | purposive | **balanced_control** (accountability) — document-led state-capture reporting from available text. |
 | Reporting notes (Thebe) | 14 Jun 2026 | purposive | **balanced_control** (method note) — interview about prior story, no driver in OG. |
