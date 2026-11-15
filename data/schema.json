@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mediawatch.sa.local/schema/v0.1-draft",
-  "title": "MediaWatch SA",
-  "description": "publication > person > article|public_post > finding. Cavus defaults 5 Nov 2026. target_inferred for AfriMAGA tagging.",
+  "$id": "https://mediawatch.sa.local/schema/v0.4-draft",
+  "title": "MediaWatch SA data schema v0.4-draft (primary + secondary lean)",
+  "description": "Primary: FOR/AGAINST named actors (findings, scores). Secondary: left/right lean_scores derived from findings × actor_axis_map — kept separate. Draft only.",
   "type": "object",
   "properties": {
     "publications": {
@@ -342,9 +342,13 @@
             "type": "number"
           },
           "signed_score": {
-            "type": "number",
+            "type": [
+              "number",
+              "null"
+            ],
             "minimum": -2,
-            "maximum": 2
+            "maximum": 2,
+            "description": "Signed primary score (−2…+2). Null when accountability_exempt (finding recorded but excluded from numeric primary score)."
           },
           "methodology_version": {
             "type": "string"
@@ -353,7 +357,11 @@
             "type": "string"
           },
           "credit": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional credit (e.g. AGOA SA casebook). Null when none."
           },
           "created_at": {
             "type": "string"
@@ -368,8 +376,51 @@
               "null"
             ],
             "description": "Context line proving who AfriMAGA refers to"
+          },
+          "sample_frame": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "keyword",
+              "neutral_random",
+              "counter_pull",
+              "external_seed",
+              null
+            ],
+            "description": "How the item entered the sample."
+          },
+          "accountability_status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "bias",
+              "borderline",
+              "accountability_exempt",
+              "accountability",
+              "neutral_method",
+              null
+            ],
+            "description": "§8b accountability coding. accountability_exempt ⇒ signed_score may be null."
           }
         }
+      }
+    },
+    "actor_axis_map": {
+      "type": "array",
+      "description": "Published actor→axis placements (also data/actor_axis_map.csv)",
+      "items": {
+        "$ref": "#/$defs/actor_axis_row"
+      }
+    },
+    "lean_scores": {
+      "type": "array",
+      "description": "SECONDARY meter only. Never mix with primary scores. Derived: contribution = signed_score * actor_axis / 2; mean; clamp −2..+2. See docs/LEFT_RIGHT_METHOD.md.",
+      "items": {
+        "$ref": "#/$defs/lean_score_entity"
       }
     }
   },
@@ -383,6 +434,153 @@
         "Disputed",
         "Not established"
       ]
+    },
+    "actor_axis_row": {
+      "type": "object",
+      "required": [
+        "actor",
+        "placement_contested",
+        "rationale",
+        "sources"
+      ],
+      "properties": {
+        "actor": {
+          "type": "string"
+        },
+        "economic_axis": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "-2 state/redistribution … +2 market; null = unmapped"
+        },
+        "social_axis": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -2,
+          "maximum": 2
+        },
+        "placement_contested": {
+          "enum": [
+            "no",
+            "partial",
+            "yes",
+            "n/a"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "string"
+        }
+      }
+    },
+    "lean_score_entity": {
+      "type": "object",
+      "required": [
+        "entity_type",
+        "entity_id",
+        "pooled",
+        "secondary_view_banner"
+      ],
+      "properties": {
+        "entity_type": {
+          "enum": [
+            "publication",
+            "person"
+          ]
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "display_label": {
+          "type": "string"
+        },
+        "secondary_view_banner": {
+          "type": "string",
+          "const": "Secondary view: left/right lean (reader convenience). The primary measure is for/against named actors."
+        },
+        "pooled": {
+          "$ref": "#/$defs/lean_rollup"
+        },
+        "by_sample_frame": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/lean_rollup"
+          }
+        },
+        "direct_lean_label_signals": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "direct_lean_label_signals_folded_into_score": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "lean_rollup": {
+      "type": "object",
+      "required": [
+        "n_included",
+        "flag"
+      ],
+      "properties": {
+        "n_included": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "flag": {
+          "enum": [
+            "findings_only",
+            "provisional",
+            "full"
+          ]
+        },
+        "lean_economic": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -2,
+          "maximum": 2
+        },
+        "lean_social": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -2,
+          "maximum": 2
+        },
+        "lean_composite": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -2,
+          "maximum": 2
+        },
+        "share_contested_placements": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
     }
   }
 }
