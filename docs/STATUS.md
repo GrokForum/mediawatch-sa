@@ -119,3 +119,4 @@ Seed `seed/cassian-news24-bias-meter.md` (gitignored): **0** calls mapped to fin
 | 2026-11-15 | CHG-MW-002 | DEV (plan only, same branch; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `d3ca635d4ff54e25e287ef3a7249fc9102b57220` (or revert `9515e9ce65d41e74bc090d49237c196d6eb7ecdd`) |
 | 2026-11-15 | CHG-MW-001 review fixes | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `9515e9ce65d41e74bc090d49237c196d6eb7ecdd` |
 | 2026-11-15 | CHG-MW-001 review fixes 2 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `55534683a8ef6134c3a03c4b265e44561288b610` |
+| 2026-11-15 | CHG-MW-001 push log | Branch pushed at `f74158a` as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1), 20:50 SAST; not merged | PENDING owner GO for merge | close PR #1 / delete remote branch |
