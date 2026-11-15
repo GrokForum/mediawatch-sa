@@ -7,7 +7,7 @@
 **Date:** 15 Nov 2026 (Africa/Johannesburg)  
 **Repo:** https://github.com/GrokForum/mediawatch-sa (PUBLIC). Pushing publishes. Nothing committed to `main` in this change.
 
-**Push log:** Branch pushed at `f74158a9fbe9d5a8b864895d668c567525c10164` and opened as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1) on 15 Nov 2026 20:50 SAST (pushed and opened by Cavus under the reviewed flow). Nothing merged to `main`; later commits stay local until the owner's GO on that exact head.
+**Push log:** Branch pushed at `f74158a9fbe9d5a8b864895d668c567525c10164` and opened as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1) on 15 Nov 2026 20:50 SAST (pushed and opened by Cavus under the reviewed flow). Nothing merged to `main`; Later pushes to this branch need the owner's GO on the exact head. The current head is the head of PR #1.
 
 ---
 
