@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Draft secondary lean scores",
-    "updated_at_sast": "2026-11-15T20:50:00+02:00",
+    "updated_at_sast": "2026-11-15T20:55:00+02:00",
     "methodology": "docs/LEFT_RIGHT_METHOD.md",
     "actor_axis_map": "data/actor_axis_map.csv",
     "formula": "contribution_axis = signed_score * actor_axis_value / 2; lean_axis = clamp(mean(contributions), -2, +2); lean_composite = mean(lean_economic, lean_social). FOR shifts toward actor placement; AGAINST shifts away (via signed_score sign).",
@@ -21,7 +21,8 @@
     "draft": true,
     "accountability_exempt_treatment": "Findings with signed_score null (accountability_exempt) are included in n_included with contribution 0 when the actor is mapped, preserving the treatment used on 5 Nov 2026.",
     "findings_only_treatment": "When flag is findings_only (n_included < 5), lean_economic, lean_social and lean_composite are stored as null. Raw means are not stored; they can be recomputed from audit_contributions. Numeric lean is not shown.",
-    "cowan_frame_note": "Cowan sample relabelled 15 Nov 2026: KC-01 counter_pull; other coded Cowan findings purposive. Not a neutral_random draw."
+    "cowan_frame_note": "Cowan sample relabelled 15 Nov 2026: KC-01 counter_pull; other coded Cowan findings purposive. Not a neutral_random draw.",
+    "rounding_rule": "Axis means (lean_economic, lean_social) and lean_composite are computed from unrounded values: lean_composite = mean(lean_economic, lean_social) before rounding. Each displayed lean is rounded to 3 decimal places only at output. Do not average already-rounded axis scores."
   },
   "lean_scores": [
     {
@@ -45,7 +46,7 @@
           "flag": "provisional",
           "lean_economic": 0.153,
           "lean_social": 0.014,
-          "lean_composite": 0.084,
+          "lean_composite": 0.083,
           "share_contested_placements": 0.889
         },
         "keyword": {
@@ -54,7 +55,7 @@
           "flag": "full",
           "lean_economic": -0.232,
           "lean_social": -0.561,
-          "lean_composite": -0.397,
+          "lean_composite": -0.396,
           "share_contested_placements": 0.914
         },
         "neutral_random": {
@@ -983,7 +984,7 @@
           "flag": "full",
           "lean_economic": 0.466,
           "lean_social": 0.319,
-          "lean_composite": 0.393,
+          "lean_composite": 0.392,
           "share_contested_placements": 0.8
         },
         "neutral_random": {

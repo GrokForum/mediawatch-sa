@@ -21,7 +21,7 @@ Commit, locally only, the unpushed catch-up already done in the working tree aft
 
 1. Legitimate free paywall recovery on the News24 register, with method note and recode of one full-body recovery.
 2. Cassian News24 bias-meter cross-check: seed stays gitignored and reference-only; zero calls imported as findings; three references logged.
-3. Kyle Cowan added as a public-role News24 journalist, with a neutral May–Oct 2026 sample.
+3. Kyle Cowan added as a public-role News24 journalist, with a purposive May–Oct 2026 investigations sample (KC-01 counter_pull).
 4. Two meters, kept separate: **PRIMARY** remains the owner's FOR/AGAINST named-actor meter; **SECONDARY** is a left/right lean for reader convenience, with its own method, map, schema and draft scores, never mixed into primary scores.
 
 ---
@@ -102,7 +102,7 @@ Pre-change SHA: `0d88905a569e2f997bbdf7146eb398749ae93c24`.
 - News24 findings and meta still carry `methodology_version: 0.3-draft` because primary coding rules did not change; the document is 0.4-draft for the secondary meter.
 - Historical "Gaps" in `docs/STATUS.md` still say some early items were missing; later sections and this RFC supersede that.
 - `index.html` placeholder, HTTPS/CNAME, and the unused SQLite instantiation.
-- Article IDs such as `A-N24-KC-2026-07-25-MONEY` and `A-N24-KC-2026-09-05-ORANIA` keep the URL-slug date; `published_at` is the page date (26 Jul / 6 Sep) with `published_at_precision=date`. The IDAC page date (19 Jul vs stored 18 Jul) was not in the review-fix list and is unchanged.
+- Article IDs such as `A-N24-KC-2026-07-25-MONEY`, `A-N24-KC-2026-09-05-ORANIA` and `A-N24-KC-2026-07-18-IDAC` keep the URL-slug date; `published_at` is the page date (26 Jul / 6 Sep / 19 Jul) with `published_at_precision=date`. KC-01 (24 May) is also date-only, verified on the page capture.
 - Scripts already on `main` still use `Path("/workspace/mediawatch-sa/data")` (inside this project, not an outside-bot path).
 
 ---
@@ -154,6 +154,15 @@ A second commit on this branch addresses the review. It does not amend the first
 11. KC-02–KC-04 `published_at` set to the page dates 26 Jul and 6 Sep, with `published_at_precision=date`.
 12. Other bots’ `/workspace/…` paths removed from `docs/STATUS.md`; hub path in STATUS and METHODOLOGY is now relative `plan.md`.
 13. `people.csv` du Toit note is public-role only; no internal AGOA casebook reference.
+
+## Review fixes 2 (15 Nov 2026, after second Cavus PASS_WITH_CONCERNS)
+
+A third catch-up commit on this branch (does not amend). Rollback of **only** this commit is revert of it (parent `55534683a8ef6134c3a03c4b265e44561288b610`).
+
+1. Goal 3 now says “a purposive May–Oct 2026 investigations sample (KC-01 counter_pull)”.
+2. `data/news24_pilot_findings.csv` and `data/people.csv` restored to CRLF to match the other CSVs on `main`. No `.gitattributes`; `core.autocrlf` is unset.
+3. Lean composites recomputed from unrounded axis means; round to 3 d.p. only at output (documented in `docs/LEFT_RIGHT_METHOD.md` and lean meta). News24 keyword is −0.396 and counter_pull is 0.083 again.
+4. IDAC `published_at` corrected to 19 Jul 2026 (page date on Wayback 20260722120532). KC-01 (24 May) and KC-05 marked `published_at_precision=date` after the same page-date check.
 
 **Status remains: PENDING REVIEW (Cavus, Cassian) and owner GO.**
 
