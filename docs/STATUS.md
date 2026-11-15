@@ -102,3 +102,18 @@ Named people are journalists/editors in public roles; X handles only where API-v
 - data/dailyinvestor_pilot_findings.json|.csv (19 findings)
 - data/newsday_pilot_findings.json|.csv (23 findings)
 - Window May–Oct 2026; draft only — no login/publish/push.
+
+## Paywall recovery pass (2026-11-05 SAST)
+
+Legitimate free recovery on `data/paywall_register.csv` (21 News24 rows): **2 full** (Wayback unlocked), **12 partial** (Wayback paywall shells / OG), **7 still_blocked**. No bypass/login/UA-spoof. Method note: `docs/FREE_ACCESS.md`. Recoded F-N24-FAV-ESKOM-01 evidence/quote from Wayback full body; JG-01/02 remain headline/lede-only (partial). Draft only; no git push.
+
+## Cassian seed cross-check (5 Nov 2026 SAST)
+
+Seed `seed/cassian-news24-bias-meter.md` (gitignored): **0** calls mapped to findings (no checkable examples); **3** kept in `data/external_references.json`. Lean/Ground News axes **not** imported. Kyle Cowan added to `people.csv`; neutral sample 7 articles → 5 findings + 3 balanced_controls. See `docs/CROSSCHECK_CASSIAN.md`. Draft only; no git push.
+
+
+## Change log
+
+| Date (Africa/Johannesburg) | RFC | Env | Result | Rollback SHA |
+|----------------------------|-----|-----|--------|--------------|
+| 2026-11-15 | CHG-MW-001 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `0d88905a569e2f997bbdf7146eb398749ae93c24` |
