@@ -125,6 +125,23 @@ If any gate fails → omit or mark `verification_status = unverified` and exclud
 
 ---
 
+## 5a. Free public content only (owner rule, 17 Nov 2026)
+
+Bias is judged **only on what the public can read free**. Paywalled articles are **out of the sample** and **never scored**. A headline, standfirst, OG description or other teaser **never stands in for the body** of a paywalled piece. No subscriptions, logins, user-agent spoofing, paywall-script stripping or bypass services, ever.
+
+How it is applied:
+
+1. A finding is **excluded** (not shown on the site, not counted in any score or *n*) when it rests on a piece that is paywalled at source: the finding has an `access_limit`, its article's `access` is not a free-access value, its `access_note` records a paywall, or its URL is in `data/paywall_register.csv`.
+2. Excluded findings are listed in `data/paywall_exclusions.csv` (finding id, reason, access basis, date). Evidence rows stay in the findings files for audit; nothing is deleted.
+3. A body recovered later from an archive (for example Wayback) of a piece that is paywalled at source is **excluded too**, pending an owner decision (RFC-CHG-MW-002 open question h).
+4. A journalist's own **public post** (for example on X) is free content and is judged on the post text only, even when it links to a paywalled article. It never borrows the paywalled body or teaser as evidence.
+5. Free registration walls (Daily Investor "free after register") are not paywalls, but this project still codes without registering.
+6. Outlets with little free content show **findings only** if they cannot reach minimum *n*.
+
+The site generator (`scripts/build_site.py`) applies the same rule and the test suite checks it.
+
+---
+
 ## 6. Roll-up rules
 
 ### 6.1 Article / public_post score (per actor)

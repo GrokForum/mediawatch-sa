@@ -7,6 +7,12 @@
 
 Canonical links always stay the outlet URL. Archived or companion copies are **evidence**, not replacements.
 
+## Standing rule: no paywalled content, ever (owner, 17 Nov 2026)
+
+Bias is judged **only on what the public can read free**. Paywalled articles are **out of the sample** and **never scored**. A headline, standfirst, OG description or other teaser **never stands in for the body** of a paywalled piece. No subscriptions, logins, user-agent spoofing, paywall-script stripping or bypass services, ever.
+
+This supersedes the earlier practice in this note of coding a paywalled piece from its headline, OG description or standfirst, and of treating an archived copy of a paywalled body as a substitute. The routes below are kept as history and for checking **free** pieces only. Whether an archived copy of a piece paywalled at source may ever count is an open owner question (RFC-CHG-MW-002, question h); until then such findings are excluded. See `docs/METHODOLOGY.md` §5a and `data/paywall_exclusions.csv`.
+
 ---
 
 ## What worked this pass (News24 paywall_register)
@@ -77,5 +83,5 @@ This is a **legitimate licensed** route, not a bypass: access is tied to library
 2. Check for an existing archive.today snapshot (read only).  
 3. Search for a verbatim republication on a free site (e.g. MSN, Politicsweb, Netwerk24, Maroela) — related coverage of the same event is not a substitute for the same copy.  
 4. Search the author’s public X posts near the pub date for gift/share links.  
-5. If still blocked: code from headline/OG/standfirst only, mark `access_limit`, register the URL in `paywall_register.csv`, and move on — **do not** buy a subscription for the owner and **do not** use bypass tooling.
+5. If the piece is paywalled at source: **do not code it.** Register the URL in `paywall_register.csv`, leave it out of the sample, and move on. Headlines and teasers never stand in for the body (owner rule, 17 Nov 2026). **Do not** buy a subscription for the owner and **do not** use bypass tooling.
 
