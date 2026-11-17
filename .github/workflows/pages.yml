@@ -1,0 +1,53 @@
+# RFC-CHG-MW-002 option A: build the static site from main and deploy it to
+# GitHub Pages (custom domain mediawatch.grokforum.site, set in Pages settings).
+# Indexing stays off: robots.txt is Disallow-all and every page is noindex.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python scripts/build_site.py --out _site
+      - run: python -m pytest -q
+      - name: Check no indexing
+        run: |
+          set -eu
+          printf 'User-agent: *\nDisallow: /\n' | cmp - _site/robots.txt
+          total=$(find _site -name '*.html' | wc -l)
+          tagged=$(grep -rl --include='*.html' '<meta name="robots" content="noindex, nofollow">' _site | wc -l)
+          echo "html=$total noindex=$tagged"
+          test "$total" -gt 0 && test "$total" -eq "$tagged"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
