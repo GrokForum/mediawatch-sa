@@ -149,8 +149,9 @@ def test_no_external_assets_or_scripts(site):
 
 
 def test_live_placeholder_untouched():
-    r = subprocess.run(["git", "diff", "--quiet", "c4f6e11", "--", "index.html", "CNAME"], cwd=ROOT)
-    assert r.returncode == 0, "root index.html / CNAME changed versus c4f6e11"
+    # 0280f59 last changed index.html/CNAME; it is unchanged by both history rewrites.
+    r = subprocess.run(["git", "diff", "--quiet", "0280f59", "--", "index.html", "CNAME"], cwd=ROOT)
+    assert r.returncode == 0, "root index.html / CNAME changed versus 0280f59"
 
 
 # ------------------------------------------------------------------ paywall exclusion

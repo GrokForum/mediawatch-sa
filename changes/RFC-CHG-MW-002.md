@@ -1,17 +1,17 @@
 # RFC-CHG-MW-002 — Drill-down site: generator scaffold and three-outlet pilot (DEV build)
 
-**Status:** PENDING REVIEW (Cavus, Cassian) and owner GO  
-**Environment:** DEV — local branch `dev/chg-mw-002-site`, built and viewed locally only. Not pushed, no PR, no change to `main`, GitHub Pages, DNS or the live `index.html` placeholder.  
-**Branch:** `dev/chg-mw-002-site` (local; used instead of `rfc/<ver>` to match the project's existing `dev/chg-mw-*` naming)  
-**Pre-change SHA (rollback base):** `c4f6e11567b2af370ec6703017c95eb331262fd6` (`main` after the PR #1 merge; pre-merge snapshot tag `snapshot-2026-11-17-pre-pr1` = `0d88905`)  
+**Status:** Owner GO to review and merge, and GO to switch GitHub Pages to the generated site, given 17 Nov 2026 20:01 SAST. Owner NO GO on search-engine indexing: `robots.txt` stays `Disallow: /` and every page keeps `noindex, nofollow`.  
+**Environment:** DEV — branch `dev/chg-mw-002-site-rw2`, rebuilt on `main` `d1029af` after the second history rewrite (17 Nov 2026). This RFC itself changes no GitHub Pages setting, DNS or the live `index.html` placeholder; the Pages switch is a separate deployment step.  
+**Branch:** `dev/chg-mw-002-site-rw2` (used instead of `rfc/<ver>` to match the project's existing `dev/chg-mw-*` naming)  
+**Pre-change SHA (rollback base):** `d1029af164f1fb8a150360f877e7c58b021ed92c` (`main` after the INC-MW-001 merge, as rewritten on 17 Nov 2026). Earlier SHAs in this file (`c4f6e11`, `0d88905`) predate the history rewrites.  
 **Date:** 17 Nov 2026 (Africa/Johannesburg)  
 **Repo:** https://github.com/GrokForum/mediawatch-sa (PUBLIC). Production URL (unchanged by this RFC): https://mediawatch.grokforum.site
 
-History: on 15 Nov this RFC was a plan only (six open questions). It was merged to `main` as plan text with PR #1. This revision records the owner's answers (relayed by Cavus on 17 Nov) and adds the first DEV build. A GO to merge this branch is **not** a GO to deploy the site or to remove `noindex`; each needs its own GO.
+History: on 15 Nov this RFC was a plan only (six open questions). It was merged to `main` as plan text with PR #1. This revision records the owner's answers (relayed by the orchestrator on 17 Nov) and adds the first DEV build. A GO to merge this branch is **not** a GO to deploy the site or to remove `noindex`; each needs its own GO.
 
 ---
 
-## Owner answers (17 Nov 2026, relayed by Cavus)
+## Owner answers (17 Nov 2026, relayed by the orchestrator)
 
 | # | Question (15 Nov) | Owner answer |
 |---|-------------------|--------------|
@@ -60,7 +60,7 @@ A static drill-down site, **publication → writer/editor → article or public 
 | `docs/STATUS.md` | Two change-log rows: the PR #1 merge (17 Nov) and this DEV build. |
 | `README.md` | Short "Build and test locally" section. |
 
-**What stays:** root `index.html` (the live "coming soon" placeholder) and `CNAME` are byte-identical to `c4f6e11` (a test checks this). No findings, people, publications, schema, paywall register or lean files are edited. GitHub settings, Pages and DNS are untouched.
+**What stays:** root `index.html` (the live "coming soon" placeholder) and `CNAME` are byte-identical to `0280f59` (the commit that last changed them; a test checks this). No findings, people, publications, schema, paywall register or lean files are edited. GitHub settings, Pages and DNS are untouched.
 
 ---
 
@@ -155,7 +155,7 @@ Mostly paywalled outlets are covered on free content only. Where too little is f
 
 - Journalists, editors, desk accounts and public figures appear in their public role only. Writer pages show name, public role and, where verified, the public X handle. No X user ids, no contact details.
 - Private individuals are never named. The junior City Power employee appears in no output. F-N24-KC-01, which concerns City Power, is excluded under the paywall rule anyway. A local-only (gitignored) denylist test checks the output for that name without committing it.
-- Internal working fields are never rendered: evidence notes, coder, credit, recovery URLs, OG and standfirst teasers, post metrics. A few steelman strings carried an internal reviewer note ("→ Cavus: …"). The generator strips those notes at render time; the data files are unchanged (see "Seen, not touched").
+- Internal working fields are never rendered: evidence notes, coder, credit, recovery URLs, OG and standfirst teasers, post metrics. A few steelman strings carried an internal reviewer note (an arrow followed by a reviewer name). The generator strips those notes at render time; the data files are unchanged (see "Seen, not touched").
 - The output contains no paths or text from `seed/`, `data/fetched_articles/`, internal working paths or other bots' paths. Tests check for 300-character runs of any locally fetched article body (none found) and that neither folder is tracked by git.
 - popia-review verdict for this change: see "Sign-off and result" below.
 
@@ -173,7 +173,7 @@ Schema validation (`python scripts/validate_schema.py`): News24 findings, `peopl
 
 ## Rollback
 
-Nothing reaches PROD from this RFC. To roll back DEV, delete the local branch (`git branch -D dev/chg-mw-002-site`) or `git reset` it to `c4f6e11`. If this branch is later merged on a GO, revert the merge commit on `main`. The live site keeps showing the placeholder either way, because this RFC does not deploy. No `.bkp` files.
+Nothing reaches PROD from this RFC. To roll back DEV, delete the local branch (`git branch -D dev/chg-mw-002-site`) or `git reset` it to `d1029af`. If this branch is later merged on a GO, revert the merge commit on `main`. The live site keeps showing the placeholder either way, because this RFC does not deploy. No `.bkp` files.
 
 ---
 
@@ -194,7 +194,7 @@ j. **Public evidence notes:** `evidence_notes` hold working notes (reviewer name
 
 ## Seen, not touched
 
-- **Live PROD exposure since the PR #1 merge (needs its own incident RFC and GO).** The legacy Jekyll build publishes the repo root of `main`. On 17 Nov 2026 (about 11:05 SAST), public GETs returned HTTP 200 for `/data/lean_scores_draft.json`, `/data/news24_pilot_findings.json`, `/docs/LEFT_RIGHT_METHOD` (Jekyll-rendered with SEO tags, no noindex), `/docs/CROSSCHECK_CASSIAN`, `/docs/METHODOLOGY` and `/plan`. There is no `robots.txt` (404). So the hidden secondary meter and draft working files are reachable and indexable on mediawatch.grokforum.site, not only in the GitHub repo. Suggested fix, for a separate RFC: a root `_config.yml` with `exclude:` for `data/`, `docs/`, `changes/`, `plan.md`, `scripts/`, `site/`, `tests/`, `README.md`, `requirements.txt`, plus a root `robots.txt` with `Disallow: /`. Or deployment option A above, which ends repo-root publishing.
+- **Live PROD exposure since the PR #1 merge (needs its own incident RFC and GO).** The legacy Jekyll build publishes the repo root of `main`. On 17 Nov 2026 (about 11:05 SAST), public GETs returned HTTP 200 for `/data/lean_scores_draft.json`, `/data/news24_pilot_findings.json`, `/docs/LEFT_RIGHT_METHOD` (Jekyll-rendered with SEO tags, no noindex), `/docs/CROSSCHECK_*`, `/docs/METHODOLOGY` and `/plan`. There is no `robots.txt` (404). So the hidden secondary meter and draft working files are reachable and indexable on mediawatch.grokforum.site, not only in the GitHub repo. Suggested fix, for a separate RFC: a root `_config.yml` with `exclude:` for `data/`, `docs/`, `changes/`, `plan.md`, `scripts/`, `site/`, `tests/`, `README.md`, `requirements.txt`, plus a root `robots.txt` with `Disallow: /`. Or deployment option A above, which ends repo-root publishing.
 - **Git history:** the junior City Power employee's surname was removed from the tree in CHG-MW-001, but it is still in commit `d3ca635`, now part of `main`'s public history. Removing it needs a history rewrite and force-push (destructive; owner decision).
 - Actor names vary across files ("Ramaphosa" vs "Cyril Ramaphosa", "Trump/US" vs "Trump / US government"), which splits scorecards. Normalising them is a data change.
 - `people.csv` lacks four bylined News24 journalists (Jan Gerber, Emsie Ferreira, Siyamtanda Capa, Bongekile Macupe). The site falls back to the published byline with role "Journalist (byline)". Only Macupe currently has a rendered finding.
@@ -207,8 +207,8 @@ j. **Public evidence notes:** `evidence_notes` hold working notes (reviewer name
 
 ## Sign-off and result
 
-Author: Grok Bot (MediaWatch SA executor). Sign-off is needed from Cavus and Cassian (expert, shadow, charter and drift checks), then the owner's GO on the exact head before any push.
+Author: Grok Bot (MediaWatch SA executor). Sign-off by two reviewers (expert, shadow, charter and drift checks) on the exact head; owner GO to merge given 17 Nov 2026 20:01 SAST.
 
 popia-review (17 Nov 2026): **PASS** for this change and its generated output. Items found and handled: the junior City Power employee is not in the output; internal reviewer-name fragments in three steelmen are stripped at render; X user ids are not rendered. Items outside this change are listed under "Seen, not touched": the live Jekyll exposure, and the surname in git history.
 
-**Result: PENDING REVIEW (Cavus, Cassian) and owner GO.** Nothing pushed.
+**Result:** owner GO to merge given 17 Nov 2026 20:01 SAST; the review and merge are recorded on the pull request.
