@@ -4,7 +4,7 @@
 
 | Deliverable | Path | Notes |
 |-------------|------|-------|
-| Hub plan | `/workspace/mediawatch-sa/plan.md` | Publications + sampling, scoring summary, schema drill path, worked example |
+| Hub plan | `plan.md` | Publications + sampling, scoring summary, schema drill path, worked example |
 | Methodology | `docs/METHODOLOGY.md` | −2…+2 per actor, driver weights, min *n*, confidence, steelman, POPIA |
 | SQL schema | `data/schema.sql` | publication → person → article\|public_post → finding (+ score_runs) |
 | JSON schema | `data/schema.json` | Same model for website/API validation |
@@ -24,12 +24,11 @@ News24 EiC **Adriaan Basson** (@AdriaanBasson) and Assistant Editor **Pieter du 
 3. Basson RT 10:59:57 SAST of du Toit — amplification finding.  
 4. Basson 18:31:22 SAST — AfriMAGA gang / Trump's dying star — loaded_label.
 
-### Workspace search (related files)
+### Related seeds
 
-- **Present seed:** `mediawatch-sa/seed/agoa-sa-bias-casebook-2026-11-05.md` (AGOA SA casebook).  
+- **Present seed (gitignored):** `seed/agoa-sa-bias-casebook-2026-11-05.md` (AGOA SA casebook).  
 - **Seed sources:** AGOA SA casebook (credited); private seed material is kept out of this repo.
-- **Cassian refs elsewhere (not bias-meter data):** `/workspace/ktb/cassian-brief-2026-11-02.md`, `/workspace/cavus/cassian-asks.md` — not imported.  
-- **Cassian's News24 bias meter:** **not found** under `seed/` or obvious `/workspace` paths this pass.
+- **Cassian's News24 bias meter:** later located in the gitignored seed; reference only (see the Cassian seed cross-check below). Other internal briefs were checked and not imported.
 
 ### Seed format → schema map (AGOA casebook)
 
@@ -102,3 +101,22 @@ Named people are journalists/editors in public roles; X handles only where API-v
 - data/dailyinvestor_pilot_findings.json|.csv (19 findings)
 - data/newsday_pilot_findings.json|.csv (23 findings)
 - Window May–Oct 2026; draft only — no login/publish/push.
+
+## Paywall recovery pass (2026-11-05 SAST)
+
+Legitimate free recovery on `data/paywall_register.csv` (21 News24 rows): **2 full** (Wayback unlocked), **12 partial** (Wayback paywall shells / OG), **7 still_blocked**. No bypass/login/UA-spoof. Method note: `docs/FREE_ACCESS.md`. Recoded F-N24-FAV-ESKOM-01 evidence/quote from Wayback full body; JG-01/02 remain headline/lede-only (partial). Draft only; no git push.
+
+## Cassian seed cross-check (5 Nov 2026 SAST)
+
+Seed `seed/cassian-news24-bias-meter.md` (gitignored): **0** calls mapped to findings (no checkable examples); **3** kept in `data/external_references.json`. Lean/Ground News axes **not** imported. Kyle Cowan added to `people.csv`; 11 pieces fetched, 7 coded (5 findings + 3 balanced_controls); not a random draw (see `docs/CROSSCHECK_CASSIAN.md`). See `docs/CROSSCHECK_CASSIAN.md`. Draft only; no git push.
+
+
+## Change log
+
+| Date (Africa/Johannesburg) | RFC | Env | Result | Rollback SHA |
+|----------------------------|-----|-----|--------|--------------|
+| 2026-11-15 | CHG-MW-001 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `0d88905a569e2f997bbdf7146eb398749ae93c24` |
+| 2026-11-15 | CHG-MW-002 | DEV (plan only, same branch; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `d3ca635d4ff54e25e287ef3a7249fc9102b57220` (or revert `9515e9ce65d41e74bc090d49237c196d6eb7ecdd`) |
+| 2026-11-15 | CHG-MW-001 review fixes | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `9515e9ce65d41e74bc090d49237c196d6eb7ecdd` |
+| 2026-11-15 | CHG-MW-001 review fixes 2 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `55534683a8ef6134c3a03c4b265e44561288b610` |
+| 2026-11-15 | CHG-MW-001 push log | Branch pushed at `f74158a` as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1), 20:50 SAST; docs-only `1a726a0` pushed to the same branch 15 Nov 22:53 SAST; not merged | PENDING owner GO for merge | close PR #1 / delete remote branch |

@@ -21,7 +21,7 @@ This file is the hub. Supporting artefacts:
 
 ## Project rules (owner, binding)
 
-1. **No left/right labels.** Bias is recorded as **FOR** or **AGAINST** named actors (e.g. ANC, DA, EFF, MK Party, AfriForum, Solidarity, SAAI, Trump / US government), judged case by case.
+1. **Two meters, kept separate.** **PRIMARY** bias is **FOR** or **AGAINST** named actors (e.g. ANC, DA, EFF, MK Party, AfriForum, Solidarity, SAAI, Trump / US government), judged case by case — unchanged. **SECONDARY** is a left/right lean offered as reader convenience only (`docs/LEFT_RIGHT_METHOD.md`, `data/actor_axis_map.csv`, `data/lean_scores_draft.json`); banner + SA-contested caveat required; never mixed into primary scores.
 2. **Drivers per finding:** loaded labels (e.g. "AfriMAGA", "far-right"), one-sided sourcing, missing right of reply, omission, framing, headline vs body gap, factual errors and corrections.
 3. **Evidence:** every finding quotes the exact line and links the source URL. Steelman both sides.
 4. **Fact labels (only these five):** Proven, Established, Alleged, Disputed, Not established.
@@ -89,7 +89,7 @@ Full detail: `docs/METHODOLOGY.md`.
 
 | Field | Content |
 |-------|---------|
-| `actor` | Named actor (no left/right spectrum) |
+| `actor` | Named actor (primary FOR/AGAINST; secondary lean derived via axis map) |
 | `direction` | `FOR` \| `AGAINST` |
 | `driver` | One of: `loaded_label`, `one_sided_sourcing`, `missing_right_of_reply`, `omission`, `framing`, `headline_body_gap`, `factual_error`, `correction` |
 | `quote` | Exact line(s) |
@@ -186,7 +186,7 @@ Bios on X name News24 (Proven, X API 5 Nov 2026).
 
 - Public-post path in the schema (not only articles).  
 - Editor amplification (original + RT) under the same publication.  
-- Loaded pejorative without left/right spectrum.  
+- Loaded pejorative coded on the **primary** FOR/AGAINST meter (secondary lean is a separate derived view).  
 - Reuse of external casebook with clear credit and no fabrication.
 
 Machine-readable coding: `data/pilot_findings.json`.
@@ -225,7 +225,7 @@ Ownership line from same seed (Established except IOL share sizes): IOL / EWN / 
 
 ### Still open
 
-1. Cassian's News24 bias meter seed: expected at `seed/cassian-news24-bias-meter.md` — not present as of this update; cross-check when dropped.
+1. Cassian's News24 bias meter seed: present at `seed/cassian-news24-bias-meter.md` (gitignored). **Reference only** — 0 findings imported; **not** used as lean inputs (`docs/CROSSCHECK_CASSIAN.md`).
 2. Whether publication roll-up should mean findings or mean of article-means (METHODOLOGY still defaults to mean of findings).
 
 ---
@@ -233,7 +233,18 @@ Ownership line from same seed (Established except IOL share sizes): IOL / EWN / 
 ## 7. Immediate next steps
 
 1. Owner sign-off on open questions above.  
-2. Drop Cassian bias-meter export into `seed/` and map columns → schema.  
+2. ~~Drop Cassian bias-meter export into `seed/` and map columns → schema.~~ Done as reference-only; do **not** map into findings or lean_scores.  
 3. Re-fetch URLs for AGOA notes #1–4, #6 (in/near window) and promote from leads to full findings.  
 4. Begin May–Oct 2026 News24 article sample on AfriForum / Solidarity / US–SA.  
 5. Stand up SQLite from `schema.sql` and load CSVs + pilot JSON.
+
+## Secondary meter (left/right lean) — draft 5 Nov 2026
+
+**Banner:** Secondary view: left/right lean (reader convenience). The primary measure is for/against named actors.
+
+- Method: `docs/LEFT_RIGHT_METHOD.md`
+- Map: `data/actor_axis_map.csv` (cite platforms; mark contested; AfriForum / MK / GNU hard)
+- Draft scores: `data/lean_scores_draft.json` (News24 + Basson/du Toit/Cowan, Daily Investor, Newsday)
+- Schema: `lean_scores` / `lean_score_runs` — never mixed with primary `scores`
+- Cassian seed: reference only; not lean input
+- Everything remains draft; **do not git push** until owner says so

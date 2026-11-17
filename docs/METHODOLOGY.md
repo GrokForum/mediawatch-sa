@@ -1,9 +1,9 @@
 # MediaWatch SA — Methodology (draft)
 
-**Version:** 0.3-draft (Cavus defaults + sample_frame + accountability rule)  
+**Version:** 0.4-draft (two meters: primary FOR/AGAINST + secondary left/right lean)  
 **Date:** 5 Nov 2026 (Africa/Johannesburg)  
-**Hub:** `/workspace/mediawatch-sa/plan.md`  
-**Constraint:** transparent, reproducible, no left/right spectrum labels.
+**Hub:** `plan.md`  
+**Constraint:** transparent, reproducible. **Primary** meter stays FOR/AGAINST named actors (no spectrum). A **secondary** left/right lean exists as reader convenience only — see `docs/LEFT_RIGHT_METHOD.md`; never mixed into primary scores.
 
 ---
 
@@ -20,9 +20,34 @@ Marked **Cavus default, 5 Nov 2026 (owner may override)** wherever they lock a c
 6. **First names:** keep first names **exactly as quoted**; never match them to real people. — *Cavus default, 5 Nov 2026 (owner may override)*
 
 
+
+## 0. Two meters (kept separate)
+
+MediaWatch SA maintains **two** measures; the secondary lean is hidden until the owner’s GO. They stay separate in data, docs, and (later) the site.
+
+### PRIMARY — FOR / AGAINST named actors *(unchanged)*
+
+Each finding answers: relative to a **named actor**, does this line work **FOR** or **AGAINST** that actor, and by which **driver**? Signed scores (−2…+2), min-*n* rules, and `sample_frame` splits in §§3–8 apply here. **This is the main bias claim.**
+
+### SECONDARY — left/right lean *(reader convenience)*
+
+Banner required on every display:
+
+> **Secondary view: left/right lean (reader convenience). The primary measure is for/against named actors.**
+
+Caveat: the left/right split is **contested in South Africa**. AfriForum, MK Party and the GNU are especially hard to place.
+
+- Method: `docs/LEFT_RIGHT_METHOD.md`
+- Actor map: `data/actor_axis_map.csv` (economic −2…+2 state/redistribution↔market; social −2…+2; rationale + sources; contested marked)
+- Formula: `contribution = signed_score × actor_axis / 2`; lean = clamp(mean(contributions), −2, +2); same min-*n* and `sample_frame` splits as primary
+- Storage: own schema / file (`lean_scores`, `data/lean_scores_draft.json`) — **never** mixed into primary `scores`
+- Optional direct lean-label signals (`far-right`, `radical left`, …) logged separately; not folded into the derived lean unless an owner-approved rule says so
+- Cassian seed and other external lean scales: **reference only** — not findings, not lean inputs (`docs/CROSSCHECK_CASSIAN.md`)
+
+
 ## 1. What we measure
 
-Bias is **not** a political compass score. Each finding answers:
+**Primary** bias is **not** a political compass score (a secondary lean view exists separately — §0). Each **primary** finding answers:
 
 > Relative to a **named actor**, does this published line (or public post by a named newsroom figure) work **FOR** or **AGAINST** that actor, and by which **driver**?
 
@@ -197,7 +222,9 @@ Every finding **must** carry a `sample_frame` field so roll-ups can weight or sp
 |-------|---------|-----------|
 | `keyword` | Hit via actor/term search (AfriForum, Solidarity, SAAI, Trump, AGOA, AfriMAGA, etc.) | Search → fetch → code |
 | `neutral_random` | Date-based politics draw, **not** keyed on the scored actor | Fixed weekdays from `/politics`, archive, or sitemap; ~2 stories/week across the window |
-| `counter_pull` | Deliberate search for the **opposite** direction of the provisional pattern | e.g. FOR AfriForum/Solidarity/SAAI; AGAINST DA/GNU; FOR Trump/US; matching writer X on the same weeks |
+| `counter_pull` | Deliberate search for the **opposite** direction of the provisional pattern | e.g. FOR AfriForum/Solidarity/SAAI; AGAINST DA/GNU; FOR Trump/US; matching writer X on the same weeks; or a Press Council / Ombud pass that is not a random draw |
+| `external_seed` | Re-verified from an outside seed that supplies a checkable quote, URL and date | Only after re-verify; otherwise keep as an external reference |
+| `purposive` | Judgement / byline corpus with **no** pre-registered random rule | e.g. a named-journalist investigations sample to fill a coverage gap. Do **not** label this `neutral_random`. |
 
 **Rules:**
 
@@ -228,6 +255,22 @@ Re-audit trigger: any existing AGAINST finding on a governing actor must be re-c
 
 ---
 
+## 8c. `accountability_status`, including `control`
+
+`accountability_status` on a finding is one of:
+
+| Value | Meaning |
+|-------|---------|
+| `bias` | Coded as a bias finding that enters signed-score means (subject to min-*n*). |
+| `borderline` | A bias finding kept, but flagged as close to the accountability or proportion gate; explain in `evidence_notes`. |
+| `accountability_exempt` | Sourced accountability that meets all §8b gates; quote kept; `signed_score` may be null; excluded from signed-score means. |
+| `accountability` | Accountability reporting logged as such (e.g. on a balanced_control row). |
+| `neutral_method` | Method/process note with no FOR/AGAINST driver. |
+| `control` | A finding retained as a **balance or contrast** observation in the sample (for example, an outlet also platforming criticism that cuts against a provisional pattern, or a straight news note kept as a soft/neutral control). It still has a quote, URL and fact label. It is not the same as `accountability_exempt`. |
+
+---
+
 ## 10. Versioning
 
-Breaking changes to weights or labels bump `methodology_version` and freeze prior scores as `score_run` snapshots. Never silently rewrite historical public scores.
+
+Breaking changes to weights, labels, or the secondary axis map bump `methodology_version` (and `left_right_method` version when only the secondary changes) and freeze prior scores as `score_run` / `lean_score_run` snapshots. Never silently rewrite historical public scores. Never rewrite primary scores to absorb lean.
