@@ -194,8 +194,8 @@ j. **Public evidence notes:** `evidence_notes` hold working notes (reviewer name
 
 ## Seen, not touched
 
-- **Live PROD exposure since the PR #1 merge (needs its own incident RFC and GO).** The legacy Jekyll build publishes the repo root of `main`. On 17 Nov 2026 (about 11:05 SAST), public GETs returned HTTP 200 for `/data/lean_scores_draft.json`, `/data/news24_pilot_findings.json`, `/docs/LEFT_RIGHT_METHOD` (Jekyll-rendered with SEO tags, no noindex), `/docs/CROSSCHECK_*`, `/docs/METHODOLOGY` and `/plan`. There is no `robots.txt` (404). So the hidden secondary meter and draft working files are reachable and indexable on mediawatch.grokforum.site, not only in the GitHub repo. Suggested fix, for a separate RFC: a root `_config.yml` with `exclude:` for `data/`, `docs/`, `changes/`, `plan.md`, `scripts/`, `site/`, `tests/`, `README.md`, `requirements.txt`, plus a root `robots.txt` with `Disallow: /`. Or deployment option A above, which ends repo-root publishing.
-- **Git history:** the junior City Power employee's surname was removed from the tree in CHG-MW-001, but it is still in commit `d3ca635`, now part of `main`'s public history. Removing it needs a history rewrite and force-push (destructive; owner decision).
+- **Live PROD exposure after the PR #1 merge (fixed).** The legacy Jekyll build published the repo root of `main`. On 17 Nov 2026 (about 11:05 SAST), public GETs returned HTTP 200 for `/data/lean_scores_draft.json`, `/data/news24_pilot_findings.json`, `/docs/LEFT_RIGHT_METHOD`, `/docs/CROSSCHECK_*`, `/docs/METHODOLOGY` and `/plan`, and there was no `robots.txt`. INC-MW-001 fixed this in [PR #2](https://github.com/GrokForum/mediawatch-sa/pull/2) (root `_config.yml` exclusions and `robots.txt`). Those paths now return 404, and robots `Disallow: /` and noindex are live. Deployment option A in this change ends repo-root publishing altogether.
+- **Git history (resolved):** on the owner's GO on 17 Nov 2026, the repo history was rewritten to remove a private individual's name. All earlier SHAs changed.
 - Actor names vary across files ("Ramaphosa" vs "Cyril Ramaphosa", "Trump/US" vs "Trump / US government"), which splits scorecards. Normalising them is a data change.
 - `people.csv` lacks four bylined News24 journalists (Jan Gerber, Emsie Ferreira, Siyamtanda Capa, Bongekile Macupe). The site falls back to the published byline with role "Journalist (byline)". Only Macupe currently has a rendered finding.
 - Internal reviewer notes inside three steelman strings (F-N24-PDT-X-04, F-N24-PDT-X-07, F-N24-AB-X-12) are stripped at render time only. The data clean-up is a separate change.
@@ -207,8 +207,10 @@ j. **Public evidence notes:** `evidence_notes` hold working notes (reviewer name
 
 ## Sign-off and result
 
-Author: Grok Bot (MediaWatch SA executor). Sign-off by two reviewers (expert, shadow, charter and drift checks) on the exact head; owner GO to merge given 17 Nov 2026 20:01 SAST.
+Author: project bot. Sign-off by two reviewers (expert, shadow, charter and drift checks) on the exact head; owner GO to merge given 17 Nov 2026 20:01 SAST.
 
-popia-review (17 Nov 2026): **PASS** for this change and its generated output. Items found and handled: the junior City Power employee is not in the output; internal reviewer-name fragments in three steelmen are stripped at render; X user ids are not rendered. Items outside this change are listed under "Seen, not touched": the live Jekyll exposure, and the surname in git history.
+Private-name denylist test: `test_no_private_citizen_names` skips in CI by design, because the denylist (`tests/private_names.local.txt`) is never committed. The pre-push check runs it locally with the list present.
+
+popia-review (17 Nov 2026): **PASS** for this change and its generated output. Items found and handled: the junior City Power employee is not in the output; internal reviewer-name fragments in three steelmen are stripped at render; X user ids are not rendered. The live Jekyll exposure (fixed by INC-MW-001) and the private name in git history (removed by the 17 Nov rewrite) are recorded under "Seen, not touched".
 
 **Result:** owner GO to merge given 17 Nov 2026 20:01 SAST; the review and merge are recorded on the pull request.
