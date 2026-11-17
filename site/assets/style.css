@@ -1,0 +1,30 @@
+/* MediaWatch SA: plain CSS, no external fonts, CDNs or trackers. RFC-CHG-MW-002 */
+:root{--fg:#1d1d1f;--muted:#5b5b66;--line:#dcdce3;--bg:#fff;--soft:#f5f5f8;--for:#1f6f43;--against:#9b2c2c;--warn:#8a5a00}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--fg);background:var(--bg);line-height:1.55}
+header.site{border-bottom:1px solid var(--line);background:var(--soft)}
+header.site .wrap{display:flex;flex-wrap:wrap;gap:1rem;align-items:baseline}
+header.site a.brand{font-weight:700;font-size:1.15rem;color:var(--fg);text-decoration:none}
+nav a{margin-right:.9rem}
+.wrap{max-width:960px;margin:0 auto;padding:1rem 1.25rem}
+.draft{background:#fff7e0;border:1px solid #f0d68a;padding:.6rem .8rem;border-radius:6px;font-size:.92rem}
+.crumbs{font-size:.88rem;color:var(--muted)}
+.crumbs a{color:var(--muted)}
+a{color:#1a4f8b}
+h1{font-size:1.6rem;margin:.6rem 0}
+h2{font-size:1.2rem;margin-top:1.6rem;border-bottom:1px solid var(--line);padding-bottom:.2rem}
+table{border-collapse:collapse;width:100%;font-size:.93rem;margin:.6rem 0}
+th,td{border-bottom:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.FOR{color:var(--for);font-weight:600}
+.AGAINST{color:var(--against);font-weight:600}
+.badge{display:inline-block;font-size:.78rem;padding:.05rem .45rem;border-radius:999px;border:1px solid var(--line);background:var(--soft);white-space:nowrap}
+.badge.provisional,.badge.pending{border-color:#f0d68a;background:#fff7e0;color:var(--warn)}
+.badge.findings_only{color:var(--muted)}
+blockquote.quote{margin:.6rem 0;padding:.6rem .9rem;border-left:4px solid #8aa4c8;background:var(--soft);font-size:1.02rem}
+dl.ev{display:grid;grid-template-columns:max-content 1fr;gap:.3rem 1rem}
+dl.ev dt{font-weight:600;color:var(--muted)}
+dl.ev dd{margin:0}
+.note{font-size:.9rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);margin-top:2.5rem;font-size:.85rem;color:var(--muted)}

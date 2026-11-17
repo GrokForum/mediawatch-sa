@@ -1,5 +1,8 @@
 # Paywalls register (draft)
 
+> **Standing rule (owner, 17 Nov 2026): no paywalled content, ever.** Bias is judged **only on what the public can read free**. Paywalled articles are **out of the sample** and **never scored**. A headline, standfirst, OG description or other teaser **never stands in for the body** of a paywalled piece. No subscriptions, logins, user-agent spoofing, paywall-script stripping or bypass services, ever.
+> The subscription prices below are kept as a record of which outlets are paywalled. They are **not** a shopping list: there will be no subscribe or login run. The "Priority for a later login/subscribe run" section is superseded and kept only as history. Findings that rested on paywalled pieces are listed in `data/paywall_exclusions.csv` and are excluded from the site and all scores.
+
 Fetched for subscription product/price rows: **2026-11-05 (Africa/Johannesburg)**.  
 No logins purchased; prices are as shown on each outlet’s public subscribe/membership page (or noted when the page 404s / is JS-gated / secondary).  
 Sampled-items-blocked counts are from the MediaWatch SA draft corpus so far (News24 + Daily Investor + Newsday pilots). Other outlets: 0 until sampled.
@@ -29,7 +32,9 @@ Sampled-items-blocked counts are from the MediaWatch SA draft corpus so far (New
 | Daily Investor | registration soft-wall (not paid) | Premium access free for registered users | **Free** after register | https://dailyinvestor.com/subscribe | 2026-11-05 | **0** (pilot: full bodies via curl; no login) | Explicitly: “Premium access to Daily Investor is free for all registered users.” Broad Media brand. Pilot May–Oct 2026 coded without register. |
 | Newsday | none observed (free to read) | n/a — `/subscribe/` and `/premium/` **404** | n/a | https://newsday.co.za/ ; About https://newsday.co.za/about/ | 2026-11-05 | **0** | Full article bodies served without login this pass. FAIR Press Council stamp. Register/Login/Support-us chrome present but no paid product page found. |
 
-## Priority for a later login/subscribe run (owner decision)
+## Priority for a later login/subscribe run (owner decision) — SUPERSEDED 17 Nov 2026
+
+*Superseded by the standing no-paywall rule above. Kept as history only; no subscription or login will be bought or used.*
 
 Highest yield for MediaWatch SA coding depth right now:
 

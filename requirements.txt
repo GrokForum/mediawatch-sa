@@ -1,0 +1,5 @@
+# MediaWatch SA (RFC-CHG-MW-002)
+# The site generator (scripts/build_site.py) uses the Python 3 standard library only.
+# These pinned packages are for checks: schema validation and the test suite.
+jsonschema==4.23.0
+pytest==8.3.4
