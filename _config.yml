@@ -1,0 +1,10 @@
+# Jekyll (GitHub Pages legacy build): keep working files off the public site.
+# INC-MW-001. Only index.html, CNAME and robots.txt are meant to be served.
+exclude:
+  - data/
+  - docs/
+  - changes/
+  - scripts/
+  - tests/
+  - plan.md
+  - README.md
