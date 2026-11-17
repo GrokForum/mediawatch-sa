@@ -195,7 +195,7 @@ j. **Public evidence notes:** `evidence_notes` hold working notes (reviewer name
 ## Seen, not touched
 
 - **Live PROD exposure after the PR #1 merge (fixed).** The legacy Jekyll build published the repo root of `main`. On 17 Nov 2026 (about 11:05 SAST), public GETs returned HTTP 200 for `/data/lean_scores_draft.json`, `/data/news24_pilot_findings.json`, `/docs/LEFT_RIGHT_METHOD`, `/docs/CROSSCHECK_*`, `/docs/METHODOLOGY` and `/plan`, and there was no `robots.txt`. INC-MW-001 fixed this in [PR #2](https://github.com/GrokForum/mediawatch-sa/pull/2) (root `_config.yml` exclusions and `robots.txt`). Those paths now return 404, and robots `Disallow: /` and noindex are live. Deployment option A in this change ends repo-root publishing altogether.
-- **Git history (resolved):** on the owner's GO on 17 Nov 2026, the repo history was rewritten to remove a private individual's name. All earlier SHAs changed.
+- **Git history (branches and tags clean; old PR refs open):** on the owner's GO on 17 Nov 2026, the repo history was rewritten to remove a private individual's name, and all earlier SHAs changed. GitHub still keeps the read-only PR #1 and PR #2 head refs on old commits, which only GitHub Support can purge; that request is pending.
 - Actor names vary across files ("Ramaphosa" vs "Cyril Ramaphosa", "Trump/US" vs "Trump / US government"), which splits scorecards. Normalising them is a data change.
 - `people.csv` lacks four bylined News24 journalists (Jan Gerber, Emsie Ferreira, Siyamtanda Capa, Bongekile Macupe). The site falls back to the published byline with role "Journalist (byline)". Only Macupe currently has a rendered finding.
 - Internal reviewer notes inside three steelman strings (F-N24-PDT-X-04, F-N24-PDT-X-07, F-N24-AB-X-12) are stripped at render time only. The data clean-up is a separate change.
@@ -209,7 +209,7 @@ j. **Public evidence notes:** `evidence_notes` hold working notes (reviewer name
 
 Author: project bot. Sign-off by two reviewers (expert, shadow, charter and drift checks) on the exact head; owner GO to merge given 17 Nov 2026 20:01 SAST.
 
-Private-name denylist test: `test_no_private_citizen_names` skips in CI by design, because the denylist (`tests/private_names.local.txt`) is never committed. The pre-push check runs it locally with the list present.
+Private-name denylist test: `test_no_private_citizen_names` skips in CI by design, because the denylist (`tests/private_names.local.txt`) is never committed. Run it locally with the list present (`pytest tests/test_site.py`) before every push; no hook enforces this yet.
 
 popia-review (17 Nov 2026): **PASS** for this change and its generated output. Items found and handled: the junior City Power employee is not in the output; internal reviewer-name fragments in three steelmen are stripped at render; X user ids are not rendered. The live Jekyll exposure (fixed by INC-MW-001) and the private name in git history (removed by the 17 Nov rewrite) are recorded under "Seen, not touched".
 
