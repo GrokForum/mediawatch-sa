@@ -1,3 +1,7 @@
 seed/
 data/fetched_articles/
 *.env
+_site/
+__pycache__/
+.pytest_cache/
+tests/private_names.local.txt

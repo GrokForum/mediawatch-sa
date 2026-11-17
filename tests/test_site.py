@@ -1,0 +1,343 @@
+"""Tests for the MediaWatch SA static site (RFC-CHG-MW-002).
+
+Run: python -m pytest -q
+"""
+import csv
+import html
+import json
+import re
+import subprocess
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+import build_site  # noqa: E402
+
+ALLOWED = {"Proven", "Established", "Alleged", "Disputed", "Not established"}
+
+
+@pytest.fixture(scope="session")
+def site(tmp_path_factory):
+    out = tmp_path_factory.mktemp("site") / "_site"
+    stats = build_site.build(out)
+    return out, stats
+
+
+def pages(out):
+    return sorted(out.rglob("*.html"))
+
+
+def text_of(path):
+    return path.read_text(encoding="utf-8")
+
+
+def visible_text(h):
+    h = re.sub(r"<[^>]+>", " ", h)
+    return html.unescape(re.sub(r"\s+", " ", h))
+
+
+def all_findings():
+    out = {}
+    for fn in build_site.FINDINGS_FILES.values():
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        for f in doc["findings"]:
+            out[f["id"]] = f
+    return out
+
+
+# ------------------------------------------------------------------ build
+def test_build_succeeds(site):
+    out, stats = site
+    assert (out / "index.html").exists()
+    assert (out / "robots.txt").exists()
+    assert (out / "corrections" / "index.html").exists()
+    assert (out / "method" / "index.html").exists()
+    assert (out / "coverage" / "index.html").exists()
+    for pid in build_site.PILOT:
+        assert (out / "p" / pid / "index.html").exists()
+    assert stats["findings_rendered"] > 0
+    assert len(list((out / "f").iterdir())) == stats["findings_rendered"]
+
+
+def test_build_script_cli(tmp_path):
+    r = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_site.py"), "--out", str(tmp_path / "o")],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "WARNING" not in r.stderr
+
+
+# ------------------------------------------------------------------ findings
+def test_every_finding_page_has_quote_source_label_steelmen(site):
+    out, _ = site
+    data = all_findings()
+    for d in (out / "f").iterdir():
+        h = text_of(d / "index.html")
+        fid = re.search(r'data-finding="([^"]+)"', h).group(1)
+        f = data[fid]
+        q = re.search(r'<blockquote class="quote finding-quote">(.*?)</blockquote>', h, re.S)
+        assert q and html.unescape(q.group(1)) == f["quote"], fid
+        link = re.search(r'<a class="source-link" href="([^"]+)"', h)
+        assert link and html.unescape(link.group(1)) == f["url"], fid
+        assert link.group(1).startswith("https://"), fid
+        lab = re.search(r'<span class="badge fact-label">([^<]+)</span>', h)
+        assert lab and lab.group(1) in ALLOWED, fid
+        for cls in ("steelman-for", "steelman-against"):
+            m = re.search(rf'<dd class="{cls}">([^<]+)</dd>', h)
+            assert m and m.group(1).strip(), (fid, cls)
+
+
+def test_only_allowed_fact_labels_anywhere(site):
+    out, _ = site
+    for p in pages(out):
+        for lab in re.findall(r'<span class="badge fact-label">([^<]+)</span>', text_of(p)):
+            assert lab in ALLOWED
+
+
+def test_unofficial_drivers_marked_pending(site):
+    out, _ = site
+    official = build_site.official_drivers()
+    data = all_findings()
+    for d in (out / "f").iterdir():
+        h = text_of(d / "index.html")
+        fid = re.search(r'data-finding="([^"]+)"', h).group(1)
+        pending = "driver name pending owner decision" in h
+        assert pending == (data[fid]["driver"] not in official), fid
+
+
+# ------------------------------------------------------------------ hidden secondary meter
+LEAN_PATTERNS = re.compile(
+    r"left[\s/-]*right|secondary view|lean[_ ](score|meter|rollup)|economic_axis|social_axis|"
+    r"actor_axis|n_included|\blean\b", re.IGNORECASE)
+
+
+def test_no_lean_meter_in_output(site):
+    out, _ = site
+    for p in out.rglob("*"):
+        if p.is_file():
+            t = p.read_text(encoding="utf-8")
+            m = LEAN_PATTERNS.search(t)
+            assert not m, f"{p.relative_to(out)}: {m.group(0)!r}"
+
+
+def test_generator_does_not_read_lean_files():
+    src = (ROOT / "scripts" / "build_site.py").read_text(encoding="utf-8")
+    assert "lean_scores" not in src and "actor_axis_map" not in src
+
+
+# ------------------------------------------------------------------ noindex
+def test_noindex_everywhere(site):
+    out, _ = site
+    for p in pages(out):
+        assert '<meta name="robots" content="noindex, nofollow">' in text_of(p), p
+    robots = (out / "robots.txt").read_text(encoding="utf-8")
+    assert "User-agent: *" in robots and "Disallow: /" in robots
+
+
+def test_no_external_assets_or_scripts(site):
+    out, _ = site
+    for p in pages(out):
+        h = text_of(p)
+        assert "<script" not in h.lower(), p
+        for m in re.finditer(r'<(?:link|img|iframe)[^>]+(?:href|src)="([^"]+)"', h):
+            assert not re.match(r"https?://|//", m.group(1)), (p, m.group(1))
+    css = (out / "assets" / "style.css").read_text(encoding="utf-8")
+    assert "http" not in css and "@import" not in css
+
+
+def test_live_placeholder_untouched():
+    r = subprocess.run(["git", "diff", "--quiet", "c4f6e11", "--", "index.html", "CNAME"], cwd=ROOT)
+    assert r.returncode == 0, "root index.html / CNAME changed versus c4f6e11"
+
+
+# ------------------------------------------------------------------ paywall exclusion
+def test_paywall_exclusions_match_rule():
+    pubs, people, docs, excluded, detected, listed = build_site.load()
+    assert set(detected) == set(listed), sorted(set(detected) ^ set(listed))
+
+
+def test_no_paywalled_items_rendered(site):
+    out, stats = site
+    excluded = set(stats["excluded"])
+    assert excluded, "expected the known paywalled News24 findings to be excluded"
+    data = all_findings()
+    reg = {build_site.norm_url(r["url"]) for r in build_site.read_csv("paywall_register.csv")}
+    blob = "\n".join(text_of(p) for p in pages(out))
+    for fid in excluded:
+        assert not (out / "f" / build_site.slug(fid)).exists(), fid
+        assert f">{fid}<" not in blob, fid
+        assert f'"{fid}"' not in blob, fid
+    for p in pages(out):
+        for href in re.findall(r'href="(https?://[^"]+)"', text_of(p)):
+            u = build_site.norm_url(html.unescape(href))
+            if "news24.com" in u:
+                assert u not in reg, (p, u)
+    # excluded findings never counted: the n on scorecards equals counted rendered findings
+    for fid in excluded:
+        assert fid in data
+
+
+# ------------------------------------------------------------------ thresholds
+def test_threshold_function():
+    f = build_site.flag_for
+    assert [f(n) for n in (0, 4, 5, 9, 10, 25)] == [
+        "findings_only", "findings_only", "provisional", "provisional", "full", "full"]
+
+
+def test_thresholds_applied_on_scorecards(site):
+    out, _ = site
+    seen = 0
+    for p in pages(out):
+        for m in re.finditer(r'<tr class="score-row"([^>]*)>(.*?)</tr>', text_of(p), re.S):
+            attrs = dict(re.findall(r'data-([a-z]+)="([^"]*)"', m.group(1)))
+            n = int(attrs["n"])
+            assert attrs["flag"] == build_site.flag_for(n)
+            if n < 5 or attrs["suppressed"] == "1":
+                assert attrs["score"] == "", (p, attrs)
+                assert "&ndash;" in m.group(2)
+            else:
+                assert attrs["score"] != "", (p, attrs)
+            if 5 <= n < 10:
+                assert 'badge provisional' in m.group(2)
+            seen += 1
+    assert seen > 0
+
+
+def test_publication_scores_recomputed_independently(site):
+    out, stats = site
+    excluded = set(stats["excluded"])
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        acc = defaultdict(list)
+        for f in doc["findings"]:
+            if f["id"] in excluded or f.get("accountability_status") == "accountability_exempt":
+                continue
+            if f.get("signed_score") is None:
+                continue
+            acc[f["actor"]].append(float(f["signed_score"]))
+        h = text_of(out / "p" / pid / "index.html")
+        rows = {html.unescape(a): (int(n), s) for a, n, s in
+                re.findall(r'data-level="publication" data-actor="([^"]+)" data-n="(\d+)" data-flag="[^"]+" data-score="([^"]*)"', h)}
+        for actor, vals in acc.items():
+            n, s = rows[actor]
+            assert n == len(vals)
+            if n >= 5:
+                assert abs(float(s) - round(sum(vals) / n, 2)) < 1e-9
+
+
+# ------------------------------------------------------------------ POPIA / privacy
+def _private_names():
+    p = ROOT / "tests" / "private_names.local.txt"
+    if not p.exists():
+        return []
+    return [l.strip().lower() for l in p.read_text(encoding="utf-8").splitlines()
+            if l.strip() and not l.startswith("#")]
+
+
+def test_no_private_citizen_names(site):
+    out, _ = site
+    names = _private_names()
+    if not names:
+        pytest.skip("tests/private_names.local.txt not present (local-only denylist)")
+    for p in pages(out):
+        t = visible_text(text_of(p)).lower()
+        for n in names:
+            assert not re.search(rf"\b{re.escape(n)}\b", t), p.relative_to(out)
+
+
+def test_writer_pages_are_public_role_only(site):
+    out, _ = site
+    people = {r["id"]: r for r in build_site.read_csv("people.csv")}
+    for d in (out / "w").iterdir():
+        h = text_of(d / "index.html")
+        # no contact or identity details beyond name, public role and verified public X handle
+        assert not re.search(r"mailto:|tel:|\+27|\b0\d{2}[ -]?\d{3}[ -]?\d{4}\b", h), d
+        assert "x_user_id" not in h
+        p = people.get(d.name)
+        if p and p.get("x_user_id"):
+            assert p["x_user_id"] not in h, d
+
+
+def test_internal_fields_never_rendered(site):
+    out, _ = site
+    data = all_findings()
+    blob = "\n".join(visible_text(text_of(p)) for p in pages(out))
+    for f in data.values():
+        note = (f.get("evidence_notes") or "").strip()
+        if len(note) > 40:
+            assert note[:40] not in blob, f["id"]
+    for word in ("evidence_notes", "mediawatch-sa-pilot", "mediawatch-sa-foundation", "Cavus", "Cassian", "casebook"):
+        assert word.lower() not in blob.lower(), word
+
+
+def test_no_seed_or_fetched_or_private_paths_in_output(site):
+    out, _ = site
+    bad = re.compile(r"seed/|fetched_articles|/workspace|agoa[-_ ]sa|owner-supplied|/home/", re.IGNORECASE)
+    for p in out.rglob("*"):
+        if p.is_file():
+            m = bad.search(p.read_text(encoding="utf-8"))
+            assert not m, (p, m.group(0))
+    allowed_top = {"index.html", "robots.txt", "assets", "p", "w", "a", "x", "i", "f",
+                   "method", "corrections", "coverage"}
+    assert {c.name for c in out.iterdir()} <= allowed_top
+
+
+def test_no_fetched_article_text_in_output(site):
+    out, _ = site
+    fetched = ROOT / "data" / "fetched_articles"
+    if not fetched.exists():
+        pytest.skip("no local fetched_articles")
+    blob = re.sub(r"\s+", " ", "\n".join(visible_text(text_of(p)) for p in pages(out)))
+    for fp in fetched.rglob("*"):
+        if not fp.is_file():
+            continue
+        t = re.sub(r"\s+", " ", fp.read_text(encoding="utf-8", errors="ignore"))
+        # any 300-character run of a fetched body would be more than a short quote
+        for i in range(0, max(0, len(t) - 300), 300):
+            chunk = t[i:i + 300]
+            assert chunk not in blob, fp.name
+
+
+def test_gitignored_folders_not_tracked():
+    files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.splitlines()
+    for f in files:
+        assert not f.startswith(("seed/", "data/fetched_articles/", "_site/")), f
+    assert "tests/private_names.local.txt" not in files
+
+
+# ------------------------------------------------------------------ schema
+def _schema_summary():
+    jsonschema = pytest.importorskip("jsonschema")  # noqa: F841
+    import validate_schema
+    return validate_schema.summarise(validate_schema.validate())
+
+
+def test_schema_news24_and_registers_pass():
+    s = _schema_summary()
+    for name in ("news24_pilot_findings.json", "people.csv", "publications.csv"):
+        assert s[name]["errors"] == 0, (name, s[name])
+
+
+@pytest.mark.xfail(strict=True, reason="Daily Investor/Newsday use unofficial driver names; recode vs extend schema "
+                                       "is an open owner decision (RFC-CHG-MW-002 open question a)")
+@pytest.mark.parametrize("name", ["dailyinvestor_pilot_findings.json", "newsday_pilot_findings.json"])
+def test_schema_di_newsday_drivers(name):
+    s = _schema_summary()
+    assert s[name]["errors"] == 0, s[name]
+
+
+def test_schema_di_newsday_only_driver_errors():
+    s = _schema_summary()
+    for name in ("dailyinvestor_pilot_findings.json", "newsday_pilot_findings.json"):
+        assert set(s[name]["by_field"]) <= {"driver: enum"}, s[name]
+
+
+# ------------------------------------------------------------------ line endings
+def test_crlf_preserved_on_data_csvs():
+    for p in sorted((ROOT / "data").glob("*.csv")):
+        raw = p.read_bytes()
+        assert b"\r\n" in raw, p.name
+        assert raw.count(b"\n") == raw.count(b"\r\n"), p.name

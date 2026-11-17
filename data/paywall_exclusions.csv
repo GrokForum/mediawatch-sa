@@ -1,0 +1,21 @@
+finding_id,publication_id,reason,access_basis,rule,marked_on
+F-N24-JG-01,news24,excluded_paywalled,paywalled body; coded from headline/standfirst only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-JG-02,news24,excluded_paywalled,paywalled body; coded from headline/standfirst only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-PDT-COL-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-PDT-COL-02,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-EF-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-AB-COL-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-AB-COL-02,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-NEUT-AB-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-NEUT-CAPA-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-CTR-SAAI-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-CTR-PDT-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-FAV-CALLAND-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-FAV-ESKOM-01,news24,excluded_paywalled,Wayback copy of a piece paywalled at source (full body recovered from archive),owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-FAV-SCHREIBER-01,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-FAV-SCHREIBER-02,news24,excluded_paywalled,paywalled body; coded from headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-KC-01,news24,excluded_paywalled,"paywalled body; quote taken from the Press Ombud ruling, but the article itself is paywalled",owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-KC-02,news24,excluded_paywalled,paywalled body; coded from archived headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-KC-03,news24,excluded_paywalled,paywalled body; coded from archived headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-KC-04,news24,excluded_paywalled,paywalled body; coded from archived headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
+F-N24-KC-05,news24,excluded_paywalled,paywalled body; coded from archived headline/og teaser only,owner no-paywall rule 17 Nov 2026: free public content only; teasers never stand in for the body,2026-11-17
