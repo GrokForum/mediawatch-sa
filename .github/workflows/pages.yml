@@ -1,11 +1,16 @@
 # RFC-CHG-MW-002 option A: build the static site from main and deploy it to
 # GitHub Pages (custom domain mediawatch.grokforum.site, set in Pages settings).
 # Indexing stays off: robots.txt is Disallow-all and every page is noindex.
+# RFC-CHG-MW-003: also runs nightly and records a post-deploy live check
+# (artifact only; this workflow never has contents: write).
 name: Pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    # Nightly at 03:30 Africa/Johannesburg (SAST, UTC+2; South Africa has no DST).
+    - cron: "30 1 * * *"
   workflow_dispatch:
 
 permissions:
@@ -59,3 +64,40 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
+  live_check:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write  # upload the nightly result artifact only; not contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Live check
+        run: |
+          python3 scripts/check_live.py \
+            --base-url https://mediawatch.grokforum.site \
+            --out live-check.json \
+            --sha "${{ github.sha }}" \
+            --run-id "${{ github.run_id }}" \
+            --event "${{ github.event_name }}" \
+            --wait 300
+      - name: Record result in the job summary
+        if: always()
+        run: |
+          if [ -f live-check.json ]; then
+            {
+              echo '## Live check'
+              echo
+              echo '```json'
+              cat live-check.json
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: live-check-${{ github.run_id }}
+          path: live-check.json
+          if-no-files-found: error
+          retention-days: 90
