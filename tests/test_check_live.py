@@ -4,6 +4,7 @@ The fixture is a local HTTP server. These tests do not fetch the production
 site and do not need network access beyond 127.0.0.1.
 """
 import json
+import re
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -144,9 +145,16 @@ def test_fail_if_forbidden_path_is_200(live_server, tmp_path):
     assert bad
 
 
-def test_fail_if_home_missing_noindex_or_draft(live_server, tmp_path):
+def test_fail_if_home_missing_noindex(live_server, tmp_path):
+    """DRAFT stays; only the noindex meta is removed, so that guard fails on its own."""
     base, handler = live_server
-    handler.pages["/"] = b"<!doctype html><html><head><title>ok</title></head><body>hi</body></html>"
+    handler.pages["/"] = (
+        b"<!doctype html><html lang=\"en\"><head>"
+        b"<title>Publications | MediaWatch SA (draft)</title>"
+        b"</head><body>"
+        b"<p class=\"draft\"><strong>Draft preview (DEV).</strong></p>"
+        b"</body></html>"
+    )
     out = tmp_path / "live-check.json"
     rc = check_live.main(["--base-url", base, "--out", str(out), "--wait", "0"])
     assert rc == 1
@@ -154,6 +162,27 @@ def test_fail_if_home_missing_noindex_or_draft(live_server, tmp_path):
     home = next(c for c in payload["checks"] if c["name"] == "home_200")
     assert home["pass"] is False
     assert home["noindex"] is False
+    assert home["draft"] is True
+
+
+def test_fail_if_home_missing_draft(live_server, tmp_path):
+    """noindex stays; only the DRAFT markers are removed, so that guard fails on its own."""
+    base, handler = live_server
+    handler.pages["/"] = (
+        b"<!doctype html><html lang=\"en\"><head>"
+        b"<meta name=\"robots\" content=\"noindex, nofollow\">"
+        b"<title>Publications | MediaWatch SA</title>"
+        b"</head><body>"
+        b"<p>hello</p>"
+        b"</body></html>"
+    )
+    out = tmp_path / "live-check.json"
+    rc = check_live.main(["--base-url", base, "--out", str(out), "--wait", "0"])
+    assert rc == 1
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    home = next(c for c in payload["checks"] if c["name"] == "home_200")
+    assert home["pass"] is False
+    assert home["noindex"] is True
     assert home["draft"] is False
 
 
@@ -237,3 +266,21 @@ def test_artifact_retention_is_90_days_and_unique_per_run():
     assert step["with"]["path"] == "live-check.json"
     assert "${{ github.run_id }}" in str(step["with"]["name"])
     assert step.get("if") == "always()"
+
+
+def test_run_blocks_have_no_template_expressions():
+    """github.* (and other ${{ }} expressions) used by run: steps must be in env:."""
+    raw = WORKFLOW.read_text(encoding="utf-8")
+    in_run = False
+    run_indent = None
+    for line in raw.splitlines():
+        if re.match(r"^\s+run:\s*\|?\s*$", line) or re.match(r"^\s+run:\s+\S", line):
+            in_run = True
+            run_indent = len(line) - len(line.lstrip())
+            assert "${{" not in line, line
+            continue
+        if in_run:
+            if line.strip() and (len(line) - len(line.lstrip())) <= run_indent:
+                in_run = False
+            else:
+                assert "${{" not in line, line

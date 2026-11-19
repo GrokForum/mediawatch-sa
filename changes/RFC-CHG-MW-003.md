@@ -1,6 +1,6 @@
 # RFC-CHG-MW-003 — Nightly build, publish and live check (DEV)
 
-**Status:** DEV build complete. PENDING REVIEW (reviewer A, reviewer B) and owner GO to push or merge. Not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
+**Status:** Pushed as PR #4 (`dev/chg-mw-003-nightly`). Under review (reviewer A, reviewer B). Not merged; not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
 **Environment:** DEV — branch `dev/chg-mw-003-nightly` (used instead of `rfc/<ver>` to match the project's existing `dev/chg-mw-*` naming).  
 **Pre-change SHA (rollback base):** `8294282db5e2e9774e89695e8b75e0e4c16a759b` (`main` after PR #3).  
 **Date:** 19 Nov 2026 (Africa/Johannesburg)  
@@ -85,7 +85,8 @@ A failed live check turns the workflow red. It does **not** roll back the deploy
 ## Tests and how success is proven (DEV)
 
 - `uv run -q --no-project --with-requirements requirements.txt python -m pytest -q -rs` — including the local denylist test. `PyYAML==6.0.2` is pinned in `requirements.txt` (CI installs only that file).
-- New tests: fixture server PASS and FAIL cases (wrong robots, `/data` served as 200, missing noindex/DRAFT); workflow has the schedule, the `live_check` job, no `contents: write`, no `actions: write`, `persist-credentials: false` on both checkouts, pinned 40-character action SHAs, 90-day artifact retention.
+- New tests: fixture server PASS and FAIL cases (wrong robots, `/data` served as 200, missing noindex only, missing DRAFT only); workflow has the schedule, the `live_check` job, no `contents: write`, no `actions: write`, `persist-credentials: false` on both checkouts, pinned 40-character action SHAs, 90-day artifact retention. The home-page DRAFT and noindex guards are tested in separate fixtures so each fails on its own.
+- `github.sha`, `github.run_id` and `github.event_name` used by the live-check `run:` step are passed through `env:` (`GIT_SHA`, `RUN_ID`, `EVENT_NAME`) and referenced as shell variables, so the script cannot be rewritten by template injection.
 - A local `scripts/build_site.py` build still has noindex on every HTML page, exact `robots.txt`, and only the already-allowed file types (this RFC adds none).
 
 ## Rollback
@@ -106,8 +107,8 @@ Or, before merge, delete the branch. Pre-change SHA: `8294282db5e2e9774e89695e8b
 
 - `pages-build-deployment` still appears in the Actions list as GitHub's legacy Pages job; `build_type` is already `workflow`. Not changed.
 - Source-link gaps on published claims (owner group has no source URL field; editor source URLs are in the data but not rendered) are reported with CHG-MW-004, not fixed here.
-- No search-engine indexing request, no `contents: write`, no push, no PR, no merge, no Pages settings change, no deploy.
+- No search-engine indexing request, no `contents: write`, no merge, no Pages settings change, no deploy. The branch has been pushed as PR #4 and is under review.
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. Owner GO is required before this branch is pushed, merged or deployed.
+Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The branch has been pushed as PR #4. Owner GO is required before merge or deploy.

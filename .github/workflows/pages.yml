@@ -76,13 +76,17 @@ jobs:
         with:
           persist-credentials: false
       - name: Live check
+        env:
+          GIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           python3 scripts/check_live.py \
             --base-url https://mediawatch.grokforum.site \
             --out live-check.json \
-            --sha "${{ github.sha }}" \
-            --run-id "${{ github.run_id }}" \
-            --event "${{ github.event_name }}" \
+            --sha "$GIT_SHA" \
+            --run-id "$RUN_ID" \
+            --event "$EVENT_NAME" \
             --wait 300
       - name: Record result in the job summary
         if: always()
