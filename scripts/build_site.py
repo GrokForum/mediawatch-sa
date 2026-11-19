@@ -22,13 +22,18 @@ Usage: python scripts/build_site.py [--out _site]
 """
 import argparse
 import csv
+import hashlib
 import html
 import json
+import os
 import re
 import shutil
+import subprocess
 import sys
 from collections import Counter, defaultdict
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -226,7 +231,7 @@ def slug(s):
     return re.sub(r"[^A-Za-z0-9_-]+", "-", str(s)).strip("-")
 
 
-def page(title, body, depth, crumbs=()):
+def page(title, body, depth, crumbs=(), build_meta=None):
     up = "../" * depth
     nav = (f'<nav><a href="{up}index.html">Publications</a><a href="{up}method/index.html">Method</a>'
            f'<a href="{up}coverage/index.html">Coverage plan</a>'
@@ -236,6 +241,14 @@ def page(title, body, depth, crumbs=()):
     if crumbs:
         parts = [f'<a href="{up}{href}">{e(label)}</a>' if href else e(label) for label, href in crumbs]
         crumb_html = '<p class="crumbs">' + " &rsaquo; ".join(parts) + "</p>"
+    stamp = ""
+    if build_meta:
+        stamp = (
+            f'<p class="build-stamp">Build <code>{e(build_meta["git_sha_short"])}</code>'
+            f' · {e(build_meta["built_at_sast"])} Africa/Johannesburg'
+            f' · data date {e(build_meta["data_date"])}'
+            f' · <a href="{up}manifest.json">manifest.json</a></p>'
+        )
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -253,7 +266,7 @@ def page(title, body, depth, crumbs=()):
 {crumb_html}
 {body}
 </main>
-<footer><div class="wrap">MediaWatch SA: bias FOR or AGAINST named actors, with the exact line, the source link and both sides' strongest case for every finding. Only free public content is judged; paywalled pieces are never scored.
+<footer><div class="wrap">MediaWatch SA: bias FOR or AGAINST named actors, with the exact line, the source link and both sides' strongest case for every finding. Only free public content is judged; paywalled pieces are never scored.{stamp}
 <p class="footer-nav"><a href="{up}privacy/index.html">Privacy</a></p></div></footer>
 </body>
 </html>
@@ -332,6 +345,98 @@ def date_of(obj, *keys):
     return ""
 
 
+SAST = ZoneInfo("Africa/Johannesburg")
+DATA_WINDOW = {"start": "2026-05-01", "end": "2026-10-31", "label": "May–October 2026"}
+# Committed files the generator reads. Paths are relative to the repo root.
+MANIFEST_INPUTS = (
+    "data/publications.csv",
+    "data/people.csv",
+    "data/paywall_register.csv",
+    "data/paywall_exclusions.csv",
+    "data/schema.json",
+    "data/news24_pilot_findings.json",
+    "data/dailyinvestor_pilot_findings.json",
+    "data/newsday_pilot_findings.json",
+)
+
+
+def now_sast():
+    return datetime.now(SAST)
+
+
+def sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def build_identity():
+    """Git SHA and Actions run id for the public manifest.
+
+    SHA comes from MEDIAWATCH_GIT_SHA or GITHUB_SHA, else `git rev-parse HEAD`.
+    Run id comes from MEDIAWATCH_RUN_ID or GITHUB_RUN_ID, else JSON null (local build).
+    """
+    sha = (os.environ.get("MEDIAWATCH_GIT_SHA") or os.environ.get("GITHUB_SHA") or "").strip()
+    if not sha:
+        try:
+            r = subprocess.run(
+                ["git", "-C", str(ROOT), "rev-parse", "HEAD"],
+                capture_output=True, text=True, timeout=10,
+            )
+            if r.returncode == 0:
+                sha = r.stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            sha = ""
+    run_id = (os.environ.get("MEDIAWATCH_RUN_ID") or os.environ.get("GITHUB_RUN_ID") or "").strip() or None
+    return sha, run_id
+
+
+def to_sast_date(value):
+    """Return YYYY-MM-DD in Africa/Johannesburg, or None if the value cannot be parsed."""
+    if not value:
+        return None
+    s = str(value).strip()
+    if s.endswith("Z"):
+        s = s[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(s)
+    except ValueError:
+        try:
+            return datetime.strptime(s[:10], "%Y-%m-%d").date().isoformat()
+        except ValueError:
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=SAST)
+    return dt.astimezone(SAST).date().isoformat()
+
+
+def https_urls(text):
+    """Extract unique https:// URLs from a semicolon-separated source field."""
+    found = []
+    for part in re.split(r"\s*;\s*", text or ""):
+        m = re.search(r"https://[^\s;]+", part or "")
+        if m:
+            url = m.group(0).rstrip(".,)")
+            if url not in found:
+                found.append(url)
+    return found
+
+
+
+def editor_sources(pub):
+    urls = https_urls(pub.get("editor_source_url") or "")
+    if not urls:
+        return ""
+    links = " ".join(
+        f'<a class="source-link" href="{e(u)}" rel="nofollow noopener">{e(u)}</a>'
+        for u in urls
+    )
+    return f' <span class="note">Source: {links}</span>'
+
+
+
 # ---------------------------------------------------------------- build
 def build(out_dir):
     pubs, people, docs, excluded, detected, listed = load()
@@ -392,6 +497,24 @@ def build(out_dir):
             items[key]["findings"].append(f)
             findings.append(f)
 
+    git_sha, run_id = build_identity()
+    source_dates = []
+    for f in findings:
+        source_dates.append(to_sast_date(f.get("published_at_sast") or f.get("published_at")))
+    for it in items.values():
+        # items store a display date; recover a date prefix if it is ISO-like
+        source_dates.append(to_sast_date(it.get("date")))
+    source_dates = [d for d in source_dates if d]
+    data_date = max(source_dates) if source_dates else DATA_WINDOW["end"]
+    built_at = now_sast().isoformat(timespec="seconds")
+    build_meta = {
+        "git_sha": git_sha,
+        "git_sha_short": (git_sha[:7] if git_sha else "unknown"),
+        "run_id": run_id,
+        "built_at_sast": built_at,
+        "data_date": data_date,
+    }
+
     if out_dir.exists():
         shutil.rmtree(out_dir)
     (out_dir / "assets").mkdir(parents=True)
@@ -402,7 +525,7 @@ def build(out_dir):
         depth = rel.count("/")
         path = out_dir / rel
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(page(title, body, depth, crumbs), encoding="utf-8")
+        path.write_text(page(title, body, depth, crumbs, build_meta=build_meta), encoding="utf-8")
 
     def item_href(key):
         kind, iid = key
@@ -453,7 +576,7 @@ def build(out_dir):
         body = f"""<h1>{e(pub['name'])}</h1>
 <dl class="ev"><dt>Website</dt><dd><a href="{e(pub['url'])}" rel="nofollow noopener">{e(pub['url'])}</a></dd>
 <dt>Owner group</dt><dd>{e(pub.get('owner_group'))} <span class="badge">{e(pub.get('owner_fact_label'))}</span></dd>
-<dt>Editor</dt><dd>{e(pub.get('editor_in_chief'))}</dd>
+<dt>Editor</dt><dd>{e(pub.get('editor_in_chief'))}{editor_sources(pub)}</dd>
 <dt>Excluded (paywalled)</dt><dd>{excluded_counts[pid]} finding(s) rested on paywalled pieces and are not shown or scored.</dd></dl>
 <h2>Scorecard by named actor</h2>
 {scorecard_table(scorecards(fs), 'publication')}
@@ -629,6 +752,29 @@ def build(out_dir):
 <p class="note">Outlets that keep most news behind a paywall are covered only on their free content. If too little is free to reach minimum samples, the outlet shows findings only.</p>"""
     write("coverage/index.html", "Coverage plan", coverage, [("Coverage plan", None)])
 
+    page_count = sum(1 for _ in out_dir.rglob("*.html"))
+    manifest = {
+        "schema": "mediawatch.manifest/v1",
+        "kind": "manifest",
+        "build": {"git_sha": git_sha, "run_id": run_id},
+        "built_at_sast": built_at,
+        "data_date": data_date,
+        "data_window": dict(DATA_WINDOW),
+        "counts": {
+            "html_pages": page_count,
+            "findings_rendered": len(findings),
+            "findings_excluded_paywalled": len(excluded),
+            "items": len(items),
+            "writers": len(by_person),
+            "publications": len(PILOT),
+        },
+        "inputs": [
+            {"path": rel, "sha256": sha256_file(ROOT / rel)} for rel in MANIFEST_INPUTS
+        ],
+    }
+    (out_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+
     return {
         "findings_rendered": len(findings),
         "excluded": sorted(excluded),
@@ -636,7 +782,8 @@ def build(out_dir):
         "excluded_listed": sorted(listed),
         "items": len(items),
         "writers": len(by_person),
-        "pages": sum(1 for _ in out_dir.rglob("*.html")),
+        "pages": page_count,
+        "manifest": manifest,
     }
 
 
