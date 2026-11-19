@@ -115,11 +115,12 @@ Seed `seed/cassian-news24-bias-meter.md` (gitignored): **0** calls mapped to fin
 
 | Date (Africa/Johannesburg) | RFC | Env | Result | Rollback SHA |
 |----------------------------|-----|-----|--------|--------------|
-| 2026-11-15 | CHG-MW-001 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `0d88905a569e2f997bbdf7146eb398749ae93c24` |
-| 2026-11-15 | CHG-MW-002 | DEV (plan only, same branch; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `d3ca635d4ff54e25e287ef3a7249fc9102b57220` (or revert `9515e9ce65d41e74bc090d49237c196d6eb7ecdd`) |
-| 2026-11-15 | CHG-MW-001 review fixes | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `9515e9ce65d41e74bc090d49237c196d6eb7ecdd` |
-| 2026-11-15 | CHG-MW-001 review fixes 2 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (Cavus, Cassian) and owner GO | `55534683a8ef6134c3a03c4b265e44561288b610` |
+| 2026-11-15 | CHG-MW-001 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (reviewer A, previous reviewer) and owner GO | `0d88905a569e2f997bbdf7146eb398749ae93c24` |
+| 2026-11-15 | CHG-MW-002 | DEV (plan only, same branch; not published) | PENDING REVIEW (reviewer A, previous reviewer) and owner GO | `d3ca635d4ff54e25e287ef3a7249fc9102b57220` (or revert `9515e9ce65d41e74bc090d49237c196d6eb7ecdd`) |
+| 2026-11-15 | CHG-MW-001 review fixes | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (reviewer A, previous reviewer) and owner GO | `9515e9ce65d41e74bc090d49237c196d6eb7ecdd` |
+| 2026-11-15 | CHG-MW-001 review fixes 2 | DEV (`dev/chg-mw-001-catchup`; not published) | PENDING REVIEW (reviewer A, previous reviewer) and owner GO | `55534683a8ef6134c3a03c4b265e44561288b610` |
 | 2026-11-15 | CHG-MW-001 push log | Branch pushed at `f74158a` as draft [PR #1](https://github.com/GrokForum/mediawatch-sa/pull/1), 20:50 SAST; docs-only `1a726a0` pushed to the same branch 15 Nov 22:53 SAST; not merged | PENDING owner GO for merge | close PR #1 / delete remote branch |
 | 2026-11-17 | CHG-MW-001 merge (PR #1) | `main` | PR #1 merged on the owner's GO (relayed by the orchestrator); after the second history rewrite the merge is `cbbcb9e`. Recorded here by CHG-MW-002 | tag `snapshot-2026-11-17-pre-pr1` (`0d88905`) |
 | 2026-11-17 | CHG-MW-002 site build (generator scaffold, 3-outlet pilot, no-paywall rule) | DEV (`dev/chg-mw-002-site-rw2` on `main` `d1029af`) | Owner GO to merge and to switch Pages, 17 Nov 2026 20:01 SAST; indexing NO GO; tests 24 passed, 2 xfailed (DI/ND driver names); popia-review PASS | `d1029af164f1fb8a150360f877e7c58b021ed92c` (revert the merge, or reset to it) |
-| 2026-11-19 | CHG-MW-004 public data manifest (`_site/manifest.json`, footer stamp, editor source links) | DEV (`dev/chg-mw-004-manifest` on `main` `8294282`) | PENDING REVIEW (Cavus, Janus) and owner GO; not pushed | `8294282db5e2e9774e89695e8b75e0e4c16a759b` |
+| 2026-11-19 | CHG-MW-004 public data manifest (`_site/manifest.json`, footer stamp, editor source links) | DEV (`dev/chg-mw-004-manifest` on `main` `8294282`) | PENDING REVIEW (reviewer A, reviewer B) and owner GO; not pushed | `8294282db5e2e9774e89695e8b75e0e4c16a759b` |
+| 2026-11-19 | CHG-MW-004 review fix (role words in RFC and STATUS changelog) | DEV (`dev/chg-mw-004-manifest`) | PENDING REVIEW (reviewer A, reviewer B) and owner GO; not pushed | `923418ccb1818c08aca2a1a9c944ad4f2019584d` |
