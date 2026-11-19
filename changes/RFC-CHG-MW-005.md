@@ -50,7 +50,7 @@ This answers RFC-CHG-MW-002 open question f for MediaWatch SA.
 - **What is published:** findings on free public articles and public posts, each with a quote, a source link, a named actor, a fact label and both steelmen; journalists, editors and public figures only in their public or professional role.
 - **What is not published:** private individuals are never named (role labels only); no private contact details, identity numbers or home addresses; no paywalled text; no internal working notes.
 - **Visitors:** no cookies, analytics, trackers, accounts or forms; noindex and `Disallow: /` until a separate indexing decision.
-- **Corrections and removal:** how to ask, with a link to the existing Corrections page, and the contact `privacy@grokforum.site`.
+- **Corrections and removal:** how to ask, with a link to the existing Corrections page, and the contact `privacy@grokforum.site`. If a removal is accepted, the name is taken off the published pages at the next build; earlier copies in the repository history or in caches may still hold it.
 - **Responsible party:** GrokForum, which publishes MediaWatch SA. The owner's private identity is not named. A link is given to the Information Regulator (South Africa) at its public site, as a complaints route.
 
 The page is generated HTML, like the other static pages, so it carries the same noindex meta, DRAFT banner and `(draft)` title.
@@ -60,7 +60,7 @@ The page is generated HTML, like the other static pages, so it carries the same 
 ## Tests and how success is proven (DEV)
 
 - `uv run -q --no-project --with-requirements requirements.txt --with pyyaml python -m pytest -q -rs` — including the local denylist test.
-- Privacy page present with the required topics; footer link on every HTML page; `mailto:privacy@grokforum.site` on Corrections and Privacy; the old placeholder gone from the output.
+- Privacy page present with the required topics (including the honest removal sentence); footer link on every HTML page; `mailto:privacy@grokforum.site` on Corrections and Privacy; the old placeholder gone from the output. A site-wide test walks the built `_site` and fails on any email address or `mailto` other than `privacy@grokforum.site`, after decoding `&#64;`, `&#x40;`, `%40`, `&commat;` and `[at]` / `(at)` variants.
 - Every HTML page still has noindex and the DRAFT banner; `robots.txt` remains exactly `User-agent: *\nDisallow: /\n`; no new file types.
 
 ## Rollback

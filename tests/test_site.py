@@ -10,6 +10,7 @@ import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
+from urllib.parse import unquote
 
 import pytest
 
@@ -366,6 +367,8 @@ def test_privacy_page_present_with_required_topics(site):
     assert "https://inforegulator.org.za/" in h
     # Responsible party named as the publisher, not a private person.
     assert "GrokForum" in h
+    assert "taken off the published pages at the next build" in vis
+    assert "repository history" in vis and "caches" in vis
 
 
 def test_privacy_linked_from_every_footer(site):
@@ -391,6 +394,77 @@ def test_confirmed_privacy_address_in_output(site):
     blob = "\n".join(p.read_text(encoding="utf-8") for p in out.rglob("*") if p.is_file())
     assert "privacy@grokforum.site" in blob.lower()
     assert CONTACT_PLACEHOLDER not in blob
+
+
+ALLOWED_EMAIL = "privacy@grokforum.site"
+_AT_CODES = re.compile(r"&#0*64;|&#x0*40;|&commat;|%40", re.I)
+_AT_WORDS = re.compile(r"\s*\[\s*at\s*\]\s*|\s*\(\s*at\s*\)\s*", re.I)
+_EMAIL_RE = re.compile(r"[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}", re.I)
+_MAILTO_RE = re.compile(r"mailto:([^\"\'\s<>]+)", re.I)
+
+
+def decode_email_obfuscation(text: str) -> str:
+    """Decode common email hide-outs before scanning (entities, %40, [at] / (at))."""
+    s = text.replace("&commat;", "@").replace("&COMMAT;", "@")
+    s = html.unescape(s)
+    s = _AT_CODES.sub("@", s)
+    s = unquote(s)
+    s = _AT_WORDS.sub("@", s)
+    return s
+
+
+def foreign_emails(text: str) -> list[str]:
+    """Email addresses and mailto targets in text other than the role address."""
+    decoded = decode_email_obfuscation(text)
+    found = []
+    for match in _EMAIL_RE.finditer(decoded):
+        addr = match.group(0).rstrip(".,;:").lower()
+        if addr != ALLOWED_EMAIL:
+            found.append(addr)
+    for match in _MAILTO_RE.finditer(decoded):
+        target = match.group(1).split("?", 1)[0].strip().lower()
+        target = decode_email_obfuscation(target)
+        if target.startswith("mailto:"):
+            target = target[7:]
+        if "@" in target and target != ALLOWED_EMAIL:
+            found.append(target)
+    unique = []
+    for addr in found:
+        if addr not in unique:
+            unique.append(addr)
+    return unique
+
+
+def test_email_obfuscation_decoder_catches_variants():
+    variants = {
+        "alert&#64;example.com": "alert@example.com",
+        "alert&#x40;example.com": "alert@example.com",
+        "alert%40example.com": "alert@example.com",
+        "alert&commat;example.com": "alert@example.com",
+        "alert [at] example.com": "alert@example.com",
+        "alert(at)example.com": "alert@example.com",
+    }
+    for raw, expected in variants.items():
+        decoded = decode_email_obfuscation(raw)
+        assert expected in decoded, (raw, decoded)
+        assert foreign_emails(raw) == [expected]
+        assert foreign_emails(f"mailto:{raw}") == [expected]
+    assert foreign_emails("Contact privacy@grokforum.site") == []
+    assert foreign_emails('href="mailto:privacy@grokforum.site"') == []
+    assert foreign_emails("privacy&#64;grokforum.site") == []
+    assert foreign_emails("privacy [at] grokforum.site") == []
+
+
+def test_only_allowed_email_in_built_site(site):
+    """Walk the built site; any email or mailto other than the role address fails."""
+    out, _ = site
+    offenders = []
+    for path in sorted(p for p in out.rglob("*") if p.is_file()):
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        found = foreign_emails(raw)
+        if found:
+            offenders.append((str(path.relative_to(out)), found))
+    assert offenders == [], offenders
 
 # ------------------------------------------------------------------ manifest (RFC-CHG-MW-004)
 def test_manifest_json_present_and_valid(site):

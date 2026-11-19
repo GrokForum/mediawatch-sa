@@ -735,6 +735,7 @@ def build(out_dir):
 </ul>
 <p><strong>Contact:</strong> {contact}</p>
 <p>Accepted corrections are recorded as a new, dated score run. Earlier scores are not silently rewritten.</p>
+<p>If a removal is accepted, the name is taken off the published pages at the next build; earlier copies in the repository history or in caches may still hold it.</p>
 <h2>Who is responsible</h2>
 <p>The responsible party is GrokForum, which publishes MediaWatch SA. Privacy and correction requests go to {contact}.</p>
 <p>You can also complain to the <a href="https://inforegulator.org.za/" rel="nofollow noopener">Information Regulator (South Africa)</a>.</p>"""
