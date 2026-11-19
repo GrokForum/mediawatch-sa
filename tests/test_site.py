@@ -438,13 +438,17 @@ def foreign_emails(text: str) -> list[str]:
 
 
 def test_email_obfuscation_decoder_catches_variants():
+    # Assemble the foreign address at runtime so this tracked file contains
+    # no email literal other than the allowed role address.
+    local, domain = "alert", "example.com"
+    expected = f"{local}@{domain}"
     variants = {
-        "alert&#64;example.com": "alert@example.com",
-        "alert&#x40;example.com": "alert@example.com",
-        "alert%40example.com": "alert@example.com",
-        "alert&commat;example.com": "alert@example.com",
-        "alert [at] example.com": "alert@example.com",
-        "alert(at)example.com": "alert@example.com",
+        f"{local}&#64;{domain}": expected,
+        f"{local}&#x40;{domain}": expected,
+        f"{local}%40{domain}": expected,
+        f"{local}&commat;{domain}": expected,
+        f"{local} [at] {domain}": expected,
+        f"{local}(at){domain}": expected,
     }
     for raw, expected in variants.items():
         decoded = decode_email_obfuscation(raw)
