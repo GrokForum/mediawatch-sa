@@ -57,6 +57,7 @@ def test_build_succeeds(site):
     assert (out / "corrections" / "index.html").exists()
     assert (out / "method" / "index.html").exists()
     assert (out / "coverage" / "index.html").exists()
+    assert (out / "privacy" / "index.html").exists()
     for pid in build_site.PILOT:
         assert (out / "p" / pid / "index.html").exists()
     assert stats["findings_rendered"] > 0
@@ -282,7 +283,7 @@ def test_no_seed_or_fetched_or_private_paths_in_output(site):
             m = bad.search(p.read_text(encoding="utf-8"))
             assert not m, (p, m.group(0))
     allowed_top = {"index.html", "robots.txt", "assets", "p", "w", "a", "x", "i", "f",
-                   "method", "corrections", "coverage"}
+                   "method", "corrections", "coverage", "privacy"}
     assert {c.name for c in out.iterdir()} <= allowed_top
 
 
@@ -342,3 +343,49 @@ def test_crlf_preserved_on_data_csvs():
         raw = p.read_bytes()
         assert b"\r\n" in raw, p.name
         assert raw.count(b"\n") == raw.count(b"\r\n"), p.name
+
+
+# ------------------------------------------------------------------ privacy (RFC-CHG-MW-005)
+CONTACT_PLACEHOLDER = "[contact address to be confirmed by the owner before publication]"
+
+
+def test_privacy_page_present_with_required_topics(site):
+    out, _ = site
+    path = out / "privacy" / "index.html"
+    assert path.is_file()
+    h = text_of(path)
+    vis = visible_text(h).lower()
+    assert "what is published" in vis
+    assert "private" in vis and "never named" in vis
+    assert "public" in vis and "role" in vis
+    assert "correction" in vis and "removal" in vis
+    assert '<meta name="robots" content="noindex, nofollow">' in h
+    assert "Draft preview (DEV)" in h
+    assert "MediaWatch SA (draft)" in text_of(path).split("<title>")[1].split("</title>")[0]
+    # Information Regulator is a public body, linked as a right of complaint.
+    assert "https://inforegulator.org.za/" in h
+    # Responsible party named as the publisher, not a private person.
+    assert "GrokForum" in h
+
+
+def test_privacy_linked_from_every_footer(site):
+    out, _ = site
+    for p in pages(out):
+        h = text_of(p)
+        assert re.search(r'<a href="(?:(?:../)*)privacy/index.html">Privacy</a>', h), p
+
+
+def test_contact_placeholder_kept_on_corrections_and_privacy(site):
+    out, _ = site
+    for rel in ("corrections/index.html", "privacy/index.html"):
+        h = text_of(out / rel)
+        assert CONTACT_PLACEHOLDER in h, rel
+        assert 'class="contact-placeholder"' in h, rel
+        assert "mailto:" not in h.lower(), rel
+
+
+def test_no_unconfirmed_privacy_address_in_output(site):
+    out, _ = site
+    blob = "\n".join(p.read_text(encoding="utf-8") for p in out.rglob("*") if p.is_file())
+    assert "privacy@grokforum.site" not in blob.lower()
+    assert "privacy@grokforum" not in blob.lower()

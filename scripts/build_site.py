@@ -230,7 +230,8 @@ def page(title, body, depth, crumbs=()):
     up = "../" * depth
     nav = (f'<nav><a href="{up}index.html">Publications</a><a href="{up}method/index.html">Method</a>'
            f'<a href="{up}coverage/index.html">Coverage plan</a>'
-           f'<a href="{up}corrections/index.html">Corrections &amp; right of reply</a></nav>')
+           f'<a href="{up}corrections/index.html">Corrections &amp; right of reply</a>'
+           f'<a href="{up}privacy/index.html">Privacy</a></nav>')
     crumb_html = ""
     if crumbs:
         parts = [f'<a href="{up}{href}">{e(label)}</a>' if href else e(label) for label, href in crumbs]
@@ -252,7 +253,8 @@ def page(title, body, depth, crumbs=()):
 {crumb_html}
 {body}
 </main>
-<footer><div class="wrap">MediaWatch SA: bias FOR or AGAINST named actors, with the exact line, the source link and both sides' strongest case for every finding. Only free public content is judged; paywalled pieces are never scored.</div></footer>
+<footer><div class="wrap">MediaWatch SA: bias FOR or AGAINST named actors, with the exact line, the source link and both sides' strongest case for every finding. Only free public content is judged; paywalled pieces are never scored.
+<p class="footer-nav"><a href="{up}privacy/index.html">Privacy</a></p></div></footer>
 </body>
 </html>
 """
@@ -578,7 +580,7 @@ def build(out_dir):
 <h2>Accountability reporting</h2>
 <p>Sourced accountability reporting on those in power, with fair right of reply and no loaded driver, is not counted as bias. Such findings stay visible for audit but do not count in the score.</p>
 <h2>Privacy</h2>
-<p>Journalists, editors and public figures are named in their public role only. Private individuals who appear in stories are described by role, never named.</p>"""
+<p>Journalists, editors and public figures are named in their public role only. Private individuals who appear in stories are described by role, never named. See the <a href="../privacy/index.html">privacy page</a>.</p>"""
     write("method/index.html", "Method", method, [("Method", None)])
 
     corrections = """<h1>Corrections and right of reply</h1>
@@ -589,6 +591,31 @@ def build(out_dir):
 <p><strong>Contact:</strong> <span class="contact-placeholder">[contact address to be confirmed by the owner before publication]</span></p>
 <p>Accepted corrections are recorded as a new, dated score run. Earlier scores are not silently rewritten. Replies are never published automatically.</p>"""
     write("corrections/index.html", "Corrections and right of reply", corrections, [("Corrections and right of reply", None)])
+
+    contact = '<span class="contact-placeholder">[contact address to be confirmed by the owner before publication]</span>'
+    privacy = f"""<h1>Privacy</h1>
+<p>MediaWatch SA is a draft public register of South African media bias. This page says what the register publishes, what it does not, and how to ask for a correction or a removal.</p>
+<h2>What is published</h2>
+<p>The site publishes findings about free, publicly available news articles and public posts. Each finding quotes a published line, links to that source, names the actor the line is for or against, gives a fact label, and sets out the strongest case on both sides.</p>
+<p>Journalists, editors and public figures are named only in their public or professional role (for example an editor-in-chief, a bylined journalist, or a public official). Publication names, owner groups and public social-media accounts are shown only where they are already public.</p>
+<h2>What is not published</h2>
+<p>Private individuals who appear in a story are never named. They are described by role only (for example a municipal employee, or a spokesperson).</p>
+<p>The site does not publish private contact details, identity numbers, home addresses, or other personal information of private people. It does not publish paywalled text. Internal working notes are not rendered.</p>
+<h2>How this site treats visitors</h2>
+<p>The site uses no cookies, no analytics and no trackers. It has no accounts and no forms. Every page carries a noindex instruction, and robots.txt disallows crawling, until a separate decision to index.</p>
+<h2>Corrections and removal</h2>
+<p>If you believe a published finding is wrong, unfair, or names someone who should not be named, you can ask for a correction or a removal. The same route is described on <a href="../corrections/index.html">corrections and right of reply</a>.</p>
+<ul>
+<li>Name the finding ID or the page address and say what is wrong.</li>
+<li>Link or attach the evidence you rely on.</li>
+<li>For a removal request, say which name or detail should come down and why (for example, a private person named in error).</li>
+</ul>
+<p><strong>Contact:</strong> {contact}</p>
+<p>Accepted corrections are recorded as a new, dated score run. Earlier scores are not silently rewritten.</p>
+<h2>Who is responsible</h2>
+<p>The responsible party is GrokForum, which publishes MediaWatch SA. The contact placeholder above is the route for privacy and correction requests once the owner confirms an address.</p>
+<p>You can also complain to the <a href="https://inforegulator.org.za/" rel="nofollow noopener">Information Regulator (South Africa)</a>.</p>"""
+    write("privacy/index.html", "Privacy", privacy, [("Privacy", None)])
 
     coverage = """<h1>Coverage plan</h1>
 <p>The aim is to cover South African media broadly. Coverage grows in phases. No dates are promised; each phase starts only when its entry criteria are met.</p>
