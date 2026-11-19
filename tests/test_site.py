@@ -282,7 +282,7 @@ def test_no_seed_or_fetched_or_private_paths_in_output(site):
             m = bad.search(p.read_text(encoding="utf-8"))
             assert not m, (p, m.group(0))
     allowed_top = {"index.html", "robots.txt", "assets", "p", "w", "a", "x", "i", "f",
-                   "method", "corrections", "coverage"}
+                   "method", "corrections", "coverage", "manifest.json"}
     assert {c.name for c in out.iterdir()} <= allowed_top
 
 
@@ -342,3 +342,105 @@ def test_crlf_preserved_on_data_csvs():
         raw = p.read_bytes()
         assert b"\r\n" in raw, p.name
         assert raw.count(b"\n") == raw.count(b"\r\n"), p.name
+
+
+# ------------------------------------------------------------------ manifest (RFC-CHG-MW-004)
+def test_manifest_json_present_and_valid(site):
+    out, stats = site
+    path = out / "manifest.json"
+    assert path.is_file()
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    assert doc["schema"] == "mediawatch.manifest/v1"
+    assert doc["kind"] == "manifest"
+    sha = doc["build"]["git_sha"]
+    assert isinstance(sha, str) and len(sha) >= 7
+    # local pytest has no GITHUB_RUN_ID unless the environment set one
+    assert "run_id" in doc["build"]
+    assert doc["built_at_sast"]
+    expected_data_date = max(
+        d for d in (
+            build_site.to_sast_date(f.get("published_at_sast") or f.get("published_at"))
+            for f in all_findings().values()
+            if f["id"] not in stats["excluded"]
+        ) if d
+    )
+    assert doc["data_date"] == expected_data_date
+    # Current pilot: newest rendered finding is 2026-10-27 (2026-10-30 is paywalled and excluded).
+    assert expected_data_date == "2026-10-27"
+    assert doc["data_window"]["start"] == "2026-05-01"
+    assert doc["data_window"]["end"] == "2026-10-31"
+    counts = doc["counts"]
+    assert counts["html_pages"] == stats["pages"] == len(pages(out))
+    assert counts["findings_rendered"] == stats["findings_rendered"]
+    assert counts["findings_excluded_paywalled"] == len(stats["excluded"])
+    assert counts["items"] == stats["items"]
+    assert counts["writers"] == stats["writers"]
+    assert counts["publications"] == 3
+    paths = [i["path"] for i in doc["inputs"]]
+    assert paths == list(build_site.MANIFEST_INPUTS)
+    for item in doc["inputs"]:
+        assert len(item["sha256"]) == 64
+        assert item["sha256"] == build_site.sha256_file(ROOT / item["path"])
+
+
+def test_only_allowed_file_types_including_manifest(site):
+    out, _ = site
+    unexpected = []
+    for p in out.rglob("*"):
+        if p.is_dir():
+            continue
+        rel = p.relative_to(out)
+        if p.suffix in {".html", ".css"} or str(rel) in {"robots.txt", "manifest.json"}:
+            continue
+        unexpected.append(str(rel))
+    assert unexpected == []
+    # exactly one json file, at the site root
+    json_files = [p for p in out.rglob("*.json")]
+    assert [p.relative_to(out).as_posix() for p in json_files] == ["manifest.json"]
+
+
+def test_footer_build_stamp_and_manifest_link(site):
+    out, _ = site
+    for p in pages(out):
+        h = text_of(p)
+        assert 'class="build-stamp"' in h, p
+        assert "Africa/Johannesburg" in h
+        assert f'data date {json.loads((out / "manifest.json").read_text(encoding="utf-8"))["data_date"]}' in h
+        assert "manifest.json" in h
+        assert '<meta name="robots" content="noindex, nofollow">' in h
+
+
+def test_workflow_allows_exactly_manifest_json():
+    raw = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+    assert "! -path '_site/manifest.json'" in raw
+    assert "! -name '*.json'" not in raw
+
+
+# ------------------------------------------------------------------ source links (standing owner rule)
+def test_every_published_finding_and_item_links_to_source(site):
+    """Every register finding and item page must link an https source."""
+    out, _ = site
+    for d in (out / "f").iterdir():
+        h = text_of(d / "index.html")
+        link = re.search(r'<a class="source-link" href="([^"]+)"', h)
+        assert link and html.unescape(link.group(1)).startswith("https://"), d
+    for folder in ("a", "x", "i"):
+        root = out / folder
+        if not root.exists():
+            continue
+        for d in root.iterdir():
+            h = text_of(d / "index.html")
+            assert re.search(r"<dt>Source</dt>\s*<dd><a href=\"https://", h), d
+
+
+def test_publication_editor_https_sources_are_linked(site):
+    out, _ = site
+    pubs = {r["id"]: r for r in build_site.read_csv("publications.csv")}
+    for pid in build_site.PILOT:
+        h = text_of(out / "p" / pid / "index.html")
+        pub = pubs[pid]
+        for url in build_site.https_urls(pub.get("editor_source_url") or ""):
+            assert f'class="source-link" href="{html.escape(url, quote=True)}"' in h, (pid, url)
+        # Owner group is published but publications.csv has no owner source URL field.
+        # That gap is reported in RFC-CHG-MW-004; this test only checks the group is shown.
+        assert html.escape(pub["owner_group"]) in h

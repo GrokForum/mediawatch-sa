@@ -41,7 +41,8 @@ jobs:
       - name: Check only allowed file types
         run: |
           set -eu
-          bad=$(find _site ! -type d \( ! -type f -o \( ! -name '*.html' ! -name '*.css' ! -path '_site/robots.txt' \) \))
+          # html, css, robots.txt, and exactly one extra file: manifest.json (RFC-CHG-MW-004).
+          bad=$(find _site ! -type d \( ! -type f -o \( ! -name '*.html' ! -name '*.css' ! -path '_site/robots.txt' ! -path '_site/manifest.json' \) \))
           if [ -n "$bad" ]; then echo "Unexpected files in _site:"; echo "$bad"; exit 1; fi
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
