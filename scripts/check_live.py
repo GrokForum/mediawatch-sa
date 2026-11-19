@@ -20,6 +20,7 @@ import time
 import urllib.error
 import urllib.request
 from datetime import datetime
+from html.parser import HTMLParser
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -34,6 +35,74 @@ USER_AGENT = "MediaWatch-SA-live-check/1.0"
 DEFAULT_TIMEOUT = 20
 DEFAULT_WAIT = 300
 RETRY_EVERY = 15
+
+class _PageSignals(HTMLParser):
+    """Collect robots meta content and visible text (not script, style, or attributes)."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.robots_contents: list[str] = []
+        self._chunks: list[str] = []
+        self._skip = 0
+
+    def handle_starttag(self, tag, attrs):
+        self._on_start(tag, attrs)
+
+    def handle_startendtag(self, tag, attrs):
+        self._on_start(tag, attrs)
+
+    def _on_start(self, tag, attrs) -> None:
+        t = (tag or "").lower()
+        if t in ("script", "style"):
+            self._skip += 1
+            return
+        if t == "meta":
+            data = {(k or "").lower(): (v or "") for k, v in attrs}
+            if data.get("name", "").strip().lower() == "robots":
+                self.robots_contents.append(data.get("content", ""))
+
+    def handle_endtag(self, tag):
+        if (tag or "").lower() in ("script", "style") and self._skip:
+            self._skip -= 1
+
+    def handle_data(self, data):
+        if self._skip == 0 and data:
+            self._chunks.append(data)
+
+    def visible_text(self) -> str:
+        return " ".join(self._chunks)
+
+
+def _parse_page(html: str) -> _PageSignals:
+    parser = _PageSignals()
+    parser.feed(html or "")
+    parser.close()
+    return parser
+
+
+def _robots_tokens(content: str) -> set[str]:
+    return {part.strip().lower() for part in content.split(",") if part.strip()}
+
+
+def has_noindex_nofollow(html: str) -> bool:
+    """True when a robots meta lists both noindex and nofollow (html.parser, not a substring)."""
+    try:
+        parsed = _parse_page(html)
+    except Exception:
+        return False
+    return any(
+        "noindex" in _robots_tokens(content) and "nofollow" in _robots_tokens(content)
+        for content in parsed.robots_contents
+    )
+
+
+def has_visible_draft(html: str) -> bool:
+    """True when a DRAFT marker appears in visible text, not in script, style, or attributes."""
+    try:
+        text = _parse_page(html).visible_text()
+    except Exception:
+        return False
+    return any(marker in text for marker in DRAFT_MARKERS)
 
 
 def now_sast() -> datetime:
@@ -99,19 +168,17 @@ def evaluate(base: str, timeout: int) -> list[dict]:
     checks: list[dict] = []
 
     home = fetch(join_url(base, "/"), timeout=timeout)
-    home_ok = (
-        home["status"] == 200
-        and NOINDEX in home["body"]
-        and any(m in home["body"] for m in DRAFT_MARKERS)
-    )
+    home_noindex = has_noindex_nofollow(home["body"])
+    home_draft = has_visible_draft(home["body"])
+    home_ok = home["status"] == 200 and home_noindex and home_draft
     checks.append(_result(
         "home_200",
         home["url"],
         home_ok,
         status=home["status"],
         final_url=home["final_url"],
-        noindex=NOINDEX in home["body"],
-        draft=any(m in home["body"] for m in DRAFT_MARKERS),
+        noindex=home_noindex,
+        draft=home_draft,
         error=home["error"],
     ))
 
@@ -133,14 +200,15 @@ def evaluate(base: str, timeout: int) -> list[dict]:
 
     for path in SAMPLE_PATHS:
         got = fetch(join_url(base, path), timeout=timeout)
-        ok = got["status"] == 200 and NOINDEX in got["body"]
+        page_noindex = has_noindex_nofollow(got["body"])
+        ok = got["status"] == 200 and page_noindex
         checks.append(_result(
             f"noindex:{path}",
             got["url"],
             ok,
             status=got["status"],
             final_url=got["final_url"],
-            noindex=NOINDEX in got["body"],
+            noindex=page_noindex,
             error=got["error"],
         ))
 

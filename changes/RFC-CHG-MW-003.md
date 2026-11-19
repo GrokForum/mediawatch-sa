@@ -69,9 +69,9 @@ The `live_check` job has only `contents: read`. It has no `actions: write`, no `
 
 | Check | Pass rule |
 |-------|-----------|
-| `home_200` | `GET /` is 200, the page contains `<meta name="robots" content="noindex, nofollow">`, and a visible DRAFT marker (`Draft preview (DEV)` or `MediaWatch SA (draft)`). |
+| `home_200` | `GET /` is 200, a robots meta (parsed with `html.parser`, not a substring) lists both `noindex` and `nofollow`, and a visible DRAFT marker (`Draft preview (DEV)` or `MediaWatch SA (draft)`) appears in visible text (not in `script`, `style`, or attributes). |
 | `robots_disallow` | `GET /robots.txt` is 200 and the body is exactly `User-agent: *\nDisallow: /\n`. |
-| `noindex:` for `/`, `/method/`, `/coverage/`, `/corrections/`, `/p/news24/` | 200 and the same noindex meta. |
+| `noindex:` for `/`, `/method/`, `/coverage/`, `/corrections/`, `/p/news24/` | 200 and the same parsed robots meta. |
 | `forbidden_404:` for `/data`, `/data/`, `/docs`, `/docs/`, `/plan`, `/plan/` | Final status 404 (INC-MW-001). |
 
 The JSON records `checked_at_sast`, `git_sha`, `run_id`, `event`, `attempts`, `verdict`, and per-check status codes. It does not store full HTML bodies.
@@ -85,7 +85,7 @@ A failed live check turns the workflow red. It does **not** roll back the deploy
 ## Tests and how success is proven (DEV)
 
 - `uv run -q --no-project --with-requirements requirements.txt python -m pytest -q -rs` — including the local denylist test. `PyYAML==6.0.2` is pinned in `requirements.txt` (CI installs only that file).
-- New tests: fixture server PASS and FAIL cases (wrong robots, `/data` served as 200, missing noindex only, missing DRAFT only); workflow has the schedule, the `live_check` job, no `contents: write`, no `actions: write`, `persist-credentials: false` on both checkouts, pinned 40-character action SHAs, 90-day artifact retention. The home-page DRAFT and noindex guards are tested in separate fixtures so each fails on its own.
+- New tests: fixture server PASS and FAIL cases (wrong robots, `/data` served as 200, missing noindex only, missing DRAFT only, only `/method/` missing noindex so the per-page check fails on its own); robots meta is parsed with `html.parser` (a substring in a comment, script or body text does not pass); DRAFT is matched in visible text only (markers in `script`, `style` or attributes do not pass). Workflow has the schedule, the `live_check` job, no `contents: write`, no `actions: write`, `persist-credentials: false` on both checkouts, pinned 40-character action SHAs, 90-day artifact retention. The home-page DRAFT and noindex guards are tested in separate fixtures so each fails on its own.
 - `github.sha`, `github.run_id` and `github.event_name` used by the live-check `run:` step are passed through `env:` (`GIT_SHA`, `RUN_ID`, `EVENT_NAME`) and referenced as shell variables, so the script cannot be rewritten by template injection.
 - A local `scripts/build_site.py` build still has noindex on every HTML page, exact `robots.txt`, and only the already-allowed file types (this RFC adds none).
 

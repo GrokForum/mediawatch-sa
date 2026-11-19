@@ -186,6 +186,89 @@ def test_fail_if_home_missing_draft(live_server, tmp_path):
     assert home["draft"] is False
 
 
+def test_fail_if_only_method_lacks_noindex(live_server, tmp_path):
+    """Other samples stay good; only /method/ loses the robots meta, so that per-page check fails."""
+    base, handler = live_server
+    handler.pages["/method/"] = (
+        b"<!doctype html><html lang=\"en\"><head>"
+        b"<title>Method | MediaWatch SA (draft)</title>"
+        b"</head><body>"
+        b"<p class=\"draft\"><strong>Draft preview (DEV).</strong></p>"
+        b"</body></html>"
+    )
+    out = tmp_path / "live-check.json"
+    rc = check_live.main(["--base-url", base, "--out", str(out), "--wait", "0"])
+    assert rc == 1
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    by_name = {c["name"]: c for c in payload["checks"]}
+    assert by_name["home_200"]["pass"] is True
+    assert by_name["robots_disallow"]["pass"] is True
+    assert by_name["noindex:/"]["pass"] is True
+    assert by_name["noindex:/coverage/"]["pass"] is True
+    assert by_name["noindex:/corrections/"]["pass"] is True
+    assert by_name["noindex:/p/news24/"]["pass"] is True
+    assert by_name["noindex:/method/"]["pass"] is False
+    assert by_name["noindex:/method/"]["noindex"] is False
+    assert by_name["noindex:/method/"]["status"] == 200
+
+
+def test_noindex_ignores_substring_outside_robots_meta(live_server, tmp_path):
+    """The exact meta string in a comment, script and body text is not a robots meta."""
+    exact = check_live.NOINDEX
+    base, handler = live_server
+    handler.pages["/"] = (
+        "<!doctype html><html lang=\"en\"><head>"
+        f"<!-- {exact} -->"
+        "<title>Publications | MediaWatch SA (draft)</title>"
+        "</head><body>"
+        "<script>const x = '" + exact.replace("'", "\\'") + "';</script>"
+        "<p>The required tag is " + exact.replace("<", "&lt;") + "</p>"
+        '<p class="draft"><strong>Draft preview (DEV).</strong></p>'
+        "</body></html>"
+    ).encode("utf-8")
+    out = tmp_path / "live-check.json"
+    rc = check_live.main(["--base-url", base, "--out", str(out), "--wait", "0"])
+    assert rc == 1
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    home = next(c for c in payload["checks"] if c["name"] == "home_200")
+    assert home["noindex"] is False
+    assert home["draft"] is True
+    assert home["pass"] is False
+    # Direct helper: attribute-reordered meta still counts; a comment or escaped
+    # substring does not (a raw meta tag inside <p> would still be a robots meta).
+    reordered = '<meta content="noindex, nofollow" name="robots">'
+    assert check_live.has_noindex_nofollow(reordered) is True
+    assert check_live.has_noindex_nofollow(f"<!-- {exact} -->") is False
+    assert check_live.has_noindex_nofollow(f"<p>{exact.replace('<', '&lt;')}</p>") is False
+
+
+def test_draft_ignores_markers_in_script_style_or_attributes(live_server, tmp_path):
+    """DRAFT markers in script, style or attributes do not satisfy the visible-text check."""
+    base, handler = live_server
+    handler.pages["/"] = (
+        b"<!doctype html><html lang=\"en\"><head>"
+        b"<meta name=\"robots\" content=\"noindex, nofollow\">"
+        b"<title>Publications | MediaWatch SA</title>"
+        b"<style>.x::before { content: \"Draft preview (DEV)\"; }</style>"
+        b"</head><body>"
+        b"<script>const label = \"Draft preview (DEV)\"; const t = \"MediaWatch SA (draft)\";</script>"
+        b"<p title=\"Draft preview (DEV)\" data-label=\"MediaWatch SA (draft)\">hello</p>"
+        b"</body></html>"
+    )
+    out = tmp_path / "live-check.json"
+    rc = check_live.main(["--base-url", base, "--out", str(out), "--wait", "0"])
+    assert rc == 1
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    home = next(c for c in payload["checks"] if c["name"] == "home_200")
+    assert home["noindex"] is True
+    assert home["draft"] is False
+    assert home["pass"] is False
+    visible = "<p class=\"draft\"><strong>Draft preview (DEV).</strong></p>"
+    hidden = '<p title="Draft preview (DEV)">hello</p>'
+    assert check_live.has_visible_draft(visible) is True
+    assert check_live.has_visible_draft(hidden) is False
+
+
 def test_forbidden_paths_and_samples_match_rfc():
     assert check_live.FORBIDDEN_PATHS == (
         "/data", "/data/", "/docs", "/docs/", "/plan", "/plan/")
