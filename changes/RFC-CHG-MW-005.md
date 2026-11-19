@@ -1,6 +1,6 @@
 # RFC-CHG-MW-005 — Privacy page (DEV)
 
-**Status:** DEV build complete. PENDING REVIEW (reviewer A, reviewer B) and owner GO to push or merge. Not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
+**Status:** Pushed as PR #6 (`dev/chg-mw-005-privacy`). Under review (reviewer A, reviewer B). Not merged; not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
 **Environment:** DEV — branch `dev/chg-mw-005-privacy` (used instead of `rfc/<ver>` to match the project's existing `dev/chg-mw-*` naming).  
 **Pre-change SHA (rollback base):** `8294282db5e2e9774e89695e8b75e0e4c16a759b` (`main` after PR #3).  
 **Date:** 19 Nov 2026 (Africa/Johannesburg)  
@@ -20,7 +20,7 @@
 
 ## Goal
 
-Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no privacy link, and the Corrections page showed a contact placeholder. This RFC adds the privacy page and, after the owner's decision of 19 Nov 2026 (relayed by reviewer A), uses `privacy@grokforum.site` as the contact address.
+Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no privacy link, and the Corrections page showed a contact placeholder. This RFC adds the privacy page and, after the owner's decision of 19 Nov 2026 (relayed by reviewer A), uses the role address `privacy@grokforum.site` as the contact.
 
 ---
 
@@ -39,7 +39,7 @@ Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no
 
 ## Contact address
 
-On 19 Nov 2026 the owner decided the contact address is `privacy@grokforum.site`, as relayed by reviewer A. The previous placeholder (`[contact address to be confirmed by the owner before publication]`) is replaced on the Corrections page and the Privacy page with a `mailto:privacy@grokforum.site` link. The same address is used in the Privacy page's "Who is responsible" section.
+On 19 Nov 2026 the owner decided the contact is the role address `privacy@grokforum.site`, as relayed by reviewer A. The previous placeholder (`[contact address to be confirmed by the owner before publication]`) is replaced on the Corrections page and the Privacy page with a `mailto:privacy@grokforum.site` link. The same address is used in the Privacy page's "Who is responsible" section.
 
 This answers RFC-CHG-MW-002 open question f for MediaWatch SA.
 
@@ -83,8 +83,8 @@ This branch therefore records the required addition here and does not copy the 0
 - Phase 0 findings this RFC does **not** close: B2 (nightly job — CHG-MW-003), M4 (no CSP meta), L2 (favicon.ico 404), L4 (one 4.0 s sample). H3 (the public data manifest) is now on this branch by a forward-only merge of CHG-MW-004. Other sites' findings belong to those bots.
 - RFC-CHG-MW-002 open question f (corrections contact) is answered: `privacy@grokforum.site`, owner decision 19 Nov 2026, relayed by reviewer A.
 - Source-link gaps (owner group has no source URL field; editor source URLs are in the data but not rendered on this branch) are reported with CHG-MW-004.
-- No search-engine indexing request, no push, no PR, no merge, no Pages settings change, no deploy.
+- No search-engine indexing request, no merge, no Pages settings change, no deploy. The branch has been pushed as PR #6 and is under review.
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. Owner GO is required before this branch is pushed, merged or deployed.
+Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The branch has been pushed as PR #6. Owner GO is required before merge or deploy.
