@@ -375,17 +375,19 @@ def test_privacy_linked_from_every_footer(site):
         assert re.search(r'<a href="(?:(?:../)*)privacy/index.html">Privacy</a>', h), p
 
 
-def test_contact_placeholder_kept_on_corrections_and_privacy(site):
+def test_contact_address_on_corrections_and_privacy(site):
     out, _ = site
+    mailto = 'href="mailto:privacy@grokforum.site"'
     for rel in ("corrections/index.html", "privacy/index.html"):
         h = text_of(out / rel)
-        assert CONTACT_PLACEHOLDER in h, rel
-        assert 'class="contact-placeholder"' in h, rel
-        assert "mailto:" not in h.lower(), rel
+        assert "privacy@grokforum.site" in h, rel
+        assert mailto in h, rel
+        assert CONTACT_PLACEHOLDER not in h, rel
+        assert "contact-placeholder" not in h, rel
 
 
-def test_no_unconfirmed_privacy_address_in_output(site):
+def test_confirmed_privacy_address_in_output(site):
     out, _ = site
     blob = "\n".join(p.read_text(encoding="utf-8") for p in out.rglob("*") if p.is_file())
-    assert "privacy@grokforum.site" not in blob.lower()
-    assert "privacy@grokforum" not in blob.lower()
+    assert "privacy@grokforum.site" in blob.lower()
+    assert CONTACT_PLACEHOLDER not in blob

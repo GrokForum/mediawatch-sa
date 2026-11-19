@@ -583,16 +583,16 @@ def build(out_dir):
 <p>Journalists, editors and public figures are named in their public role only. Private individuals who appear in stories are described by role, never named. See the <a href="../privacy/index.html">privacy page</a>.</p>"""
     write("method/index.html", "Method", method, [("Method", None)])
 
-    corrections = """<h1>Corrections and right of reply</h1>
+    contact = '<a href="mailto:privacy@grokforum.site">privacy@grokforum.site</a>'
+    corrections = f"""<h1>Corrections and right of reply</h1>
 <p>If you are a publication, journalist or named actor and believe a finding is wrong, unfair or missing context, you can ask for a correction or submit a reply.</p>
 <ul><li>Name the finding ID (for example <code>F-DI-01</code>) and say what is wrong.</li>
 <li>Link or attach the evidence you rely on.</li>
 <li>Say whether you want your reply published alongside the finding.</li></ul>
-<p><strong>Contact:</strong> <span class="contact-placeholder">[contact address to be confirmed by the owner before publication]</span></p>
+<p><strong>Contact:</strong> {contact}</p>
 <p>Accepted corrections are recorded as a new, dated score run. Earlier scores are not silently rewritten. Replies are never published automatically.</p>"""
     write("corrections/index.html", "Corrections and right of reply", corrections, [("Corrections and right of reply", None)])
 
-    contact = '<span class="contact-placeholder">[contact address to be confirmed by the owner before publication]</span>'
     privacy = f"""<h1>Privacy</h1>
 <p>MediaWatch SA is a draft public register of South African media bias. This page says what the register publishes, what it does not, and how to ask for a correction or a removal.</p>
 <h2>What is published</h2>
@@ -613,7 +613,7 @@ def build(out_dir):
 <p><strong>Contact:</strong> {contact}</p>
 <p>Accepted corrections are recorded as a new, dated score run. Earlier scores are not silently rewritten.</p>
 <h2>Who is responsible</h2>
-<p>The responsible party is GrokForum, which publishes MediaWatch SA. The contact placeholder above is the route for privacy and correction requests once the owner confirms an address.</p>
+<p>The responsible party is GrokForum, which publishes MediaWatch SA. Privacy and correction requests go to {contact}.</p>
 <p>You can also complain to the <a href="https://inforegulator.org.za/" rel="nofollow noopener">Information Regulator (South Africa)</a>.</p>"""
     write("privacy/index.html", "Privacy", privacy, [("Privacy", None)])
 
