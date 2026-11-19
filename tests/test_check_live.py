@@ -187,7 +187,7 @@ def test_workflow_has_nightly_schedule_and_live_check_job():
     assert job["permissions"]["contents"] == "read"
     assert job["permissions"].get("pages") is None
     assert "id-token" not in job["permissions"]
-    assert job["permissions"]["actions"] == "write"  # artifact upload only
+    assert "actions" not in job["permissions"]
 
 
 def test_workflow_has_no_contents_write():
@@ -199,6 +199,19 @@ def test_workflow_has_no_contents_write():
         perms = job.get("permissions") or {}
         assert perms.get("contents") in (None, "read"), name
         assert perms.get("contents") != "write", name
+        assert perms.get("actions") != "write", name
+
+
+def test_checkouts_do_not_persist_credentials():
+    doc, _ = _load_workflow()
+    checkouts = []
+    for job in doc["jobs"].values():
+        for step in job.get("steps") or []:
+            if isinstance(step.get("uses"), str) and "actions/checkout@" in step["uses"]:
+                checkouts.append(step)
+    assert len(checkouts) == 2
+    for step in checkouts:
+        assert step.get("with", {}).get("persist-credentials") is False
 
 
 def test_workflow_actions_are_pinned_shas():

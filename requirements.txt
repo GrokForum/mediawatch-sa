@@ -1,5 +1,7 @@
 # MediaWatch SA (RFC-CHG-MW-002)
 # The site generator (scripts/build_site.py) uses the Python 3 standard library only.
 # These pinned packages are for checks: schema validation and the test suite.
+# PyYAML is required by tests/test_check_live.py; CI installs only this file.
 jsonschema==4.23.0
 pytest==8.3.4
+PyYAML==6.0.2
