@@ -1,6 +1,6 @@
 # RFC-CHG-MW-005 — Privacy page (DEV)
 
-**Status:** DEV build complete. PENDING REVIEW (Cavus, Janus) and owner GO to push or merge. Not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
+**Status:** DEV build complete. PENDING REVIEW (reviewer A, reviewer B) and owner GO to push or merge. Not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
 **Environment:** DEV — branch `dev/chg-mw-005-privacy` (used instead of `rfc/<ver>` to match the project's existing `dev/chg-mw-*` naming).  
 **Pre-change SHA (rollback base):** `8294282db5e2e9774e89695e8b75e0e4c16a759b` (`main` after PR #3).  
 **Date:** 19 Nov 2026 (Africa/Johannesburg)  
@@ -20,7 +20,7 @@
 
 ## Goal
 
-Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no privacy link, and the Corrections page showed a contact placeholder. This RFC adds the privacy page and, after the owner's decision of 19 Nov 2026 (relayed by Cavus), uses `privacy@grokforum.site` as the contact address.
+Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no privacy link, and the Corrections page showed a contact placeholder. This RFC adds the privacy page and, after the owner's decision of 19 Nov 2026 (relayed by reviewer A), uses `privacy@grokforum.site` as the contact address.
 
 ---
 
@@ -29,7 +29,7 @@ Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no
 | File | Change |
 |------|--------|
 | `scripts/build_site.py` | Add a Privacy page at `privacy/index.html`. Link it from every footer (the required link) and from the site nav and the Method "Privacy" section. Contact on Corrections and Privacy is `privacy@grokforum.site` (a `mailto:` link), per the owner's 19 Nov 2026 decision. |
-| `tests/test_site.py` | Privacy page exists, required topics, noindex and DRAFT, footer link on every page, `mailto:privacy@grokforum.site` on Corrections and Privacy, and the old contact placeholder is gone from the output. `allowed_top` includes `privacy`. |
+| `tests/test_site.py` | Privacy page exists, required topics, noindex and DRAFT, footer link on every page, `mailto:privacy@grokforum.site` on Corrections and Privacy, and the old contact placeholder is gone from the output. `allowed_top` includes `privacy` (and, after the merge of CHG-MW-004, `manifest.json`). |
 | `changes/RFC-CHG-MW-005.md` | This record. |
 | `docs/STATUS.md` | Change-log row for this RFC. |
 
@@ -39,7 +39,7 @@ Close Phase 0 audit finding **H1**: the live site has no `/privacy/` page and no
 
 ## Contact address
 
-On 19 Nov 2026 the owner decided the contact address is `privacy@grokforum.site`, as relayed by Cavus. The previous placeholder (`[contact address to be confirmed by the owner before publication]`) is replaced on the Corrections page and the Privacy page with a `mailto:privacy@grokforum.site` link. The same address is used in the Privacy page's "Who is responsible" section.
+On 19 Nov 2026 the owner decided the contact address is `privacy@grokforum.site`, as relayed by reviewer A. The previous placeholder (`[contact address to be confirmed by the owner before publication]`) is replaced on the Corrections page and the Privacy page with a `mailto:privacy@grokforum.site` link. The same address is used in the Privacy page's "Who is responsible" section.
 
 This answers RFC-CHG-MW-002 open question f for MediaWatch SA.
 
@@ -72,13 +72,19 @@ git revert <merge-commit-of-this-RFC>
 
 Pre-change SHA: `8294282db5e2e9774e89695e8b75e0e4c16a759b`. No Pages settings change to undo.
 
+## Live-check sample path `/privacy/`
+
+`scripts/check_live.py` and its `SAMPLE_PATHS` live on the CHG-MW-003 branch, not on this one until that change is on the same tree. `/privacy/` must be added to `SAMPLE_PATHS` on **this** change, not on CHG-MW-003: until this privacy page is deployed, the live site has no `/privacy/` and the 003 nightly would go red if it sampled that path.
+
+This branch therefore records the required addition here and does not copy the 003 checker into this PR. Once CHG-MW-003 is on `main` (or otherwise on the same tree as this branch), a one-line follow-up should add `/privacy/` to `SAMPLE_PATHS` (and to the checker's local fixture pages) so the nightly confirms the privacy page is 200 and noindex.
+
 ## Seen, not touched
 
-- Phase 0 findings this RFC does **not** close: B2 (nightly job — CHG-MW-003), H3 (public data manifest — CHG-MW-004), M4 (no CSP meta), L2 (favicon.ico 404), L4 (one 4.0 s sample). Other sites' findings belong to those bots.
-- RFC-CHG-MW-002 open question f (corrections contact) is answered: `privacy@grokforum.site`, owner decision 19 Nov 2026, relayed by Cavus.
+- Phase 0 findings this RFC does **not** close: B2 (nightly job — CHG-MW-003), M4 (no CSP meta), L2 (favicon.ico 404), L4 (one 4.0 s sample). H3 (the public data manifest) is now on this branch by a forward-only merge of CHG-MW-004. Other sites' findings belong to those bots.
+- RFC-CHG-MW-002 open question f (corrections contact) is answered: `privacy@grokforum.site`, owner decision 19 Nov 2026, relayed by reviewer A.
 - Source-link gaps (owner group has no source URL field; editor source URLs are in the data but not rendered on this branch) are reported with CHG-MW-004.
 - No search-engine indexing request, no push, no PR, no merge, no Pages settings change, no deploy.
 
 ## Sign-off
 
-Author: Grok Bot. Sign-off is by someone other than the author. Reviewers: Cavus and Janus. Owner GO is required before this branch is pushed, merged or deployed.
+Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. Owner GO is required before this branch is pushed, merged or deployed.
