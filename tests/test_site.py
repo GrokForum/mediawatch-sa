@@ -134,7 +134,9 @@ def test_generator_does_not_read_lean_files():
 def test_noindex_everywhere(site):
     out, _ = site
     for p in pages(out):
-        assert '<meta name="robots" content="noindex, nofollow">' in text_of(p), p
+        h = text_of(p)
+        assert '<meta name="robots" content="noindex, nofollow">' in h, p
+        assert "Draft preview (DEV)" in visible_text(h), p
     robots = (out / "robots.txt").read_text(encoding="utf-8")
     assert "User-agent: *" in robots and "Disallow: /" in robots
 

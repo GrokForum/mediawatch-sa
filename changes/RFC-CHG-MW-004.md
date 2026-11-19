@@ -80,7 +80,7 @@ A test now requires every finding page and every item page to have an `https://`
 - `uv run -q --no-project --with-requirements requirements.txt --with pyyaml python -m pytest -q -rs` — including the local denylist test.
 - Manifest keys, `data_date == 2026-10-27` (computed from rendered findings), counts matching the build, input sha256 values matching the files.
 - Only allowed file types in `_site/`; exactly one `.json` file, at the root.
-- Every HTML page still has noindex, the DRAFT banner, the footer stamp, and a link to `manifest.json`.
+- Every HTML page still has noindex, the DRAFT banner, the footer stamp, and a link to `manifest.json`. `test_noindex_everywhere` asserts both the robots meta and the visible `Draft preview (DEV)` banner on every HTML page.
 - `robots.txt` remains exactly `User-agent: *\nDisallow: /\n`.
 
 ## Rollback
