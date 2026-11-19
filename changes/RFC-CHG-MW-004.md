@@ -1,6 +1,6 @@
 # RFC-CHG-MW-004 — Public data manifest (DEV)
 
-**Status:** DEV build complete. PENDING REVIEW (reviewer A, reviewer B) and owner GO to push or merge. Not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
+**Status:** Pushed as PR #5 (`dev/chg-mw-004-manifest`). Under review (reviewer A, reviewer B). Not merged; not deployed. This RFC does not change GitHub Pages settings, DNS, or indexing.  
 **Environment:** DEV — branch `dev/chg-mw-004-manifest` (used instead of `rfc/<ver>` to match the project's existing `dev/chg-mw-*` naming).  
 **Pre-change SHA (rollback base):** `8294282db5e2e9774e89695e8b75e0e4c16a759b` (`main` after PR #3).  
 **Date:** 19 Nov 2026 (Africa/Johannesburg)  
@@ -97,8 +97,8 @@ Pre-change SHA: `8294282db5e2e9774e89695e8b75e0e4c16a759b`. No Pages settings ch
 - Phase 0 findings this RFC does **not** close: B2 (nightly job — CHG-MW-003), H1 (privacy page and contact — CHG-MW-005; the contact placeholder stays), M4 (no CSP meta), L2 (favicon.ico 404), L4 (one 4.0 s sample). Other sites' findings belong to those bots.
 - The live-check job is not on this branch (it lives on CHG-MW-003). After both merge, a later change can teach the live check to wait for this manifest's `git_sha`.
 - RFC-CHG-MW-002 open questions (a)–(j) stay with reviewer A and the owner, including the corrections contact.
-- No search-engine indexing request, no push, no PR, no merge, no Pages settings change, no deploy.
+- No search-engine indexing request, no merge, no Pages settings change, no deploy. The branch has been pushed as PR #5 and is under review.
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. Owner GO is required before this branch is pushed, merged or deployed.
+Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The branch has been pushed as PR #5. Owner GO is required before merge or deploy.
