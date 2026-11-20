@@ -374,10 +374,18 @@ def test_load_private_name_terms_fails_if_file_missing(tmp_path):
 
 
 def test_read_capped_default_limit_is_five_million():
+    """Catch a read_capped revert (uncapped read) or a raised MAX_RESPONSE_BYTES."""
     import inspect
     default = inspect.signature(collect.read_capped).parameters["limit"].default
     assert default == 5_000_000
+    assert collect.MAX_RESPONSE_BYTES == 5_000_000
     assert default == collect.MAX_RESPONSE_BYTES
+    # Calling without an explicit limit must use that 5 MB cap.
+    ok = io.BytesIO(b"x" * 5_000_000)
+    assert len(collect.read_capped(ok)) == 5_000_000
+    too_big = io.BytesIO(b"x" * (5_000_000 + 1))
+    with pytest.raises(collect.ResponseTooLarge, match="5000000"):
+        collect.read_capped(too_big)
 
 
 def test_draw_fails_closed_when_names_file_missing(tmp_path):
@@ -451,4 +459,72 @@ def test_take_replacement_returns_none_when_stratum_exhausted():
     nxt, rest = sampler.take_replacement([])
     assert nxt is None
     assert rest == []
+
+
+def test_sampler_main_does_not_write_when_candidates_hash_mismatches(tmp_path):
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    rule["candidates_sha256"] = "0" * 64
+    rule_path = tmp_path / "rule.json"
+    rule_path.write_text(json.dumps(rule), encoding="utf-8")
+    out = tmp_path / "draw.csv"
+    cand = ROOT / "data" / "sampling" / "neutral_random_candidates_v1.csv"
+    rc = sampler.main([
+        "--rule", str(rule_path),
+        "--candidates", str(cand),
+        "--out", str(out),
+        "--names", str(SYNTHETIC_NAMES),
+    ])
+    assert rc == 1
+    assert not out.exists()
+
+
+def test_sampler_refuses_locked_draw_write_on_draw_hash_mismatch(tmp_path, monkeypatch):
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    # Candidates hash is valid; pretend the would-be draw does not match the pin.
+    locked = tmp_path / "neutral_random_draw_v1.csv"
+    locked.write_text("sentinel-before\n", encoding="utf-8")
+    monkeypatch.setattr(sampler, "LOCKED_DRAW", locked)
+    # Draw an empty payload that cannot match the locked draw hash.
+    monkeypatch.setattr(sampler, "draw", lambda *a, **k: ([], []))
+    rc = sampler.main([
+        "--rule", str(ROOT / "data" / "sampling" / "neutral_random_v1.json"),
+        "--candidates", str(ROOT / "data" / "sampling" / "neutral_random_candidates_v1.csv"),
+        "--out", str(locked),
+        "--names", str(SYNTHETIC_NAMES),
+    ])
+    assert rc == 1
+    assert locked.read_text(encoding="utf-8") == "sentinel-before\n"
+
+
+def test_collect_main_does_not_write_when_coverage_fails(tmp_path, monkeypatch):
+    locked = tmp_path / "neutral_random_candidates_v1.csv"
+    locked.write_text("sentinel-before\n", encoding="utf-8")
+    monkeypatch.setattr(collect, "LOCKED_CANDIDATES", locked)
+
+    cfg = tmp_path / "collectors.json"
+    cfg.write_text(json.dumps({
+        "outlets": {
+            "newsday": {"name": "Newsday", "rss": ["https://newsday.co.za/feed/"], "sitemaps": []}
+        }
+    }), encoding="utf-8")
+
+    orig_collect = collect.Collector.collect_outlet
+
+    def few(self, outlet_id, window_start, window_end):
+        return []
+
+    monkeypatch.setattr(collect.Collector, "collect_outlet", few)
+    rc = collect.main([
+        "--config", str(cfg),
+        "--errors", str(tmp_path / "errors.csv"),
+        "--out", str(locked),
+        "--from", "2026-05-01",
+        "--to", "2026-05-01",
+        "--outlets", "newsday",
+        "--delay", "0",
+        "--run-id", "test-coverage-no-write",
+        "--overwrite-locked-candidates",
+    ])
+    assert rc == 1
+    assert locked.read_text(encoding="utf-8") == "sentinel-before\n"
 

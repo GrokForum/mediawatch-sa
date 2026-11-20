@@ -161,6 +161,20 @@ These tests were also run in a fresh git worktree that did not contain the gitig
 
 Rollback for this follow-up: `fee8916a40a02f222eed88491bb560c71e7fe190`. Local DEV only; not pushed; not merged; not deployed.
 
+
+## Review follow-up 3 (20 Nov 2026)
+
+Responds to further notes on the 008 head `90c06534a0c8a2accf113c9418e5016c0d52904a`. The 003, 004 and 005 heads are not changed.
+
+1. The synthetic draw tests still use `tests/fixtures/synthetic_private_names.txt`, so `python -m pytest -q` on a fresh checkout (as in `pages.yml`) stays green without the gitignored denylist. A live draw still fails closed if that file is missing. Proven in a fresh git worktree.
+2. `test_read_capped_default_limit_is_five_million` calls `read_capped` with the default limit: 5,000,000 bytes pass and 5,000,001 bytes fail. A revert of the cap, or a raised `MAX_RESPONSE_BYTES`, fails the test.
+3. `test_frozen_scores_and_frames` now also freezes historical article rows (`tests/frozen_articles_v008.json`). Later additions may appear; the frozen rows must not change.
+4. At runtime, `sample_neutral_random.main` verifies the locked candidate (and, when writing the locked draw, draw) sha256 pins, and `collect.main` calls `assert_candidate_coverage`, both exiting non-zero *before writing any output*.
+5. `SameHostRedirectHandler` also refuses an https-to-http downgrade and a port change (tests included). This is done here, not on the passed 003 head.
+6. The STATUS row for the 003 follow-up now says it is not pushed; the local 003 head is ahead of the remote `3ea260f`.
+
+Rollback for this follow-up: `90c06534a0c8a2accf113c9418e5016c0d52904a`. Local DEV only; not pushed; not merged; not deployed.
+
 ## Sign-off
 
 Author: the bot. Sign-off is by someone other than the author. Owner direction (relayed) was to do this work on a local branch only. Owner GO is still required, naming the head, before push, PR, merge to `main`, or deploy.

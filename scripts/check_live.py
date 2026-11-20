@@ -122,15 +122,46 @@ class CrossHostRedirectError(urllib.error.URLError):
     """A 3xx Location pointed at a different host than the request."""
 
 
+class SchemeDowngradeError(urllib.error.URLError):
+    """A 3xx Location dropped https to http."""
+
+
+class PortChangeError(urllib.error.URLError):
+    """A 3xx Location pointed at a different port than the request."""
+
+
+def _scheme_host_port(url: str) -> tuple[str, str, int | None]:
+    p = urlparse(url)
+    scheme = (p.scheme or "").lower()
+    host = (p.hostname or "").lower()
+    if p.port is not None:
+        port = p.port
+    elif scheme == "https":
+        port = 443
+    elif scheme == "http":
+        port = 80
+    else:
+        port = None
+    return scheme, host, port
+
+
 class SameHostRedirectHandler(urllib.request.HTTPRedirectHandler):
-    """Follow redirects only when the Location host equals the request host."""
+    """Follow redirects only when host, scheme-security, and port stay the same."""
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        src = (urlparse(req.full_url).hostname or "").lower()
-        dst = (urlparse(newurl).hostname or "").lower()
-        if dst != src:
+        src_scheme, src_host, src_port = _scheme_host_port(req.full_url)
+        dst_scheme, dst_host, dst_port = _scheme_host_port(newurl)
+        if dst_host != src_host:
             raise CrossHostRedirectError(
-                f"cross-host redirect from {src!r} to {dst!r} ({newurl})"
+                f"cross-host redirect from {src_host!r} to {dst_host!r} ({newurl})"
+            )
+        if src_scheme == "https" and dst_scheme == "http":
+            raise SchemeDowngradeError(
+                f"https to http downgrade from {req.full_url!r} to {newurl!r}"
+            )
+        if src_port != dst_port:
+            raise PortChangeError(
+                f"port change from {src_port} to {dst_port} ({newurl})"
             )
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
