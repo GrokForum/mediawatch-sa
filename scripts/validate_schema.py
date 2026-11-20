@@ -23,6 +23,8 @@ FINDINGS_FILES = [
     "news24_pilot_findings.json",
     "dailyinvestor_pilot_findings.json",
     "newsday_pilot_findings.json",
+    "iol_watch_findings.json",
+    "ewn_watch_findings.json",
 ]
 
 

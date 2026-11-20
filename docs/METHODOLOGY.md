@@ -1,7 +1,7 @@
 # MediaWatch SA — Methodology (draft)
 
-**Version:** 0.4-draft (two meters: primary FOR/AGAINST + secondary left/right lean)  
-**Date:** 5 Nov 2026 (Africa/Johannesburg)  
+**Version:** 0.5-draft (adds official wording vs media wording; otherwise 0.4-draft)  
+**Date:** 20 Nov 2026 (Africa/Johannesburg); 0.4-draft dated 5 Nov 2026  
 **Hub:** `plan.md`  
 **Constraint:** transparent, reproducible. **Primary** meter stays FOR/AGAINST named actors (no spectrum). A **secondary** left/right lean exists as reader convenience only — see `docs/LEFT_RIGHT_METHOD.md`; never mixed into primary scores.
 
@@ -139,6 +139,26 @@ How it is applied:
 6. Outlets with little free content show **findings only** if they cannot reach minimum *n*.
 
 The site generator (`scripts/build_site.py`) applies the same rule and the test suite checks it.
+
+---
+
+## 5b. Official wording vs media wording
+
+This rule is shared with the KTB register and the CrimeWatch register so the three public registers treat official wording the same way.
+
+When SAPS, the NPA or a charge sheet names an offence, that wording records **what was charged**, not **what happened**. The existence of the charge is **Proven** as a charge. It does not, by itself, prove or disprove the underlying acts.
+
+Each claim about an injury or an act is labelled on its own evidence:
+
+- **Alleged** if it rests only on a family member, a lobby group, or another untested assertion;
+- **Established** if hospital records, court testimony, or similarly strong evidence backs it;
+- **Proven** only from a direct primary record of the act itself.
+
+A gap in either direction — downplaying a charge or an injury, or inflating one — is a **framing** or **omission** finding once there is an exact quote and a contrary record.
+
+The same rule applies to official statistics and media reports of them. If an outlet misreports an official figure, that is a **factual_error**. The official table figure, checked in the primary statistical release, is **Proven**. A ministerial speech or briefing note is also a primary record of what was said, but it does not override the statistical tables when the two conflict.
+
+Example, logged in this version: IOL and EWN reported that South Africa recorded “more than 1,600 fewer murders” year on year in the second quarter of 2026/27. The official SAPS tables in that release show 5,590 murders in July–September 2026 against 5,794 in July–September 2025, a drop of 204 (−3.5%). The 1,600 year-on-year claim is **Not established** against those tables. (The same incorrect year-on-year wording also appears in the Acting Minister’s official speech; the speech does not replace the tables.)
 
 ---
 
@@ -291,3 +311,5 @@ Re-audit trigger: any existing AGAINST finding on a governing actor must be re-c
 
 
 Breaking changes to weights, labels, or the secondary axis map bump `methodology_version` (and `left_right_method` version when only the secondary changes) and freeze prior scores as `score_run` / `lean_score_run` snapshots. Never silently rewrite historical public scores. Never rewrite primary scores to absorb lean.
+
+0.5-draft (20 Nov 2026) adds §5b (official wording vs media wording) and is shared with the KTB and CrimeWatch registers. Prior findings keep the methodology_version they were coded under. Historical public scores are not rewritten.

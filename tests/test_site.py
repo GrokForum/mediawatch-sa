@@ -57,7 +57,7 @@ def test_build_succeeds(site):
     assert (out / "corrections" / "index.html").exists()
     assert (out / "method" / "index.html").exists()
     assert (out / "coverage" / "index.html").exists()
-    for pid in build_site.PILOT:
+    for pid in build_site.PILOT + build_site.WATCH:
         assert (out / "p" / pid / "index.html").exists()
     assert stats["findings_rendered"] > 0
     assert len(list((out / "f").iterdir())) == stats["findings_rendered"]
@@ -318,7 +318,8 @@ def _schema_summary():
 
 def test_schema_news24_and_registers_pass():
     s = _schema_summary()
-    for name in ("news24_pilot_findings.json", "people.csv", "publications.csv"):
+    for name in ("news24_pilot_findings.json", "iol_watch_findings.json",
+                 "ewn_watch_findings.json", "people.csv", "publications.csv"):
         assert s[name]["errors"] == 0, (name, s[name])
 
 
@@ -342,3 +343,61 @@ def test_crlf_preserved_on_data_csvs():
         raw = p.read_bytes()
         assert b"\r\n" in raw, p.name
         assert raw.count(b"\n") == raw.count(b"\r\n"), p.name
+
+
+# ------------------------------------------------------------------ CHG-MW-007 official wording / Q2 murder figures
+def test_method_page_has_official_wording_section(site):
+    out, _ = site
+    h = visible_text(text_of(out / "method" / "index.html")).lower()
+    assert "official wording vs media wording" in h
+    assert "what was charged" in h and "what happened" in h
+    assert "factual error" in h
+    assert "ktb" in h and "crimewatch" in h
+    src = (ROOT / "docs" / "METHODOLOGY.md").read_text(encoding="utf-8")
+    assert src.split("**Version:**", 1)[1].lstrip().startswith("0.5-draft")
+    assert "## 5b. Official wording vs media wording" in src
+
+
+def test_q2_murder_stat_findings(site):
+    """IOL and EWN 1,600-fewer-murders claims against official SAPS Q2 tables."""
+    out, _ = site
+    data = all_findings()
+    saps_url = "https://www.saps.gov.za/services/downloads/2026/2026-2027_-_2nd_Quarter_WEB.pdf"
+    cases = {
+        "F-IOL-Q2-MURDER-1600": {
+            "publication_id": "iol",
+            "url_part": "sa-records-1600-fewer-murders",
+            "quote_part": "a decline of more than 1,600 murders compared with the same period last year",
+            "byline": "Se-Anne Rall",
+        },
+        "F-EWN-Q2-MURDER-1600": {
+            "publication_id": "ewn",
+            "url_part": "sa-continues-to-record-decline-in-murders-violent-crime-cachalia",
+            "quote_part": "more than 1,600 fewer murders were recorded compared to the same period last year",
+            "byline": "Tsholo Tsoku",
+        },
+    }
+    for fid, exp in cases.items():
+        f = data[fid]
+        assert f["driver"] == "factual_error"
+        assert f["actor"] == "SAPS"
+        assert f["direction"] == "FOR"
+        assert f["fact_label"] == "Not established"
+        assert f["sample_frame"] == "purposive"
+        assert f["methodology_version"] == "0.5-draft"
+        assert exp["quote_part"] in f["quote"]
+        assert exp["url_part"] in f["url"]
+        assert f["url"].startswith("https://")
+        assert f["byline"] == exp["byline"]
+        notes = f["evidence_notes"]
+        assert saps_url in notes
+        assert "5,590" in notes and "5,794" in notes
+        assert "-204" in notes or "204" in notes
+        assert "3,5%" in notes or "3.5%" in notes
+        assert "No correction" in notes or "no correction" in notes.lower()
+        assert (out / "f" / fid / "index.html").is_file(), fid
+    home = text_of(out / "index.html")
+    assert "Error watch" in home
+    assert (out / "p" / "iol" / "index.html").is_file()
+    assert (out / "p" / "ewn" / "index.html").is_file()
+
