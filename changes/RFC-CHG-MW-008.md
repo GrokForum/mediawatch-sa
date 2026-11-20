@@ -133,6 +133,21 @@ Git: `git checkout dev/chg-mw-008-collectors` is this change; reset or revert ba
 - Mail & Guardian, IOL (as a scored outlet), and broadcasters are not onboarded here.
 - Existing News24 `neutral_random` rows from the mid-week proxy pass are not redrawn.
 
+
+## Review follow-up (20 Nov 2026)
+
+Responds to reviewer B's blocking notes on this change, on top of the rebuilt 008 head `4948167836d45e6fd2e0d5add4c7db935d44a15c` and the forward merge of the 003–005 follow-ups.
+
+1. `scripts/collect.py` still logs TLS and other fetch errors and continues to the next URL, but `main` now exits non-zero when any error was logged. The locked candidates file is not overwritten unless `--overwrite-locked-candidates` is set. Response bodies are capped at 5,000,000 bytes.
+2. `data/sampling/neutral_random_v1.json` now pins `candidates_sha256`, `draw_sha256`, and per-outlet `candidate_counts`. A test fails if a third of one outlet's candidates is dropped, and another test checks the pinned hashes.
+3. A test freezes historical CSV `weight` values and JSON `signed_score` values (and the CSV signed scores).
+4. The nine findings that carried a `neutral_random` tag but were not drawn with `neutral_random_v1` (`F-N24-NEUT-AB-01`, `F-N24-NEUT-CAPA-01`, `F-N24-NEUT-MACU-01`, `F-N24-NEUT-AB-X-01`, `F-DI-16`, `F-DI-17`, `F-ND-14`, `F-ND-15`, `F-ND-22`), and their associated article and control rows, are retagged `legacy_neutral`. METHODOLOGY 8a option (b) weights locked `neutral_random` highest and does not give `legacy_neutral` that weight. Published scorecards stay unweighted unless a score run chooses option (b).
+5. The frozen-weight recode note is now on the Daily Investor and Newsday finding CSV rows that were recoded (15 + 19 = 34 rows; every unofficial driver remapped in CHG-MW-008). The missing space before "Driver recoded" in the JSON (and now CSV) notes is fixed. Historical weights and signed scores are unchanged.
+6. The STATUS row that cited unreachable commit `9d7b194` is removed. The rebuilt 008 commit on `be75ded` remains `4948167`.
+7. `sample_neutral_random.load_private_name_terms` fails if the denylist file is missing, instead of drawing unfiltered.
+
+Rollback for this follow-up: `6b5d88f17bf86648e860415759cf123b0575fc59`. Local DEV only; not pushed; not merged; not deployed.
+
 ## Sign-off
 
 Author: the bot. Sign-off is by someone other than the author. Owner direction (relayed) was to do this work on a local branch only. Owner GO is still required, naming the head, before push, PR, merge to `main`, or deploy.

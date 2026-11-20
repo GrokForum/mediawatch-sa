@@ -49,7 +49,7 @@
       "access": "full_text_curl",
       "body_chars": 4500,
       "note": "Markets shrug at impeachment risk; GNU framed as investor expectation.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "id": "A-DI-2026-05-13-STEEN-MONOPOLY",
@@ -133,7 +133,7 @@
       "access": "full_text_curl",
       "body_chars": 3800,
       "note": "Straight cabinet reshape after DA request.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "id": "A-DI-2026-07-02-DA-LEADER",
@@ -217,7 +217,7 @@
       "access": "full_text_curl",
       "body_chars": 3500,
       "note": "Markets roundup; headline credits Ramaphosa a win.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "id": "A-DI-2026-08-17-WIESE",
@@ -231,7 +231,7 @@
       "access": "full_text_curl",
       "body_chars": 4200,
       "note": "Business advice framing.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "id": "A-DI-2026-08-19-STOP-BEE",
@@ -420,7 +420,7 @@
       "fact_label": "Established",
       "steelman_for": "CRA warned impeachment reopen could interrupt the GNU/reform investment thesis; DI reports that risk.",
       "steelman_against": "Headline universalises CRA view as fact that the tide is turning against both the person and the country.",
-      "evidence_notes": "Body cites Centre for Risk Analysis on Constitutional Court impeachment ruling.Driver recoded in CHG-MW-008 from selective_framing to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Body cites Centre for Risk Analysis on Constitutional Court impeachment ruling. Driver recoded in CHG-MW-008 from selective_framing to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Shaun Jacobs",
@@ -449,7 +449,7 @@
       "fact_label": "Proven",
       "steelman_for": "Western Cape High Court did interdict parliamentary impeachment hearings — a clear procedural win.",
       "steelman_against": "Major victory editorialises a temporary interdict that does not clear the underlying Phala Phala findings.",
-      "evidence_notes": "Bloomberg-syndicated straight court report; headline valence is DI framing.Driver recoded in CHG-MW-008 from outcome_credit to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Bloomberg-syndicated straight court report; headline valence is DI framing. Driver recoded in CHG-MW-008 from outcome_credit to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Bloomberg",
@@ -478,7 +478,7 @@
       "fact_label": "Disputed",
       "steelman_for": "Ramaphosa did endorse the Transformation Fund in a parliamentary reply; some analysts see it as BEE reform.",
       "steelman_against": "That can end BEE overclaims — fund alters BEE scoring, does not repeal BEE statutes.",
-      "evidence_notes": "Soft favourable framing of Ramaphosa as reformer on empowerment model.Driver recoded in CHG-MW-008 from selective_framing to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Soft favourable framing of Ramaphosa as reformer on empowerment model. Driver recoded in CHG-MW-008 from selective_framing to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Shaun Jacobs",
@@ -507,7 +507,7 @@
       "fact_label": "Established",
       "steelman_for": "NMB coalition process on expropriation is newsworthy and ANC-led locally.",
       "steelman_against": "Headline pins the ANC nationally for a metro process and foregrounds EWC scare without balancing city legal defence.",
-      "evidence_notes": "Matched X amplification same day by @DailyInvestorSA.Driver recoded in CHG-MW-008 from omission_or_emphasis to omission to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Matched X amplification same day by @DailyInvestorSA. Driver recoded in CHG-MW-008 from omission_or_emphasis to omission to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Daily Investor",
@@ -565,7 +565,7 @@
       "fact_label": "Alleged",
       "steelman_for": "OUTA is a known accountability NGO; amplifying its CEO quote is legitimate newsgathering.",
       "steelman_against": "DI X lead amplifies intent allegation (deliberately) without counter from ANC in the post text.",
-      "evidence_notes": "Typo hte in post retained. Verified via x API.Driver recoded in CHG-MW-008 from source_selection to one_sided_sourcing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Typo hte in post retained. Verified via x API. Driver recoded in CHG-MW-008 from source_selection to one_sided_sourcing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "DailyInvestorSA",
@@ -594,7 +594,7 @@
       "fact_label": "Proven",
       "steelman_for": "Accurate report of SRI publication Race-Free by 2030 with stated unemployment target.",
       "steelman_against": "Lengthy uncritical platforming of Solidarity's normative programme without equal space for ANC/BEE defenders in same piece.",
-      "evidence_notes": "Deputy editor Bianke Neethling byline. Counter-pull deliberately sought FOR Solidarity.Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Deputy editor Bianke Neethling byline. Counter-pull deliberately sought FOR Solidarity. Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Bianke Neethling",
@@ -623,7 +623,7 @@
       "fact_label": "Established",
       "steelman_for": "SRI figure of ~576k export-linked jobs is a concrete, attributable estimate worth reporting ahead of AGOA risk.",
       "steelman_against": "Piece is built around Solidarity's frame; government rebuttal weight lighter.",
-      "evidence_notes": "Declan Thompson byline. Soft FOR Solidarity as truth-teller on US risk.Driver recoded in CHG-MW-008 from source_selection to one_sided_sourcing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Declan Thompson byline. Soft FOR Solidarity as truth-teller on US risk. Driver recoded in CHG-MW-008 from source_selection to one_sided_sourcing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Declan Thompson",
@@ -652,7 +652,7 @@
       "fact_label": "Established",
       "steelman_for": "US-SA tensions and AGOA conditionality were real by Oct 2026; job exposure is a fair economic story.",
       "steelman_against": "Headline centres US as the threat vector to SA jobs rather than SA policy choices that triggered conditions.",
-      "evidence_notes": "Same article also soft-FOR Solidarity; dual coding.Driver recoded in CHG-MW-008 from threat_framing to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Same article also soft-FOR Solidarity; dual coding. Driver recoded in CHG-MW-008 from threat_framing to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": true,
       "target_context_quote": "According to the Solidarity Research Institute (SRI), exports to the United States support approximately 576,000 jobs across South Africa.",
       "byline": "Declan Thompson",
@@ -710,7 +710,7 @@
       "fact_label": "Proven",
       "steelman_for": "Accurate Bloomberg report of new DA leader's consultation demand inside GNU.",
       "steelman_against": "Headline sends a message to Ramaphosa mildly heroic; ANC consultation defence not in lede.",
-      "evidence_notes": "Soft FOR DA leadership posture.Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Soft FOR DA leadership posture. Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Bloomberg",
@@ -768,7 +768,7 @@
       "fact_label": "Proven",
       "steelman_for": "Court challenge was real; covering EWC litigation is legitimate.",
       "steelman_against": "Headline under siege adopts challenger martial metaphor; AfriForum/Sakeliga-aligned challenges get sympathetic framing vs ANC defence.",
-      "evidence_notes": "target_inferred: litigation ecosystem includes AfriForum-aligned property challenges.Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "target_inferred: litigation ecosystem includes AfriForum-aligned property challenges. Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": true,
       "target_context_quote": "These include that expropriation without compensation is made possible by the new Act, which many argue should be declared unconstitutional.",
       "byline": "Daily Investor",
@@ -797,7 +797,7 @@
       "fact_label": "Disputed",
       "steelman_for": "Dawie Roodt's conference argument is fairly quoted; growth/investment critique of BEE/EWC is a mainstream economist view.",
       "steelman_against": "Headline adopts Roodt imperative as DI voice (must stop) without equal ANC economic defence.",
-      "evidence_notes": "Shaun Jacobs byline.Driver recoded in CHG-MW-008 from source_selection to one_sided_sourcing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Shaun Jacobs byline. Driver recoded in CHG-MW-008 from source_selection to one_sided_sourcing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Shaun Jacobs",
@@ -826,7 +826,7 @@
       "fact_label": "Proven",
       "steelman_for": "Straight Bloomberg cabinet note acknowledging DA consultation inside GNU.",
       "steelman_against": "Could still omit deeper coalition dysfunction context — mild.",
-      "evidence_notes": "Balanced control / soft FOR GNU functioning.Driver recoded in CHG-MW-008 from neutral_report to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Balanced control / soft FOR GNU functioning. Driver recoded in CHG-MW-008 from neutral_report to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Bloomberg",
@@ -837,7 +837,7 @@
       "created_at": "2026-11-05T10:50:00+02:00",
       "publication_id": "daily_investor",
       "credit": null,
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "accountability_status": "control"
     },
     {
@@ -855,7 +855,7 @@
       "fact_label": "Established",
       "steelman_for": "Rand behaviour and investor expectation of GNU endurance were observable.",
       "steelman_against": "Centrist/endure framing soft-FOR GNU stability narrative.",
-      "evidence_notes": "Neutral fortnightly markets/politics draw.Driver recoded in CHG-MW-008 from markets_frame to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Neutral fortnightly markets/politics draw. Driver recoded in CHG-MW-008 from markets_frame to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Bloomberg",
@@ -866,7 +866,7 @@
       "created_at": "2026-11-05T10:50:00+02:00",
       "publication_id": "daily_investor",
       "credit": null,
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "accountability_status": "bias"
     },
     {
@@ -884,7 +884,7 @@
       "fact_label": "Alleged",
       "steelman_for": "Roundup may correctly note a discrete diplomatic/markets win.",
       "steelman_against": "Headline personalises markets news as Ramaphosa win with thin quote trail in lede paras sampled.",
-      "evidence_notes": "Favourable-bias hunt item.Driver recoded in CHG-MW-008 from outcome_credit to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Favourable-bias hunt item. Driver recoded in CHG-MW-008 from outcome_credit to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Staff Writer",
@@ -913,7 +913,7 @@
       "fact_label": "Disputed",
       "steelman_for": "Reports AfriForum's data critique of the 72% ownership claim with attributable framing.",
       "steelman_against": "Headline big land ownership lie adopts AfriForum conclusion as DI voice; opposing land-audit defenders thinner.",
-      "evidence_notes": "Byline Kirsten Minnaar. Matched X 2070817431426040209. Explicit FOR AfriForum (was thin).Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
+      "evidence_notes": "Byline Kirsten Minnaar. Matched X 2070817431426040209. Explicit FOR AfriForum (was thin). Driver recoded in CHG-MW-008 from platforming to framing to match the official closed driver set. Weight and signed_score are frozen (not rewritten).",
       "target_inferred": false,
       "target_context_quote": null,
       "byline": "Kirsten Minnaar",

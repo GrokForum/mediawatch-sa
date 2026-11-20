@@ -259,6 +259,7 @@ Every finding **must** carry a `sample_frame` field so roll-ups can weight or sp
 |-------|---------|-----------|
 | `keyword` | Hit via actor/term search (AfriForum, Solidarity, SAAI, Trump, AGOA, AfriMAGA, etc.) | Search → fetch → code |
 | `neutral_random` | Date-based editorial draw, **not** keyed on the scored actor | Pre-registered seeded rule `neutral_random_v1` (see below): two URLs per outlet per ISO week from the collected feed or sitemap, within the registered window |
+| `legacy_neutral` | Older 'neutral' coding that was **not** drawn with `neutral_random_v1` | The News24 May–Oct 2026 mid-week politics-proxy pass, and any Daily Investor / Newsday rows previously tagged `neutral_random` before the locked rule. Kept for audit. Option (b) does **not** give these the locked `neutral_random` weight. |
 | `counter_pull` | Deliberate search for the **opposite** direction of the provisional pattern | e.g. FOR AfriForum/Solidarity/SAAI; AGAINST DA/GNU; FOR Trump/US; matching writer X on the same weeks; or a Press Council / Ombud pass that is not a random draw |
 | `external_seed` | Re-verified from an outside seed that supplies a checkable quote, URL and date | Only after re-verify; otherwise keep as an external reference |
 | `purposive` | Judgement / byline corpus with **no** pre-registered random rule | e.g. a named-journalist investigations sample to fill a coverage gap. Do **not** label this `neutral_random`. |
@@ -268,7 +269,7 @@ Every finding **must** carry a `sample_frame` field so roll-ups can weight or sp
 1. Tag every finding, including balanced controls' linked articles when a finding is coded; controls themselves record `sample_frame` on the article/control row.
 2. Keyword-only pilots are **skewed**; do not publish person×actor scores from keyword alone.
 3. Absences discovered by `counter_pull` (zero hits) are recorded in `meta.counter_pull_absences` — absence is data, not a fabricated FOR/AGAINST row.
-4. Roll-up options (owner chooses at score run): (a) report three parallel scores by frame; (b) weight `neutral_random` highest; (c) pool all frames but disclose mix.
+4. Roll-up options (owner chooses at score run): (a) report three parallel scores by frame; (b) weight `neutral_random` highest (`legacy_neutral` is not treated as `neutral_random`); (c) pool all frames but disclose mix.
 
 **Locked rule (`neutral_random_v1`, registered 20 Nov 2026, Africa/Johannesburg).** This is the pre-registered, seeded, reproducible procedure for `neutral_random` draws from this date. It is not keyed on a scored actor.
 
@@ -279,7 +280,7 @@ Every finding **must** carry a `sample_frame` field so roll-ups can weight or sp
 5. **Replacement (pre-registered):** if a drawn URL is later found to be paywalled, 404, or not an article, replace it with the next unused URL from the same stratum in the original sort order. Do not draw a new random item.
 6. **Coding:** apply METHODOLOGY 0.5. A coded-and-clean article that fires no driver produces **no** finding row, but **does** count in the sample denominator.
 
-Prior News24 May–Oct 2026 skew-fix pass: politics stories near fixed mid-week dates (~fortnightly Tue/Fri proxies), preferring the lead politics item that day; code FOR/AGAINST drivers **or** log as `balanced_controls` when no driver fires. Those rows keep their existing `sample_frame` tags; they were not drawn with `neutral_random_v1`.
+Prior News24 May–Oct 2026 skew-fix pass: politics stories near fixed mid-week dates (~fortnightly Tue/Fri proxies), preferring the lead politics item that day; code FOR/AGAINST drivers **or** log as `balanced_controls` when no driver fires. Those rows, and the Daily Investor / Newsday findings that carried a `neutral_random` tag before this locked rule, are retagged `legacy_neutral`. They were not drawn with `neutral_random_v1`.
 
 
 ## 8b. Accountability vs bias (governing-party rule)

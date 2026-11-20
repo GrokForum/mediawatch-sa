@@ -30,6 +30,8 @@ from zoneinfo import ZoneInfo
 SAST = ZoneInfo("Africa/Johannesburg")
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
+LOCKED_CANDIDATES = DATA / "sampling" / "neutral_random_candidates_v1.csv"
+MAX_RESPONSE_BYTES = 5_000_000
 DEFAULT_UA = (
     "MediaWatch-SA-collector/0.1 "
     "(https://mediawatch.grokforum.site/; public methodology register)"
@@ -293,6 +295,7 @@ class ErrorLog:
     def __init__(self, path: Path, run_id: str):
         self.path = path
         self.run_id = run_id
+        self.count = 0
         path.parent.mkdir(parents=True, exist_ok=True)
         if not path.exists():
             self._write_header()
@@ -318,6 +321,7 @@ class ErrorLog:
             "run_id": self.run_id,
         }
         self._append(row)
+        self.count += 1
         kind = "TLS/certificate" if error_type == "tls" else "fetch"
         print(
             f"[{kind} error] host={host} time={row['logged_at_sast']} "
@@ -339,6 +343,35 @@ def io_line(row: dict) -> str:
     w = csv.DictWriter(buf, fieldnames=ERROR_FIELDS, lineterminator="\r\n", extrasaction="ignore")
     w.writerow(row)
     return buf.getvalue()
+
+
+class ResponseTooLarge(OSError):
+    """The remote body exceeded MAX_RESPONSE_BYTES."""
+
+
+def read_capped(resp, limit: int = MAX_RESPONSE_BYTES) -> bytes:
+    """Read a file-like HTTP body, failing closed if it exceeds `limit` bytes."""
+    buf = bytearray()
+    while True:
+        chunk = resp.read(65536)
+        if not chunk:
+            return bytes(buf)
+        if len(buf) + len(chunk) > limit:
+            raise ResponseTooLarge(f"response exceeded {limit} bytes")
+        buf.extend(chunk)
+
+
+def assert_candidate_coverage(current: dict, locked: dict, max_drop_fraction: float = 1 / 3) -> None:
+    """Fail if any locked outlet lost more than a third of its candidate rows."""
+    missing = [oid for oid in locked if oid not in current]
+    if missing:
+        raise AssertionError(f"locked outlets missing from current candidates: {missing}")
+    for oid, expected in locked.items():
+        got = int(current.get(oid) or 0)
+        if expected and (expected - got) / expected > max_drop_fraction:
+            raise AssertionError(
+                f"{oid} candidates dropped too far: {got} remaining of {expected} locked"
+            )
 
 
 class Collector:
@@ -376,8 +409,8 @@ class Collector:
             if self._opener is not None:
                 return self._opener(req, timeout=30, context=self.context)
             with urllib.request.urlopen(req, timeout=30, context=self.context) as resp:
-                return resp.read()
-        except Exception as exc:  # log and continue; never disable TLS
+                return read_capped(resp)
+        except Exception as exc:  # log, continue to the next URL; never disable TLS
             self.error_log.record(url, exc, outlet_id=outlet_id)
             return None
 
@@ -534,8 +567,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--outlets", default="")
     parser.add_argument("--run-id", default="")
     parser.add_argument("--delay", type=float, default=0.2)
+    parser.add_argument(
+        "--overwrite-locked-candidates",
+        action="store_true",
+        help="Required to write to the locked v1 candidates file.",
+    )
     args = parser.parse_args(argv)
 
+    out_path = Path(args.out)
+    if out_path.resolve() == LOCKED_CANDIDATES.resolve() and not args.overwrite_locked_candidates:
+        print(
+            "refusing to overwrite the locked candidates file without "
+            "--overwrite-locked-candidates",
+            file=sys.stderr,
+        )
+        return 1
     window_start = date.fromisoformat(args.date_from)
     if args.date_to:
         window_end = date.fromisoformat(args.date_to)
@@ -559,8 +605,19 @@ def main(argv: list[str] | None = None) -> int:
         kept = [it for it in batch if path_allowed(it.url, cfg)]
         print(f"  fetched {len(batch)} in window, {len(kept)} after path filters", file=sys.stderr)
         all_items.extend(kept)
-    write_candidates_csv(Path(args.out), all_items)
+    out_path = Path(args.out)
+    if out_path.resolve() == LOCKED_CANDIDATES.resolve() and not args.overwrite_locked_candidates:
+        print(
+            "refusing to overwrite the locked candidates file without "
+            "--overwrite-locked-candidates",
+            file=sys.stderr,
+        )
+        return 1
+    write_candidates_csv(out_path, all_items)
     print(f"wrote {len(all_items)} candidates to {args.out}", file=sys.stderr)
+    if errors.count:
+        print(f"{errors.count} collector error(s) logged; exiting non-zero", file=sys.stderr)
+        return 1
     return 0
 
 
