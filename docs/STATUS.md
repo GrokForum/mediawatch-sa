@@ -145,3 +145,6 @@ Seed `seed/cassian-news24-bias-meter.md` (gitignored): **0** calls mapped to fin
 
 | 2026-11-20 | CHG-MW-008 collectors, locked neutral_random_v1 sampling, and official driver recode | DEV (`dev/chg-mw-008-collectors` on `dev/chg-mw-005-privacy` + CHG-MW-007) | local branch; not pushed; no PR; not merged; not deployed | `be75dedf46442bcdabac04f344aae861787076a6` |
 | 2026-11-20 | CHG-MW-008 private-names denylist applied before the draw (candidate and draw lists); sibling-register wording only in the RFC | DEV (`dev/chg-mw-008-collectors`) | local branch; not pushed; no PR; not merged; not deployed | `9d7b194d5655d1511e21e015210b1bdeaefa8e58` |
+
+| 2026-11-20 | CHG-MW-008 rebuilt as a single commit on `be75ded` (identical tree; denylist history not on this branch) | DEV (`dev/chg-mw-008-collectors`) | local branch; not pushed; no PR; not merged; not deployed | `4948167836d45e6fd2e0d5add4c7db935d44a15c` |
+| 2026-11-20 | CHG-MW-009 code the locked pilot `neutral_random_v1` draw (172 fetched and coded; 8 new findings; 164 clean; sample size on the site) | DEV (`dev/chg-mw-009-pilot-register` on `4948167`) | local branch; not pushed; no PR; not merged; not deployed | `4948167836d45e6fd2e0d5add4c7db935d44a15c` |
