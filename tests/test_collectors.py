@@ -18,6 +18,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import collect
 import sample_neutral_random as sampler
 
+# Committed fake-name fixture for synthetic draw tests. The real denylist
+# (tests/private_names.local.txt) is gitignored and is required only for a live draw.
+SYNTHETIC_NAMES = ROOT / "tests" / "fixtures" / "synthetic_private_names.txt"
+
 SRC = (ROOT / "scripts" / "collect.py").read_text(encoding="utf-8")
 
 
@@ -147,8 +151,8 @@ def test_neutral_random_v1_is_reproducible():
         for n in (1, 2, 3)
     ]
     # 1 June 2026 is a Monday, same ISO week as 2 and 3 June.
-    a, _ = sampler.draw(candidates, rule, set())
-    b, _ = sampler.draw(candidates, rule, set())
+    a, _ = sampler.draw(candidates, rule, set(), names_path=SYNTHETIC_NAMES)
+    b, _ = sampler.draw(candidates, rule, set(), names_path=SYNTHETIC_NAMES)
     assert a == b
     assert len(a) == 2
     assert {row["url"] for row in a} <= {c["url"] for c in candidates}
@@ -179,7 +183,7 @@ def test_neutral_random_excludes_known_paywall():
         },
     ]
     paywalled = {"https://www.news24.com/opinions/columnists/paywalled-20260505-0001"}
-    drawn, excluded = sampler.draw(candidates, rule, paywalled)
+    drawn, excluded = sampler.draw(candidates, rule, paywalled, names_path=SYNTHETIC_NAMES)
     assert len(excluded) == 1
     assert [r["url"] for r in drawn] == ["https://www.news24.com/politics/free-20260505-0002"]
 
@@ -247,13 +251,7 @@ def test_private_name_terms_are_dropped_from_the_draw(tmp_path):
     ]
     names = tmp_path / "names.txt"
     names.write_text("ZZZPRIVATEQQQ\n", encoding="utf-8")
-    # Point the loader at the fixture file.
-    orig = sampler.load_private_name_terms
-    sampler.load_private_name_terms = lambda path=None: orig(names)
-    try:
-        drawn, _ = sampler.draw(candidates, rule, set())
-    finally:
-        sampler.load_private_name_terms = orig
+    drawn, _ = sampler.draw(candidates, rule, set(), names_path=names)
     assert [r["url"] for r in drawn] == ["https://newsday.co.za/south-africa/1/ordinary-story/"]
 
 
@@ -373,3 +371,84 @@ def test_load_private_name_terms_fails_if_file_missing(tmp_path):
     missing = tmp_path / "does-not-exist.txt"
     with pytest.raises(FileNotFoundError, match="required"):
         sampler.load_private_name_terms(missing)
+
+
+def test_read_capped_default_limit_is_five_million():
+    import inspect
+    default = inspect.signature(collect.read_capped).parameters["limit"].default
+    assert default == 5_000_000
+    assert default == collect.MAX_RESPONSE_BYTES
+
+
+def test_draw_fails_closed_when_names_file_missing(tmp_path):
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    candidates = [
+        {
+            "outlet_id": "newsday",
+            "url": "https://newsday.co.za/south-africa/1/ordinary-story/",
+            "title": "ordinary",
+            "published_at": "2026-06-02T09:00:00+0200",
+            "date_source": "rss_pubDate",
+            "source_url": "",
+            "source_kind": "rss",
+        }
+    ]
+    missing = tmp_path / "does-not-exist.txt"
+    with pytest.raises(FileNotFoundError, match="required"):
+        sampler.draw(candidates, rule, set(), names_path=missing)
+
+
+def test_paywalled_draw_is_replaced_by_unused0_of_its_own_stratum():
+    """A later-found paywall is replaced by unused[0] of that outlet-week, in sort order."""
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    # 2026-05-04 is Monday of 2026-W19; 2026-05-11 is 2026-W20.
+    week19 = [
+        {
+            "outlet_id": "newsday",
+            "url": f"https://newsday.co.za/south-africa/{n}/story-{n}/",
+            "title": f"t{n}",
+            "published_at": f"2026-05-0{n}T09:00:00+0200",
+            "date_source": "rss_pubDate",
+            "source_url": "",
+            "source_kind": "rss",
+        }
+        for n in (4, 5, 6, 7)
+    ]
+    week20 = {
+        "outlet_id": "newsday",
+        "url": "https://newsday.co.za/south-africa/11/story-11/",
+        "title": "other-week",
+        "published_at": "2026-05-11T09:00:00+0200",
+        "date_source": "rss_pubDate",
+        "source_url": "",
+        "source_kind": "rss",
+    }
+    candidates = week19 + [week20]
+    # Pretend the draw took the 2nd and 4th of W19 (05 and 07 May).
+    drawn_urls = {
+        "https://newsday.co.za/south-africa/5/story-5/",
+        "https://newsday.co.za/south-africa/7/story-7/",
+    }
+    unused = sampler.remainders_by_stratum(
+        candidates, rule, set(), drawn_urls, names_path=SYNTHETIC_NAMES
+    )
+    pool = unused[("newsday", "2026-W19")]
+    assert [r["url"] for r in pool] == [
+        "https://newsday.co.za/south-africa/4/story-4/",
+        "https://newsday.co.za/south-africa/6/story-6/",
+    ]
+    # The drawn 5 May URL is later found paywalled: replace with unused[0] of W19.
+    nxt, rest = sampler.take_replacement(pool)
+    assert nxt["url"] == "https://newsday.co.za/south-africa/4/story-4/"
+    assert [r["url"] for r in rest] == ["https://newsday.co.za/south-africa/6/story-6/"]
+    # Another week's remainder is not the replacement.
+    other = unused[("newsday", "2026-W20")]
+    assert [r["url"] for r in other] == ["https://newsday.co.za/south-africa/11/story-11/"]
+    assert nxt["url"] not in {r["url"] for r in other}
+
+
+def test_take_replacement_returns_none_when_stratum_exhausted():
+    nxt, rest = sampler.take_replacement([])
+    assert nxt is None
+    assert rest == []
+

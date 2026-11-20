@@ -81,12 +81,17 @@ def load_candidates(path: Path) -> list[dict]:
         return list(csv.DictReader(fh))
 
 
-def draw(candidates: list[dict], rule: dict, paywalled: set[str]) -> tuple[list[dict], list[dict]]:
+def draw(
+    candidates: list[dict],
+    rule: dict,
+    paywalled: set[str],
+    names_path: Path | None = None,
+) -> tuple[list[dict], list[dict]]:
     start = date.fromisoformat(rule["window_start"])
     end = date.fromisoformat(rule["window_end"])
     k = int(rule["k_per_outlet_week"])
     seed = int(rule["seed"])
-    terms = load_private_name_terms()
+    terms = load_private_name_terms(names_path)
     pool: list[dict] = []
     excluded_paywall: list[dict] = []
     excluded_names = 0
@@ -152,7 +157,52 @@ def draw(candidates: list[dict], rule: dict, paywalled: set[str]) -> tuple[list[
     return drawn, excluded_paywall
 
 
+def remainders_by_stratum(
+    candidates: list[dict],
+    rule: dict,
+    paywalled: set[str],
+    drawn_urls: set[str],
+    names_path: Path | None = None,
+) -> dict[tuple[str, str], list[dict]]:
+    """Unused candidates per (outlet, iso_week) in the original sort order."""
+    start = date.fromisoformat(rule["window_start"])
+    end = date.fromisoformat(rule["window_end"])
+    terms = load_private_name_terms(names_path)
+    paywalled = {_norm(u) for u in paywalled}
+    drawn_urls = {_norm(u) for u in drawn_urls}
+    pool: list[dict] = []
+    for row in candidates:
+        url = _norm(row.get("url") or "")
+        if not url or url in paywalled:
+            continue
+        if contains_private_name(row, terms):
+            continue
+        d = row_date(row)
+        if d is None or d < start or d > end:
+            continue
+        item = dict(row)
+        item["_date"] = d.isoformat()
+        item["_week"] = iso_week_key(d)
+        item["_url_norm"] = url
+        pool.append(item)
+    out: dict[tuple[str, str], list[dict]] = {}
+    for oid in sorted({r["outlet_id"] for r in pool}):
+        for week in sorted({r["_week"] for r in pool if r["outlet_id"] == oid}):
+            stratum = [r for r in pool if r["outlet_id"] == oid and r["_week"] == week]
+            stratum.sort(key=lambda r: ((r.get("published_at") or ""), r["_url_norm"]))
+            out[(oid, week)] = [r for r in stratum if r["_url_norm"] not in drawn_urls]
+    return out
+
+
+def take_replacement(unused: list[dict]) -> tuple[dict | None, list[dict]]:
+    """Replace a paywalled or unusable draw with unused[0] of that stratum."""
+    if not unused:
+        return None, []
+    return unused[0], list(unused[1:])
+
+
 def write_draw(path: Path, rows: list[dict]) -> None:
+
     fields = [
         "algorithm_id",
         "seed",

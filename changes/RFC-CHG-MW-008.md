@@ -148,6 +148,19 @@ Responds to reviewer B's blocking notes on this change, on top of the rebuilt 00
 
 Rollback for this follow-up: `6b5d88f17bf86648e860415759cf123b0575fc59`. Local DEV only; not pushed; not merged; not deployed.
 
+
+## Review follow-up 2 (20 Nov 2026)
+
+Responds to reviewer A's notes on the 008 head `fee8916a40a02f222eed88491bb560c71e7fe190`.
+
+1. `draw()` now takes an optional `names_path`. The two synthetic tests (`test_neutral_random_v1_is_reproducible` and `test_neutral_random_excludes_known_paywall`) use the committed fixture `tests/fixtures/synthetic_private_names.txt` (fake tokens only). A live draw, and `load_private_name_terms()` with the default path, still fail closed if `tests/private_names.local.txt` is missing.
+2. A unit test asserts that `read_capped`'s default `limit` is exactly `5_000_000`.
+3. `remainders_by_stratum` and `take_replacement` encode the locked remainder rule: a later-found paywalled draw is replaced by `unused[0]` of its own outlet-week stratum in the original sort order, not a new random pick.
+
+These tests were also run in a fresh git worktree that did not contain the gitignored denylist file.
+
+Rollback for this follow-up: `fee8916a40a02f222eed88491bb560c71e7fe190`. Local DEV only; not pushed; not merged; not deployed.
+
 ## Sign-off
 
 Author: the bot. Sign-off is by someone other than the author. Owner direction (relayed) was to do this work on a local branch only. Owner GO is still required, naming the head, before push, PR, merge to `main`, or deploy.
