@@ -81,8 +81,15 @@ Pre-change SHA: `8294282db5e2e9774e89695e8b75e0e4c16a759b`. No Pages settings ch
 - Phase 0 findings this RFC does **not** close: B2 (nightly job — CHG-MW-003), M4 (no CSP meta), L2 (favicon.ico 404), L4 (one 4.0 s sample). H3 (the public data manifest) is now on this branch by a forward-only merge of CHG-MW-004. Other sites' findings belong to those bots.
 - RFC-CHG-MW-002 open question f (corrections contact) is answered: `privacy@grokforum.site`, owner decision 19 Nov 2026, relayed by reviewer A.
 - Source-link gaps (owner group has no source URL field; editor source URLs are in the data but not rendered on this branch) are reported with CHG-MW-004.
-- No search-engine indexing request, no merge, no Pages settings change, no deploy. The branch has been pushed as PR #6 and is under review.
+- No search-engine indexing request, no merge, no Pages settings change, no deploy. PR #6 was opened from this branch; the last remote commit remains `e2da734271a17403385ad54f49f6c4b6c4bf71f1`. Later local commits on this branch, including the /privacy/ live-check path and this follow-up, have not been pushed. The branch is under review. Not merged; not deployed.
+
+
+## Review follow-up (20 Nov 2026)
+
+STATUS and this RFC now record that the last remote commit on this branch (PR #6) is `e2da734271a17403385ad54f49f6c4b6c4bf71f1`. Local commits after that SHA, including adding `/privacy/` to the live-check sample paths and the forward merges of the CHG-MW-003 and CHG-MW-004 follow-ups, are unpushed. No other behaviour change in this commit.
+
+Rollback for this follow-up: `34f81ae93c2fa87cbd580bbffd488366e0521683`.
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The branch has been pushed as PR #6. Owner GO is required before merge or deploy.
+Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The last remote commit on PR #6 is `e2da734`. Local work after that SHA is unpushed. Owner GO is required before merge or deploy.

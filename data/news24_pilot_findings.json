@@ -298,7 +298,7 @@
       "published_at": "2026-05-16T00:00:00.000Z",
       "published_at_sast": "2026-05-16T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: og:description + search snippet only",
       "og_description": "Anxious ANC politicians and business leaders have been urging DA leader Geordin Hill-Lewis to shield President Cyril Ramaphosa from impeachment proceedings linked to the Phala Phala scandal.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -313,7 +313,7 @@
       "published_at": "2026-05-26T00:00:00.000Z",
       "published_at_sast": "2026-05-26T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "WebFetch body available",
       "og_description": "With 163 days until the 4 November local elections, the ANC’s NEC made local government reform its singular focus.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -328,7 +328,7 @@
       "published_at": "2026-05-28T00:00:00.000Z",
       "published_at_sast": "2026-05-28T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: headline+og only",
       "og_description": "The DA has snatched a ward from the ANC in Emfuleni in what has been described as an unprecedented win just six months before the local government elections.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -343,7 +343,7 @@
       "published_at": "2026-05-28T11:00:14.000Z",
       "published_at_sast": "2026-05-28T11:00:14.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: headline+og only; also surfaced in Basson X share",
       "og_description": "The DA broke through the ceiling of black voters by winning a ward in Evaton, Emfuleni, from the ANC – with eight votes – writes Adriaan Basson.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -358,7 +358,7 @@
       "published_at": "2026-05-31T15:03:00.000Z",
       "published_at_sast": "2026-05-31T15:03:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: og+search",
       "og_description": "The ANC failed to disclose two donations on time, one from a property company whose director is linked to Deputy President Paul Mashatile.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -373,7 +373,7 @@
       "published_at": "2026-06-23T00:00:00.000Z",
       "published_at_sast": "2026-06-23T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: og only",
       "og_description": "The National Assembly adopted the rules for an impeachment process on Tuesday evening.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -388,7 +388,7 @@
       "published_at": "2026-06-30T00:00:00.000Z",
       "published_at_sast": "2026-06-30T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "WebFetch/body available via prior search extract",
       "og_description": "President Cyril Ramaphosa has appointed Dina Pule, a former Cabinet minister fired for unethical behaviour, as minister of social development.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -403,7 +403,7 @@
       "published_at": "2026-07-06T00:00:00.000Z",
       "published_at_sast": "2026-07-06T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "body available",
       "og_description": "President Cyril Ramaphosa has deployed 3 405 South African National Defence Force soldiers to assist with the police’s law and order efforts during planned marches against undocumented immigrants.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -418,7 +418,7 @@
       "published_at": "2026-07-30T00:00:00.000Z",
       "published_at_sast": "2026-07-30T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: og only",
       "og_description": "The “Coalitions Bill” has finally been sent to Parliament, following approval for its release.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -433,7 +433,7 @@
       "published_at": "2026-08-26T00:00:00.000Z",
       "published_at_sast": "2026-08-26T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "body available",
       "og_description": "National Assembly Speaker Thoko Didiza has survived the motion of no confidence brought against her by EFF leader Julius Malema.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -448,7 +448,7 @@
       "published_at": "2026-08-29T18:14:22.000Z",
       "published_at_sast": "2026-08-29T18:14:22.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: og only; also serves counter_pull AGAINST-DA attributed",
       "og_description": "Gauteng Premier Panyaza Lesufi has launched a scathing attack on the DA, accusing the party of hypocrisy and “cheap point scoring” following the erection of a billboard in Hammanskraal on Saturday.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -463,7 +463,7 @@
       "published_at": "2026-10-08T00:00:00.000Z",
       "published_at_sast": "2026-10-08T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "paywall: og only",
       "og_description": "The Interministerial Committee on Migration has moved to quell public disquiet driven by social media as well as rising tensions at some of the country’s refugee centres over the implications of the recent Constitutional Court judgment on asylum seekers and the Refugees Act.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -478,7 +478,7 @@
       "published_at": "2026-10-22T00:00:00.000Z",
       "published_at_sast": "2026-10-22T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "body available via WebSearch extract",
       "og_description": "President Cyril Ramaphosa on Thursday heralded the revised white paper on local government as a “bold reset” of a system that has left millions of South Africans without reliable services.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -493,7 +493,7 @@
       "published_at": "2026-10-27T00:00:00.000Z",
       "published_at_sast": "2026-10-27T00:00:00.000+00:00",
       "section": "politics",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "access_note": "body available",
       "og_description": "Considering the possibility of his party achieving 51% of the vote in Cape Town as “too close for comfort,” DA leader and Cape Town Mayor Geordin Hill-Lewis dusted off a familiar refrain for the DA when he hung up a new poster on Tuesday: Don’t vote for small parties.",
       "fetched_at": "2026-11-05T09:15:00+02:00"
@@ -2329,7 +2329,7 @@
       "url": "https://x.com/AdriaanBasson/status/2059884023493558530",
       "text": "DA wins its first township ward in Emfuleni, beating ANC by 8 votes",
       "created_at": "2026-05-28T06:26:36.000Z",
-      "sample_frame": "neutral_random",
+      "sample_frame": "legacy_neutral",
       "verification": "x search_posts_all 2026-11-05"
     },
     {
@@ -2403,73 +2403,73 @@
       "article_id": "A-N24-NEUT-2026-05-16-HILL",
       "reason": "balanced_control",
       "note": "Reportorial on ANC/business lobbying of DA leader; no News24 FOR/AGAINST driver in available text.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-05-26-ANCFIX",
       "reason": "balanced_control",
       "note": "Attributed NEC/Mbalula plan coverage; party speech reported without loaded editorialising in available body.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-05-31-IEC",
       "reason": "accountability_not_bias",
       "note": "IEC-sourced disclosure query of ANC/Rise Mzansi donations — §8b routine accountability; no bias finding.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-06-23-IMPEACH",
       "reason": "balanced_control",
       "note": "Procedural Parliament rules story; criticism attributed to MPs in debate.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-06-30-RESHUF",
       "reason": "balanced_control",
       "note": "Factual Cabinet changes + ethics history of Pule attributed to prior Ethics Committee; reportorial.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-07-06-ARMY",
       "reason": "balanced_control",
       "note": "Deployment numbers from presidential letter; no actor-loaded driver coded.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-07-30-COAL",
       "reason": "balanced_control",
       "note": "Legislative process story; \"municipal chaos\" describes coalition instability topic, not a scored actor smear.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-08-26-DIDIZA",
       "reason": "balanced_control",
       "note": "Vote result + motion context; multi-party attributed.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-08-29-LESUFI",
       "reason": "balanced_control",
       "note": "Lesufi AGAINST-DA claims are source speech (ANC premier), not News24 finding — same rule as Mokonyane control. Also logged under counter_pull scan for AGAINST-DA.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-10-08-ASYLUM",
       "reason": "balanced_control",
       "note": "Court ruling + IMC response; government clarifying, not scored.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-10-22-WP",
       "reason": "balanced_control",
       "note": "White paper announcement; Ramaphosa/Hlabisa attributed quotes on failing councils as policy framing of a document, not coded AGAINST ANC.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-NEUT-2026-10-27-HILLCHAOS",
       "reason": "balanced_control",
       "note": "Campaign speech by Hill-Lewis; \"coalition chaos\" is source language, fairly attributed.",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "article_id": "A-N24-CTR-2026-07-25-AUCAMP",
@@ -4090,7 +4090,7 @@
       "steelman_against": "\"Historic victory\" elevates an 8-vote margin into a narrative breakthrough beyond the narrow arithmetic.",
       "evidence_notes": "Coded from headline+og only (paywalled). Winner Established via IEC/ward result reporting elsewhere same day.",
       "byline": "Adriaan Basson",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "methodology_version": "0.3-draft",
@@ -4119,7 +4119,7 @@
       "steelman_against": "Headline stacks \"Unprecedented\"+\"historic\"+\"Gauteng shift\" from one 8-vote ward — body (og) is thinner than the shift claim.",
       "evidence_notes": "Paywalled; coded headline vs og standfirst gap.",
       "byline": "Siyamtanda Capa",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "methodology_version": "0.3-draft",
@@ -4148,7 +4148,7 @@
       "steelman_against": "Lead frames the appointment primarily through past sanction rather than current portfolio rationale — soft AGAINST ANC appointing authority.",
       "evidence_notes": "§8b borderline: sourced ethics history is accountability; lead emphasis tips framing. KEEP as mild bias. Dual story also covers DA reshuffle request.",
       "byline": "Bongekile Macupe",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "methodology_version": "0.3-draft",
@@ -4264,7 +4264,7 @@
       "steelman_against": "Editor amplification without caveat still functions as soft FOR-DA visibility; mild.",
       "evidence_notes": "Neutral-week X accompanying May 28 politics draw. Result Established.",
       "byline": "Adriaan Basson",
-      "sample_frame": "neutral_random"
+      "sample_frame": "legacy_neutral"
     },
     {
       "methodology_version": "0.3-draft",

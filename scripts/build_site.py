@@ -65,9 +65,20 @@ DRIVER_NAMES = {
 FRAME_NOTES = {
     "keyword": "found by actor/term search",
     "neutral_random": "pre-registered seeded draw (neutral_random_v1: 2 URLs per outlet per ISO week)",
+    "legacy_neutral": "older mid-week or informal 'neutral' coding, not drawn with neutral_random_v1",
     "counter_pull": "deliberate search for the opposite direction",
     "external_seed": "re-verified outside seed",
     "purposive": "judgement sample, no pre-registered random rule (frame pending owner acceptance)",
+}
+# METHODOLOGY 8a option (b): weight locked neutral_random highest.
+# legacy_neutral is not treated as the locked v1 frame.
+ROLLUP_B_WEIGHTS = {
+    "neutral_random": 4.0,
+    "counter_pull": 2.0,
+    "keyword": 1.0,
+    "purposive": 1.0,
+    "external_seed": 1.0,
+    "legacy_neutral": 1.0,
 }
 ACCESS_NOTES = {
     "full_text_webfetch": "Free to read: full text was publicly available when coded.",
@@ -179,12 +190,14 @@ def item_key(f):
     return f.get("article_id") or f.get("public_post_id") or f["id"]
 
 
-def scorecards(findings, person_level=False):
+def scorecards(findings, person_level=False, rollup="unweighted"):
     """Primary FOR/AGAINST scorecards per actor.
 
     Publication level (METHODOLOGY 6.3): mean of finding signed scores.
     Person level (6.2): mean of item-level means; suppressed when every
     counted finding is keyword-frame (8a rule 2).
+    rollup='b' applies METHODOLOGY 8a option (b): weight locked
+    neutral_random highest. legacy_neutral does not receive that weight.
     """
     by_actor = defaultdict(list)
     for f in findings:
@@ -203,7 +216,17 @@ def scorecards(findings, person_level=False):
                 means = [sum(v) / len(v) for v in items.values()]
                 mean = sum(means) / len(means)
             else:
-                mean = sum(float(f["signed_score"]) for f in counted) / n
+                if rollup == "b":
+                    weights = [
+                        ROLLUP_B_WEIGHTS.get(f.get("sample_frame") or "", 1.0)
+                        for f in counted
+                    ]
+                    total_w = sum(weights)
+                    mean = sum(
+                        float(f["signed_score"]) * w for f, w in zip(counted, weights)
+                    ) / total_w
+                else:
+                    mean = sum(float(f["signed_score"]) for f in counted) / n
         frames = Counter(f.get("sample_frame") or "unrecorded" for f in counted)
         suppressed = None
         if person_level and counted and set(frames) <= {"keyword"}:

@@ -270,3 +270,106 @@ def test_committed_sample_has_no_local_denylist_terms():
         text = (ROOT / rel).read_text(encoding="utf-8").lower()
         for term in terms:
             assert term.lower() not in text, rel
+
+
+def test_locked_candidates_and_draw_hashes_match_the_lock():
+    import hashlib
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    cand = ROOT / "data" / "sampling" / "neutral_random_candidates_v1.csv"
+    draw = ROOT / "data" / "sampling" / "neutral_random_draw_v1.csv"
+    assert hashlib.sha256(cand.read_bytes()).hexdigest() == rule["candidates_sha256"]
+    assert hashlib.sha256(draw.read_bytes()).hexdigest() == rule["draw_sha256"]
+    counts = {}
+    for r in csv.DictReader(cand.open(encoding="utf-8")):
+        counts[r["outlet_id"]] = counts.get(r["outlet_id"], 0) + 1
+    assert counts == rule["candidate_counts"]
+    collect.assert_candidate_coverage(counts, rule["candidate_counts"])
+
+
+def test_candidate_coverage_fails_if_one_outlet_drops_a_third():
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    locked = dict(rule["candidate_counts"])
+    reduced = dict(locked)
+    oid = "news24"
+    reduced[oid] = (locked[oid] * 2 // 3) - 1
+    with pytest.raises(AssertionError, match="dropped too far"):
+        collect.assert_candidate_coverage(reduced, locked)
+
+
+def test_main_refuses_to_overwrite_locked_candidates(tmp_path):
+    # Point config at nothing we will actually fetch: refuse happens before or after
+    # collect; we pass --out to the locked path and no overwrite flag.
+    import hashlib
+    locked = ROOT / "data" / "sampling" / "neutral_random_candidates_v1.csv"
+    before = locked.read_bytes()
+    digest = hashlib.sha256(before).hexdigest()
+    rc = collect.main([
+        "--config", str(ROOT / "data" / "collectors.json"),
+        "--errors", str(tmp_path / "errors.csv"),
+        "--out", str(locked),
+        "--from", "2026-05-01",
+        "--to", "2026-05-01",
+        "--outlets", "newsday",
+        "--delay", "0",
+        "--run-id", "test-no-overwrite",
+    ])
+    assert rc == 1
+    assert locked.read_bytes() == before
+    assert hashlib.sha256(locked.read_bytes()).hexdigest() == digest
+
+
+def test_main_exits_nonzero_when_an_error_was_logged(tmp_path):
+    err = tmp_path / "errors.csv"
+    out = tmp_path / "candidates.csv"
+    cfg = tmp_path / "collectors.json"
+    cfg.write_text(json.dumps({
+        "outlets": {
+            "newsday": {"name": "Newsday", "rss": ["https://newsday.co.za/feed/"], "sitemaps": []}
+        }
+    }), encoding="utf-8")
+
+    orig_init = collect.Collector.__init__
+
+    def init_with_failing_opener(self, *args, **kwargs):
+        orig_init(self, *args, **kwargs)
+
+        def opener(req, timeout, context):
+            raise urllib.error.URLError(
+                ssl.SSLCertVerificationError("unable to get local issuer certificate")
+            )
+
+        self._opener = opener
+
+    collect.Collector.__init__ = init_with_failing_opener
+    try:
+        rc = collect.main([
+            "--config", str(cfg),
+            "--errors", str(err),
+            "--out", str(out),
+            "--from", "2026-05-01",
+            "--to", "2026-11-20",
+            "--outlets", "newsday",
+            "--delay", "0",
+            "--run-id", "test-fail-closed",
+        ])
+    finally:
+        collect.Collector.__init__ = orig_init
+    assert rc == 1
+    rows = list(csv.DictReader(err.open(encoding="utf-8")))
+    assert len(rows) >= 1
+    assert out.is_file()  # still wrote; exit is non-zero
+
+
+def test_read_capped_rejects_oversized_body():
+    import io
+    small = io.BytesIO(b"abc")
+    assert collect.read_capped(small, limit=10) == b"abc"
+    big = io.BytesIO(b"x" * 50)
+    with pytest.raises(collect.ResponseTooLarge):
+        collect.read_capped(big, limit=10)
+
+
+def test_load_private_name_terms_fails_if_file_missing(tmp_path):
+    missing = tmp_path / "does-not-exist.txt"
+    with pytest.raises(FileNotFoundError, match="required"):
+        sampler.load_private_name_terms(missing)

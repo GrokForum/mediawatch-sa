@@ -8,7 +8,17 @@
   "k_per_outlet_week": 2,
   "description": "Pre-registered, seeded, reproducible draw. For each outlet, take every collected article URL whose date (RSS pubDate or Atom published, else a date in the URL, else sitemap lastmod) falls in the inclusive window, after the outlet path filters in data/collectors.json and after dropping known paywall_exclusions. Sort the week (ISO week in Africa/Johannesburg) by (published_at, url). Using random.Random(seed) and iterating outlets then weeks in sorted order, draw k=2 without replacement from each outlet-week stratum (or all of the stratum if it has fewer than 2). The seed and this algorithm are frozen for v1; a later window or k is a new algorithm_id, not an edit of this file's seed. If a drawn URL is later found to be paywalled, 404, or non-article at fetch, replace it with the next unused URL from the same stratum in the original sort order (no new random draw). A coded-and-clean article with no driver still counts in the sample denominator and does not get a finding row.",
   "paywall_rule": "Known rows in data/paywall_exclusions.csv and data/paywall_register.csv are excluded from the candidate pool before the draw. No paywalled body is fetched, spoofed, or scored.",
-  "tls_rule": "Collectors never disable TLS verification. Certificate and TLS errors are logged and the run continues.",
-  "prior_procedure_note": "The earlier News24 May\u2013Oct 2026 skew-fix pass used mid-week politics date proxies, not this RNG. Those existing rows keep their sample_frame tags. New coding under this rule uses algorithm_id neutral_random_v1.",
-  "private_names_rule": "If tests/private_names.local.txt is present, any candidate whose URL or title contains a denylist term (case-insensitive) is dropped before the draw, the same way known-paywall URLs are dropped. The denylist file is gitignored and is never committed. The committed candidate and draw lists must already have this filter applied."
+  "tls_rule": "Collectors never disable TLS verification. Certificate, TLS, and other fetch errors are logged to data/collector_errors.csv and the run continues to the next URL; the process exits non-zero if any error was logged. The locked candidates file is not overwritten unless --overwrite-locked-candidates is set. Response bodies are capped.",
+  "prior_procedure_note": "The earlier News24 May–Oct 2026 skew-fix pass used mid-week politics date proxies, not this RNG. Those existing rows keep their sample_frame tags. New coding under this rule uses algorithm_id neutral_random_v1.",
+  "private_names_rule": "tests/private_names.local.txt is required. A candidate whose URL or title contains a denylist term (case-insensitive) is dropped before the draw, the same way known-paywall URLs are dropped. The run fails if the denylist file is missing. The denylist file is gitignored and is never committed. The committed candidate and draw lists must already have this filter applied.",
+  "candidates_sha256": "40af6688353b6acf583b0d89ba94ae6f133762e741ec0ceb4d4d1b90599d7b05",
+  "draw_sha256": "9421990973b2a3069b301520badcdac736c80dbb1b81a971b0ab9db8e2290113",
+  "candidate_counts": {
+    "news24": 10464,
+    "daily_investor": 2049,
+    "newsday": 1559,
+    "daily_maverick": 5015,
+    "groundup": 762,
+    "citizen": 11548
+  }
 }

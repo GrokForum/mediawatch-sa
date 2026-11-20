@@ -39,7 +39,9 @@ def load_paywall_urls() -> set[str]:
 def load_private_name_terms(path: Path | None = None) -> list[str]:
     path = path or (ROOT / "tests" / "private_names.local.txt")
     if not path.exists():
-        return []
+        raise FileNotFoundError(
+            f"private-names denylist is required at {path}; refusing to draw without it"
+        )
     terms = []
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
