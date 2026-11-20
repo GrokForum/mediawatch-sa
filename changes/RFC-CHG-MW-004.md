@@ -97,8 +97,15 @@ Pre-change SHA: `8294282db5e2e9774e89695e8b75e0e4c16a759b`. No Pages settings ch
 - Phase 0 findings this RFC does **not** close: B2 (nightly job — CHG-MW-003), H1 (privacy page and contact — CHG-MW-005; the contact placeholder stays), M4 (no CSP meta), L2 (favicon.ico 404), L4 (one 4.0 s sample). Other sites' findings belong to those bots.
 - The live-check job is not on this branch (it lives on CHG-MW-003). After both merge, a later change can teach the live check to wait for this manifest's `git_sha`.
 - RFC-CHG-MW-002 open questions (a)–(j) stay with reviewer A and the owner, including the corrections contact.
-- No search-engine indexing request, no merge, no Pages settings change, no deploy. The branch has been pushed as PR #5 and is under review.
+- No search-engine indexing request, no merge, no Pages settings change, no deploy. PR #5 was opened from this branch; the last remote commit remains `79f1ba61aac02607388b14da20685e0591054464`. Later local commits on this branch, including this review follow-up, have not been pushed. The branch is under review. Not merged; not deployed.
+
+
+## Review follow-up (20 Nov 2026)
+
+Manifest tests no longer treat the builder's own `sha256_file` helper as an oracle: each input digest is checked against `hashlib.sha256` of the file bytes and must be 64 lowercase hex characters. The manifest `build.git_sha` must be a 40-character lowercase hex git object name; a short sha or the fallback `unknown` does not pass. This is a local DEV follow-up. The last remote commit on this branch (PR #5) remains `79f1ba61aac02607388b14da20685e0591054464`; the local head is ahead and is not pushed.
+
+Rollback for this follow-up: the merge commit that brought in the CHG-MW-003 cross-host redirect fix (`0964084e03de004383ad1f3ff88e0b682536e1dd` at the time of writing; `git log` on this branch).
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The branch has been pushed as PR #5. Owner GO is required before merge or deploy.
+Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The last remote commit on PR #5 is `79f1ba6`. Local work after that SHA is unpushed. Owner GO is required before merge or deploy.

@@ -22,6 +22,7 @@ import urllib.request
 from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
 SAST = ZoneInfo("Africa/Johannesburg")
@@ -117,15 +118,36 @@ def join_url(base: str, path: str) -> str:
     return base.rstrip("/") + path
 
 
+class CrossHostRedirectError(urllib.error.URLError):
+    """A 3xx Location pointed at a different host than the request."""
+
+
+class SameHostRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Follow redirects only when the Location host equals the request host."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        src = (urlparse(req.full_url).hostname or "").lower()
+        dst = (urlparse(newurl).hostname or "").lower()
+        if dst != src:
+            raise CrossHostRedirectError(
+                f"cross-host redirect from {src!r} to {dst!r} ({newurl})"
+            )
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def _opener():
+    return urllib.request.build_opener(SameHostRedirectHandler)
+
+
 def fetch(url: str, timeout: int = DEFAULT_TIMEOUT) -> dict:
-    """GET url. Follows redirects. Returns status/body; never raises for HTTP codes."""
+    """GET url. Follows same-host redirects only. Returns status/body; never raises for HTTP codes."""
     req = urllib.request.Request(
         url,
         method="GET",
         headers={"User-Agent": USER_AGENT, "Accept": "text/html,text/plain,*/*;q=0.8"},
     )
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with _opener().open(req, timeout=timeout) as resp:
             raw = resp.read()
             return {
                 "url": url,
