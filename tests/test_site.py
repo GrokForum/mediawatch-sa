@@ -60,7 +60,7 @@ def test_build_succeeds(site):
     assert (out / "method" / "index.html").exists()
     assert (out / "coverage" / "index.html").exists()
     assert (out / "privacy" / "index.html").exists()
-    for pid in build_site.PILOT + build_site.WATCH:
+    for pid in build_site.PILOT + build_site.PHASE2 + build_site.WATCH:
         assert (out / "p" / pid / "index.html").exists()
     assert stats["findings_rendered"] > 0
     assert len(list((out / "f").iterdir())) == stats["findings_rendered"]
@@ -217,6 +217,11 @@ def test_publication_scores_recomputed_independently(site):
     excluded = set(stats["excluded"])
     for pid, fn in build_site.FINDINGS_FILES.items():
         doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        h = text_of(out / "p" / pid / "index.html")
+        if pid in build_site.PHASE2:
+            assert 'data-level="publication"' not in h
+            assert "Scorecard by named actor" not in h
+            continue
         acc = defaultdict(list)
         for f in doc["findings"]:
             if f["id"] in excluded or f.get("accountability_status") == "accountability_exempt":
@@ -224,7 +229,6 @@ def test_publication_scores_recomputed_independently(site):
             if f.get("signed_score") is None:
                 continue
             acc[f["actor"]].append(float(f["signed_score"]))
-        h = text_of(out / "p" / pid / "index.html")
         rows = {html.unescape(a): (int(n), s) for a, n, s in
                 re.findall(r'data-level="publication" data-actor="([^"]+)" data-n="(\d+)" data-flag="[^"]+" data-score="([^"]*)"', h)}
         for actor, vals in acc.items():
@@ -718,3 +722,98 @@ def test_coded_clean_article_pages_exist(site):
     h = visible_text(text_of(path))
     assert "Coded clean" in h
     assert "sample denominator" in h
+
+
+# ------------------------------------------------------------------ CHG-MW-010 phase-2 trio
+def test_v1_phase2_sample_is_fully_coded():
+    """Every locked v1 phase-2 slot is a fetched article, coded as a finding or clean."""
+    status_path = ROOT / "data" / "sampling" / "neutral_random_v1_fetch_status_phase2.csv"
+    rows = [r for r in csv.DictReader(status_path.open(encoding="utf-8"))
+            if r["outlet_id"] in build_site.PHASE2]
+    assert len(rows) == 180
+    assert all(r["access"] == "full_text_curl" and r["status"] == "fetched" for r in rows)
+
+    docs = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        if pid not in build_site.PHASE2:
+            continue
+        docs[pid] = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+
+    by_url = {}
+    for pid, doc in docs.items():
+        for a in doc["articles"]:
+            if a.get("v1_draw"):
+                by_url[(pid, (a["url"] or "").rstrip("/").lower())] = a
+    assert len(by_url) == 180
+
+    for r in rows:
+        art = by_url[(r["outlet_id"], r["url"].rstrip("/").lower())]
+        assert art.get("algorithm_id") == "neutral_random_v1"
+        assert art.get("access") == "full_text_curl"
+        controls = {c["article_id"] for c in docs[r["outlet_id"]].get("balanced_controls", [])
+                    if c.get("reason") == "coded_clean"}
+        finding_aids = {f["article_id"] for f in docs[r["outlet_id"]]["findings"]}
+        assert art["id"] in controls or art["id"] in finding_aids, art["id"]
+        assert not (art["id"] in controls and art["id"] in finding_aids), art["id"]
+
+
+def test_v1_phase2_finding_quotes_are_exact_and_labelled():
+    allowed = ALLOWED
+    expected = {"F-CIT-NRV1-01", "F-CIT-NRV1-02"}
+    found = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        if pid not in build_site.PHASE2:
+            continue
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        for f in doc["findings"]:
+            if f["id"] in expected:
+                found[f["id"]] = f
+                assert f["quote"].strip()
+                assert f["url"].startswith("https://")
+                assert f["fact_label"] in allowed
+                assert f["steelman_for"].strip() and f["steelman_against"].strip()
+                assert f["methodology_version"] == "0.5-draft"
+                assert f.get("accountability_status") == "bias"
+                assert f.get("coder") == "mediawatch-sa-010"
+    assert set(found) == expected
+    # typographic punctuation from the fetched bodies must be preserved
+    assert "–" in found["F-CIT-NRV1-01"]["quote"]
+    assert "…" in found["F-CIT-NRV1-01"]["quote"]
+    assert "won’t" in found["F-CIT-NRV1-02"]["quote"]
+
+
+def test_phase2_pages_show_findings_but_not_scores(site):
+    out, _ = site
+    home = visible_text(text_of(out / "index.html"))
+    assert "Phase 2 (not yet past the coverage gate)" in home
+    assert "not published" in home.lower() or "are not published" in home
+    for name in ("Daily Maverick", "GroundUp", "The Citizen"):
+        assert name in home
+    for pid, coded, clean, nfind in (
+        ("daily_maverick", 60, 60, 0),
+        ("groundup", 60, 60, 0),
+        ("citizen", 60, 58, 2),
+    ):
+        h = visible_text(text_of(out / "p" / pid / "index.html"))
+        raw = text_of(out / "p" / pid / "index.html")
+        assert "Phase 2 (not yet past the coverage gate)" in h
+        assert "Scores not published" in h
+        assert "Scorecard by named actor" not in h
+        assert 'data-level="publication"' not in raw
+        assert 'class="score-row"' not in raw
+        assert f"{coded} articles coded" in h
+        assert f"{clean} coded clean" in h
+        assert "v1 sample size" in h
+        # Citizen findings must be visible
+        if nfind:
+            assert "F-CIT-NRV1-01" in raw
+            assert "F-CIT-NRV1-02" in raw
+
+
+def test_later_md_parks_next_outlets():
+    text = (ROOT / "docs" / "LATER.md").read_text(encoding="utf-8")
+    assert "Mail & Guardian" in text or "Mail &amp; Guardian" in text
+    assert "IOL" in text
+    assert "eNCA" in text and "SABC News" in text and "EWN" in text and "Newzroom Afrika" in text
+    assert "mail_guardian" in text
+

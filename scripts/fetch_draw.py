@@ -449,6 +449,9 @@ def main(argv=None) -> int:
     ok = sum(1 for r in status_rows if r["status"] == "fetched")
     pw = sum(1 for r in status_rows if r["status"] == "paywalled")
     print(f"wrote {len(status_rows)} rows ({ok} fetched, {pw} still paywalled) to {out_path}", file=sys.stderr)
+    if errors.count:
+        print(f"{errors.count} collector error(s) logged; exiting non-zero", file=sys.stderr)
+        return 1
     return 0
 
 
