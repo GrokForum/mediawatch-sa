@@ -3,6 +3,7 @@
 Run: python -m pytest -q
 """
 import csv
+import hashlib
 import html
 import json
 import re
@@ -474,7 +475,8 @@ def test_manifest_json_present_and_valid(site):
     assert doc["schema"] == "mediawatch.manifest/v1"
     assert doc["kind"] == "manifest"
     sha = doc["build"]["git_sha"]
-    assert isinstance(sha, str) and len(sha) >= 7
+    # Full git object name from this repo; "unknown" or a short sha must not pass.
+    assert isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{40}", sha), sha
     # local pytest has no GITHUB_RUN_ID unless the environment set one
     assert "run_id" in doc["build"]
     assert doc["built_at_sast"]
@@ -500,8 +502,10 @@ def test_manifest_json_present_and_valid(site):
     paths = [i["path"] for i in doc["inputs"]]
     assert paths == list(build_site.MANIFEST_INPUTS)
     for item in doc["inputs"]:
-        assert len(item["sha256"]) == 64
-        assert item["sha256"] == build_site.sha256_file(ROOT / item["path"])
+        # Independent sha256: hashlib, not the site builder's helper.
+        expected = hashlib.sha256((ROOT / item["path"]).read_bytes()).hexdigest()
+        assert re.fullmatch(r"[0-9a-f]{64}", item["sha256"]), item
+        assert item["sha256"] == expected
 
 
 def test_only_allowed_file_types_including_manifest(site):
