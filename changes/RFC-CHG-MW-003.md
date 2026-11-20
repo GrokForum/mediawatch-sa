@@ -109,6 +109,13 @@ Or, before merge, delete the branch. Pre-change SHA: `8294282db5e2e9774e89695e8b
 - Source-link gaps on published claims (owner group has no source URL field; editor source URLs are in the data but not rendered) are reported with CHG-MW-004, not fixed here.
 - No search-engine indexing request, no `contents: write`, no merge, no Pages settings change, no deploy. The branch has been pushed as PR #4 and is under review.
 
+
+## Review follow-up (20 Nov 2026)
+
+`scripts/check_live.py` no longer follows a redirect to a different host. Same-host redirects are still followed. A cross-host Location fails the live check (and the `fetch` helper) with a recorded error. `tests/test_check_live.py` covers a same-host follow and a cross-host failure (`127.0.0.1` redirecting to `localhost` on a second listener). Local DEV only; this commit is not a merge or deploy.
+
+Rollback for this follow-up: `3ea260fc181601eac7cb38b9e3e8f6364bb4bf17`.
+
 ## Sign-off
 
 Author: the bot. Sign-off is by someone other than the author. Reviewers: reviewer A and reviewer B. The branch has been pushed as PR #4. Owner GO is required before merge or deploy.
