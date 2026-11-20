@@ -144,7 +144,7 @@ The site generator (`scripts/build_site.py`) applies the same rule and the test 
 
 ## 5b. Official wording vs media wording
 
-This rule is shared with the KTB register and the CrimeWatch register so the three public registers treat official wording the same way.
+This rule is shared with the sibling crime register so the public registers treat official wording the same way.
 
 When SAPS, the NPA or a charge sheet names an offence, that wording records **what was charged**, not **what happened**. The existence of the charge is **Proven** as a charge. It does not, by itself, prove or disprove the underlying acts.
 
@@ -258,7 +258,7 @@ Every finding **must** carry a `sample_frame` field so roll-ups can weight or sp
 | Value | Meaning | How drawn |
 |-------|---------|-----------|
 | `keyword` | Hit via actor/term search (AfriForum, Solidarity, SAAI, Trump, AGOA, AfriMAGA, etc.) | Search → fetch → code |
-| `neutral_random` | Date-based politics draw, **not** keyed on the scored actor | Fixed weekdays from `/politics`, archive, or sitemap; ~2 stories/week across the window |
+| `neutral_random` | Date-based editorial draw, **not** keyed on the scored actor | Pre-registered seeded rule `neutral_random_v1` (see below): two URLs per outlet per ISO week from the collected feed or sitemap, within the registered window |
 | `counter_pull` | Deliberate search for the **opposite** direction of the provisional pattern | e.g. FOR AfriForum/Solidarity/SAAI; AGAINST DA/GNU; FOR Trump/US; matching writer X on the same weeks; or a Press Council / Ombud pass that is not a random draw |
 | `external_seed` | Re-verified from an outside seed that supplies a checkable quote, URL and date | Only after re-verify; otherwise keep as an external reference |
 | `purposive` | Judgement / byline corpus with **no** pre-registered random rule | e.g. a named-journalist investigations sample to fill a coverage gap. Do **not** label this `neutral_random`. |
@@ -270,7 +270,16 @@ Every finding **must** carry a `sample_frame` field so roll-ups can weight or sp
 3. Absences discovered by `counter_pull` (zero hits) are recorded in `meta.counter_pull_absences` — absence is data, not a fabricated FOR/AGAINST row.
 4. Roll-up options (owner chooses at score run): (a) report three parallel scores by frame; (b) weight `neutral_random` highest; (c) pool all frames but disclose mix.
 
-Neutral-sample procedure used in the News24 May–Oct 2026 skew-fix pass: select politics stories near fixed mid-week dates (~fortnightly Tue/Fri proxies across May–Oct), prefer the lead politics item that day; code FOR/AGAINST drivers **or** log as `balanced_controls` when no driver fires.
+**Locked rule (`neutral_random_v1`, registered 20 Nov 2026, Africa/Johannesburg).** This is the pre-registered, seeded, reproducible procedure for `neutral_random` draws from this date. It is not keyed on a scored actor.
+
+1. **Window:** inclusive calendar dates `2026-05-01` to `2026-11-20` (Africa/Johannesburg) for the first committed draw. A later end date is a new algorithm version, not an edit of this seed.
+2. **Seed:** integer `20261120`, stored in `data/sampling/neutral_random_v1.json`. The committed draw list is `data/sampling/neutral_random_draw_v1.csv`.
+3. **Universe:** for each registered outlet, article URLs collected by the stdlib RSS/sitemap collectors (`scripts/collect.py`, endpoints in `data/collectors.json`) whose date falls in the window. Date order of preference: a date in the article permalink; then RSS `pubDate` / Atom `published` when it falls on that same calendar day (kept for time of day); then sitemap `lastmod` or a feed date when the URL has no date. Outlet path filters in `data/collectors.json` apply. URLs already listed in `data/paywall_exclusions.csv` or `data/paywall_register.csv` are dropped before the draw. URLs or titles that match the local private-names denylist (gitignored; not committed) are also dropped before the draw, so the committed candidate and draw lists never name a private person. Verification is never disabled; certificate and TLS errors are logged to `data/collector_errors.csv` and the run continues.
+4. **Stratified draw:** ISO week × outlet. Sort the stratum by `(published_at, url)`. Using `random.Random(seed)` and iterating outlets then weeks in sorted order, draw **k = 2** without replacement (or the whole stratum if it has fewer than two). 
+5. **Replacement (pre-registered):** if a drawn URL is later found to be paywalled, 404, or not an article, replace it with the next unused URL from the same stratum in the original sort order. Do not draw a new random item.
+6. **Coding:** apply METHODOLOGY 0.5. A coded-and-clean article that fires no driver produces **no** finding row, but **does** count in the sample denominator.
+
+Prior News24 May–Oct 2026 skew-fix pass: politics stories near fixed mid-week dates (~fortnightly Tue/Fri proxies), preferring the lead politics item that day; code FOR/AGAINST drivers **or** log as `balanced_controls` when no driver fires. Those rows keep their existing `sample_frame` tags; they were not drawn with `neutral_random_v1`.
 
 
 ## 8b. Accountability vs bias (governing-party rule)
@@ -312,4 +321,4 @@ Re-audit trigger: any existing AGAINST finding on a governing actor must be re-c
 
 Breaking changes to weights, labels, or the secondary axis map bump `methodology_version` (and `left_right_method` version when only the secondary changes) and freeze prior scores as `score_run` / `lean_score_run` snapshots. Never silently rewrite historical public scores. Never rewrite primary scores to absorb lean.
 
-0.5-draft (20 Nov 2026) adds §5b (official wording vs media wording) and is shared with the KTB and CrimeWatch registers. Prior findings keep the methodology_version they were coded under. Historical public scores are not rewritten.
+0.5-draft (20 Nov 2026) adds §5b (official wording vs media wording) and is shared with the sibling crime register. Prior findings keep the methodology_version they were coded under. Historical public scores are not rewritten.

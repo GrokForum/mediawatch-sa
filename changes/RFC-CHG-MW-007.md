@@ -20,7 +20,7 @@
 
 ## Goal
 
-Log a verified factual error in IOL and EWN reporting of SAPS Q2 2026/27 murder statistics, and add the shared “official wording vs media wording” rule (the same rule as the KTB and CrimeWatch registers) to the MediaWatch methodology.
+Log a verified factual error in IOL and EWN reporting of SAPS Q2 2026/27 murder statistics, and add the shared “official wording vs media wording” rule (the same rule as the sibling crime register) to the MediaWatch methodology.
 
 ---
 
@@ -77,4 +77,4 @@ Or delete the branch `dev/chg-mw-007-police-wording`. If this RFC is later merge
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Owner GO was given to log the error, watch, and add the same official-wording rule as the KTB register (20 Nov 2026). Owner GO is still required before merge or deploy.
+Author: the bot. Sign-off is by someone other than the author. Owner GO was given to log the error, watch, and add the same official-wording rule as the sibling crime register (20 Nov 2026). Owner GO is still required before merge or deploy.

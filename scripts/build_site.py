@@ -64,7 +64,7 @@ DRIVER_NAMES = {
 }
 FRAME_NOTES = {
     "keyword": "found by actor/term search",
-    "neutral_random": "date-based politics draw",
+    "neutral_random": "pre-registered seeded draw (neutral_random_v1: 2 URLs per outlet per ISO week)",
     "counter_pull": "deliberate search for the opposite direction",
     "external_seed": "re-verified outside seed",
     "purposive": "judgement sample, no pre-registered random rule (frame pending owner acceptance)",
@@ -703,7 +703,7 @@ def build(out_dir):
 <h2>What is measured</h2>
 <p>Each finding answers one question: relative to a <strong>named actor</strong>, does this published line (or a public post by a named newsroom figure) work <strong>FOR</strong> or <strong>AGAINST</strong> that actor, and by which driver? Signed scores run from &minus;2 to +2 per actor.</p>
 <h2>Drivers</h2><ul>{drivers}</ul>
-<p class="note">Some Daily Investor and Newsday findings use driver names outside this list. They are shown as recorded, marked &ldquo;driver name pending owner decision&rdquo;.</p>
+<p class="note">Daily Investor and Newsday findings use the official closed driver set. Unofficial names used in the first pilot coding were recoded in CHG-MW-008; historical weights and signed scores were not rewritten.</p>
 <h2>Fact labels (closed set)</h2><ul>{labels}</ul>
 <h2>Thresholds</h2>
 <p>A score is shown only when <em>n</em> &ge; 10 counted findings for that outlet or writer and actor. With 5&ndash;9 it is marked provisional. Under 5, only the findings are shown. Writer scores drawn only from keyword searches are suppressed.</p>
@@ -714,7 +714,7 @@ def build(out_dir):
 <p>Sourced accountability reporting on those in power, with fair right of reply and no loaded driver, is not counted as bias. Such findings stay visible for audit but do not count in the score.</p>
 <h2>Official wording vs media wording</h2>
 <p>A SAPS or NPA charge sheet records what was charged, not what happened. The charge itself is Proven as a charge; it does not prove or disprove the acts. Each injury or act claim is labelled on its own evidence (for example Alleged if only a family member or lobby group asserts it; Established if hospital records or court testimony back it). A gap in either direction &mdash; downplaying or inflating &mdash; is a framing or omission finding once there is an exact quote and a contrary record.</p>
-<p>The same rule applies to official statistics and media reports of them. A misreported official figure is a factual error. The official table figure, checked in the primary release, is Proven. A speech or briefing is a primary record of what was said, but it does not override the statistical tables when the two conflict. This rule is shared with the KTB and CrimeWatch registers so the three public registers treat official wording consistently.</p>
+<p>The same rule applies to official statistics and media reports of them. A misreported official figure is a factual error. The official table figure, checked in the primary release, is Proven. A speech or briefing is a primary record of what was said, but it does not override the statistical tables when the two conflict. This rule is shared with the sibling crime register so the public registers treat official wording consistently.</p>
 <h2>Privacy</h2>
 <p>Journalists, editors and public figures are named in their public role only. Private individuals who appear in stories are described by role, never named. See the <a href="../privacy/index.html">privacy page</a>.</p>"""
     write("method/index.html", "Method", method, [("Method", None)])

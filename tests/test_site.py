@@ -327,18 +327,10 @@ def test_schema_news24_and_registers_pass():
         assert s[name]["errors"] == 0, (name, s[name])
 
 
-@pytest.mark.xfail(strict=True, reason="Daily Investor/Newsday use unofficial driver names; recode vs extend schema "
-                                       "is an open owner decision (RFC-CHG-MW-002 open question a)")
 @pytest.mark.parametrize("name", ["dailyinvestor_pilot_findings.json", "newsday_pilot_findings.json"])
 def test_schema_di_newsday_drivers(name):
     s = _schema_summary()
     assert s[name]["errors"] == 0, s[name]
-
-
-def test_schema_di_newsday_only_driver_errors():
-    s = _schema_summary()
-    for name in ("dailyinvestor_pilot_findings.json", "newsday_pilot_findings.json"):
-        assert set(s[name]["by_field"]) <= {"driver: enum"}, s[name]
 
 
 # ------------------------------------------------------------------ line endings
@@ -581,7 +573,7 @@ def test_method_page_has_official_wording_section(site):
     assert "official wording vs media wording" in h
     assert "what was charged" in h and "what happened" in h
     assert "factual error" in h
-    assert "ktb" in h and "crimewatch" in h
+    assert "sibling crime register" in h
     src = (ROOT / "docs" / "METHODOLOGY.md").read_text(encoding="utf-8")
     assert src.split("**Version:**", 1)[1].lstrip().startswith("0.5-draft")
     assert "## 5b. Official wording vs media wording" in src

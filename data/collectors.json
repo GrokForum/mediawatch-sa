@@ -1,0 +1,185 @@
+{
+  "user_agent": "MediaWatch-SA-collector/0.1 (https://mediawatch.grokforum.site/; public methodology register)",
+  "tls_policy": "Verification is always on (ssl.create_default_context). Certificate and TLS errors are logged to data/collector_errors.csv and the run log (host, error, time in Africa/Johannesburg) and the run continues. Verification is never disabled.",
+  "outlets": {
+    "news24": {
+      "name": "News24",
+      "phase": "pilot",
+      "homepage": "https://www.news24.com/",
+      "robots": "https://www.news24.com/robots.txt",
+      "rss": [],
+      "rss_notes": "Homepage advertised https://feeds.24.com/articles/news24/topstories/rss. Fetch on 20 Nov 2026 failed with SSL UNEXPECTED_EOF_WHILE_READING under default verification. The failure is logged; verification was not disabled. Dated sitemaps are the working source.",
+      "sitemaps": [],
+      "dated_sitemap_pattern": "https://www.news24.com/news24/sitemapindex/0/{year}/{month}/{day}",
+      "include_path_prefixes": [
+        "/politics/",
+        "/opinions/",
+        "/southafrica/",
+        "/world/",
+        "/business/",
+        "/news24/politics/",
+        "/news24/opinions/",
+        "/news24/southafrica/",
+        "/news24/world/",
+        "/news24/business/"
+      ],
+      "exclude_path_prefixes": [
+        "/southafrica/weather",
+        "/news24/southafrica/weather",
+        "/brandstory/",
+        "/sport/",
+        "/sports/",
+        "/life/",
+        "/you/",
+        "/push/",
+        "/newsletter/",
+        "/multimedia/",
+        "/games/",
+        "/video/"
+      ],
+      "sitemaps_note": "robots.txt lists https://www.news24.com/sitemap (a rolling daily index). The dated pattern is used for a closed window so historical days are not missed and recent days are not fetched twice."
+    },
+    "daily_investor": {
+      "name": "Daily Investor",
+      "phase": "pilot",
+      "homepage": "https://dailyinvestor.com/",
+      "robots": "https://dailyinvestor.com/robots.txt",
+      "rss": [
+        "https://dailyinvestor.com/feed/"
+      ],
+      "sitemaps": [
+        "https://dailyinvestor.com/wp-sitemap.xml"
+      ],
+      "sitemap_allow_substrings": [
+        "wp-sitemap-posts-post-"
+      ],
+      "include_path_prefixes": [
+        "/south-africa/",
+        "/investing/",
+        "/finance/",
+        "/business/",
+        "/world/",
+        "/markets/",
+        "/economy/",
+        "/property/",
+        "/energy/",
+        "/mining/"
+      ],
+      "exclude_path_prefixes": [
+        "/product",
+        "/tag/",
+        "/author/",
+        "/page/"
+      ]
+    },
+    "newsday": {
+      "name": "Newsday",
+      "phase": "pilot",
+      "homepage": "https://newsday.co.za/",
+      "robots": "https://newsday.co.za/robots.txt",
+      "rss": [
+        "https://newsday.co.za/feed/"
+      ],
+      "sitemaps": [
+        "https://newsday.co.za/wp-sitemap.xml"
+      ],
+      "sitemap_allow_substrings": [
+        "wp-sitemap-posts-post-"
+      ],
+      "include_path_prefixes": [],
+      "exclude_path_prefixes": [
+        "/product",
+        "/tag/",
+        "/author/",
+        "/page/",
+        "/shop/"
+      ]
+    },
+    "daily_maverick": {
+      "name": "Daily Maverick",
+      "phase": "phase2",
+      "homepage": "https://www.dailymaverick.co.za/",
+      "robots": "https://www.dailymaverick.co.za/robots.txt",
+      "rss": [
+        "https://www.dailymaverick.co.za/dmrss/"
+      ],
+      "sitemaps": [
+        "https://www.dailymaverick.co.za/sitemap_index.xml"
+      ],
+      "sitemap_allow_substrings": [
+        "article-sitemap"
+      ],
+      "include_path_prefixes": [
+        "/article/",
+        "/opinion/",
+        "/article-"
+      ],
+      "exclude_path_prefixes": [
+        "/author/",
+        "/section/",
+        "/tag/",
+        "/dmrss/"
+      ]
+    },
+    "groundup": {
+      "name": "GroundUp",
+      "phase": "phase2",
+      "homepage": "https://groundup.org.za/",
+      "robots": "https://groundup.org.za/robots.txt",
+      "rss": [
+        "https://www.groundup.org.za/sitenews/rss/"
+      ],
+      "sitemaps": [
+        "https://groundup.org.za/sitemap.xml"
+      ],
+      "include_path_prefixes": [
+        "/article/"
+      ],
+      "exclude_path_prefixes": [
+        "/admin/",
+        "/preview/",
+        "/invoices/"
+      ]
+    },
+    "citizen": {
+      "name": "The Citizen",
+      "phase": "phase2",
+      "homepage": "https://www.citizen.co.za/",
+      "robots": "https://www.citizen.co.za/robots.txt",
+      "rss": [
+        "https://www.citizen.co.za/feed/"
+      ],
+      "sitemaps": [
+        "https://www.citizen.co.za/sitemap_index.xml"
+      ],
+      "sitemap_allow_substrings": [
+        "post-sitemap"
+      ],
+      "include_path_prefixes": [],
+      "exclude_path_prefixes": [
+        "/sport/",
+        "/sports/",
+        "/entertainment/",
+        "/lifestyle/",
+        "/classifieds/",
+        "/author/",
+        "/tag/",
+        "/category/",
+        "/lotto/",
+        "/sport-extra/"
+      ]
+    }
+  },
+  "tls_watch": [
+    {
+      "url": "https://www.saps.gov.za/services/crimestats.php",
+      "outlet_id": "saps",
+      "note": "Known incomplete certificate chain. Log the TLS error and continue; never disable verification."
+    },
+    {
+      "url": "https://feeds.24.com/articles/news24/topstories/rss",
+      "outlet_id": "news24",
+      "note": "Advertised on the News24 homepage as the Top Stories RSS feed. Fetch on 20 Nov 2026 failed under default verification (UNEXPECTED_EOF). Logged; verification was not disabled. Dated sitemaps are the working News24 source."
+    }
+  ]
+}
