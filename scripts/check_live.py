@@ -29,7 +29,7 @@ DEFAULT_BASE = "https://mediawatch.grokforum.site"
 ROBOTS_EXACT = "User-agent: *\nDisallow: /\n"
 NOINDEX = '<meta name="robots" content="noindex, nofollow">'
 DRAFT_MARKERS = ("Draft preview (DEV)", "MediaWatch SA (draft)")
-SAMPLE_PATHS = ("/", "/method/", "/coverage/", "/corrections/", "/p/news24/")
+SAMPLE_PATHS = ("/", "/method/", "/coverage/", "/corrections/", "/privacy/", "/p/news24/")
 FORBIDDEN_PATHS = ("/data", "/data/", "/docs", "/docs/", "/plan", "/plan/")
 USER_AGENT = "MediaWatch-SA-live-check/1.0"
 DEFAULT_TIMEOUT = 20

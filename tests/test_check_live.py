@@ -87,6 +87,7 @@ def live_server():
         "/method/": PAGE.encode("utf-8"),
         "/coverage/": PAGE.encode("utf-8"),
         "/corrections/": PAGE.encode("utf-8"),
+        "/privacy/": PAGE.encode("utf-8"),
         "/p/news24/": PAGE.encode("utf-8"),
     }
     _Handler.status_overrides = {}
@@ -273,6 +274,7 @@ def test_forbidden_paths_and_samples_match_rfc():
     assert check_live.FORBIDDEN_PATHS == (
         "/data", "/data/", "/docs", "/docs/", "/plan", "/plan/")
     assert "/" in check_live.SAMPLE_PATHS
+    assert "/privacy/" in check_live.SAMPLE_PATHS
     assert check_live.ROBOTS_EXACT == "User-agent: *\nDisallow: /\n"
 
 

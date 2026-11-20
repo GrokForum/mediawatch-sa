@@ -74,9 +74,7 @@ Pre-change SHA: `8294282db5e2e9774e89695e8b75e0e4c16a759b`. No Pages settings ch
 
 ## Live-check sample path `/privacy/`
 
-`scripts/check_live.py` and its `SAMPLE_PATHS` live on the CHG-MW-003 branch, not on this one until that change is on the same tree. `/privacy/` must be added to `SAMPLE_PATHS` on **this** change, not on CHG-MW-003: until this privacy page is deployed, the live site has no `/privacy/` and the 003 nightly would go red if it sampled that path.
-
-This branch therefore records the required addition here and does not copy the 003 checker into this PR. Once CHG-MW-003 is on `main` (or otherwise on the same tree as this branch), a one-line follow-up should add `/privacy/` to `SAMPLE_PATHS` (and to the checker's local fixture pages) so the nightly confirms the privacy page is 200 and noindex.
+`scripts/check_live.py` now lives on this branch by a forward-only merge of CHG-MW-003 (via CHG-MW-004). `/privacy/` is in `SAMPLE_PATHS` here, and in the checker's local fixture pages, so the nightly confirms the privacy page is 200 and noindex once this change is deployed. It was not added on CHG-MW-003 alone: until this privacy page is deployed, the live site has no `/privacy/` and the 003 nightly would go red if it sampled that path.
 
 ## Seen, not touched
 
