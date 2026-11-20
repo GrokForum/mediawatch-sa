@@ -46,8 +46,17 @@ class _Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         return
 
+    redirects = {}
+
     def do_GET(self):
         path = self.path.split("?", 1)[0]
+        if path in self.redirects:
+            code, location = self.redirects[path]
+            self.send_response(code)
+            self.send_header("Location", location)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
         # Normalise directory URLs the way Pages does: /method/ serves /method/index.html
         key = path
         if key not in self.pages and not key.endswith("/") and key + "/" in self.pages:
@@ -90,6 +99,7 @@ def live_server():
         "/p/news24/": PAGE.encode("utf-8"),
     }
     _Handler.status_overrides = {}
+    _Handler.redirects = {}
     httpd = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
@@ -367,3 +377,46 @@ def test_run_blocks_have_no_template_expressions():
                 in_run = False
             else:
                 assert "${{" not in line, line
+
+
+
+def test_same_host_redirect_is_followed(live_server):
+    """A 302 that stays on the same host is followed and the final page is used."""
+    base, handler = live_server
+    handler.redirects["/via-redirect"] = (302, base + "/method/")
+    got = check_live.fetch(base + "/via-redirect")
+    assert got["error"] is None
+    assert got["status"] == 200
+    assert got["final_url"].rstrip("/") == (base + "/method/").rstrip("/")
+    assert check_live.has_noindex_nofollow(got["body"])
+
+
+def test_fail_on_cross_host_redirect(live_server, tmp_path):
+    """A Location on another host is not followed and the live check fails."""
+    base, handler = live_server
+    # Second listener on 127.0.0.1, advertised as localhost so the hostnames differ.
+    other = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
+    thread = threading.Thread(target=other.serve_forever, daemon=True)
+    thread.start()
+    try:
+        _, other_port = other.server_address
+        other_url = f"http://localhost:{other_port}/"
+        handler.redirects["/"] = (302, other_url)
+        # Direct fetch must not return the other host's body.
+        got = check_live.fetch(base + "/")
+        assert got["status"] is None
+        assert got["body"] == ""
+        assert got["error"] and "cross-host redirect" in got["error"]
+        assert "localhost" in got["error"]
+
+        out = tmp_path / "live-check.json"
+        rc = check_live.main(["--base-url", base, "--out", str(out), "--wait", "0"])
+        assert rc == 1
+        payload = json.loads(out.read_text(encoding="utf-8"))
+        assert payload["verdict"] == "FAIL"
+        home = next(c for c in payload["checks"] if c["name"] == "home_200")
+        assert home["pass"] is False
+        assert home["error"] and "cross-host redirect" in home["error"]
+    finally:
+        other.shutdown()
+        other.server_close()
