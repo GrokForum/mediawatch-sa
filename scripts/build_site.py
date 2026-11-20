@@ -41,10 +41,14 @@ SITE_SRC = ROOT / "site"
 
 ALLOWED_LABELS = ("Proven", "Established", "Alleged", "Disputed", "Not established")
 PILOT = ("news24", "daily_investor", "newsday")
+# Error-watch outlets logged outside the scored three-outlet pilot (findings only until n allows a score).
+WATCH = ("iol", "ewn")
 FINDINGS_FILES = {
     "news24": "news24_pilot_findings.json",
     "daily_investor": "dailyinvestor_pilot_findings.json",
     "newsday": "newsday_pilot_findings.json",
+    "iol": "iol_watch_findings.json",
+    "ewn": "ewn_watch_findings.json",
 }
 FULL_N, PROVISIONAL_N = 10, 5
 FREE_ACCESS = {"full_text_webfetch", "full_text_curl", "partner_content_meta"}
@@ -445,7 +449,7 @@ def build(out_dir):
     items = {}       # key -> item dict
     findings = []    # rendered findings
     excluded_counts = Counter()
-    for pid in PILOT:
+    for pid in PILOT + WATCH:
         doc = docs[pid]
         arts = {a["id"]: a for a in doc.get("articles", [])}
         posts = {p["id"]: p for p in doc.get("public_posts", [])}
@@ -536,24 +540,30 @@ def build(out_dir):
         return p["full_name"] if p else None
 
     # ---- home
-    rows = []
-    for pid in PILOT:
-        pub = pubs[pid]
-        shown = [f for f in findings if f["publication_id"] == pid]
-        rows.append(f'<tr><td><a href="p/{slug(pid)}/index.html">{e(pub["name"])}</a></td>'
-                    f'<td>{e(pub.get("owner_group"))}</td><td class="num">{len(shown)}</td>'
-                    f'<td class="num">{excluded_counts[pid]}</td></tr>')
+    def pub_rows(ids):
+        rows = []
+        for pid in ids:
+            pub = pubs[pid]
+            shown = [f for f in findings if f["publication_id"] == pid]
+            rows.append(f'<tr><td><a href="p/{slug(pid)}/index.html">{e(pub["name"])}</a></td>'
+                        f'<td>{e(pub.get("owner_group"))}</td><td class="num">{len(shown)}</td>'
+                        f'<td class="num">{excluded_counts[pid]}</td></tr>')
+        return "".join(rows)
     home = f"""<h1>South African media bias register (pilot)</h1>
 <p>MediaWatch SA records bias <strong>for or against named actors</strong> (parties, governments, organisations and public figures in their public role). Each finding quotes the exact line, links the source, gives a fact label and sets out the strongest case on both sides.</p>
 <p>The pilot covers three outlets. The register will grow in phases to cover South African media broadly; see the <a href="coverage/index.html">coverage plan</a>.</p>
 <h2>Pilot publications</h2>
 <table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
-<tbody>{''.join(rows)}</tbody></table>
-<p class="note">Window: May&ndash;October 2026. Only content the public can read free is judged. Findings that rested on a paywalled piece are excluded and not scored.</p>"""
+<tbody>{pub_rows(PILOT)}</tbody></table>
+<p class="note">Window: May&ndash;October 2026. Only content the public can read free is judged. Findings that rested on a paywalled piece are excluded and not scored.</p>
+<h2>Error watch (outside the pilot sample)</h2>
+<p>These findings were logged against official records after the May&ndash;October 2026 pilot window. They are shown as findings only. They do not expand the scored three-outlet pilot and are not used to claim a publication score for these outlets.</p>
+<table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
+<tbody>{pub_rows(WATCH)}</tbody></table>"""
     write("index.html", "Publications", home)
 
     # ---- publication pages
-    for pid in PILOT:
+    for pid in PILOT + WATCH:
         pub = pubs[pid]
         fs = [f for f in findings if f["publication_id"] == pid]
         writers = Counter(f["_person"] for f in fs if f["_person"])
@@ -702,6 +712,9 @@ def build(out_dir):
 <p>Bias is judged only on what the public can read free. Paywalled articles are out of the sample and never scored. A headline, standfirst or teaser never stands in for a paywalled body. No logins, subscriptions or paywall workarounds are used.</p>
 <h2>Accountability reporting</h2>
 <p>Sourced accountability reporting on those in power, with fair right of reply and no loaded driver, is not counted as bias. Such findings stay visible for audit but do not count in the score.</p>
+<h2>Official wording vs media wording</h2>
+<p>A SAPS or NPA charge sheet records what was charged, not what happened. The charge itself is Proven as a charge; it does not prove or disprove the acts. Each injury or act claim is labelled on its own evidence (for example Alleged if only a family member or lobby group asserts it; Established if hospital records or court testimony back it). A gap in either direction &mdash; downplaying or inflating &mdash; is a framing or omission finding once there is an exact quote and a contrary record.</p>
+<p>The same rule applies to official statistics and media reports of them. A misreported official figure is a factual error. The official table figure, checked in the primary release, is Proven. A speech or briefing is a primary record of what was said, but it does not override the statistical tables when the two conflict. This rule is shared with the KTB and CrimeWatch registers so the three public registers treat official wording consistently.</p>
 <h2>Privacy</h2>
 <p>Journalists, editors and public figures are named in their public role only. Private individuals who appear in stories are described by role, never named. See the <a href="../privacy/index.html">privacy page</a>.</p>"""
     write("method/index.html", "Method", method, [("Method", None)])
@@ -744,7 +757,7 @@ def build(out_dir):
     coverage = """<h1>Coverage plan</h1>
 <p>The aim is to cover South African media broadly. Coverage grows in phases. No dates are promised; each phase starts only when its entry criteria are met.</p>
 <ol>
-<li><strong>Pilot:</strong> News24, Daily Investor and Newsday. Entry: method, fact labels and thresholds stable; free-access check done for each outlet.</li>
+<li><strong>Pilot:</strong> News24, Daily Investor and Newsday. Entry: method, fact labels and thresholds stable; free-access check done for each outlet. An error-watch log may add findings-only rows for other outlets without expanding this scored pilot.</li>
 <li><strong>Major national dailies and weeklies (free content only):</strong> entry: pilot reviewed and corrected; neutral-random sampling rule fixed; driver list settled.</li>
 <li><strong>Broadcasters' news sites:</strong> entry: phase 2 reaches minimum samples for its main actors; a rule for transcripts and clips agreed.</li>
 <li><strong>Regional, community, Afrikaans and other-language outlets:</strong> entry: coders able to read the language; translation and quote-fidelity rule agreed.</li>

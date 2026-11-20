@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "project": "MediaWatch SA",
+    "file": "iol_watch_findings",
+    "methodology_version": "0.5-draft",
+    "window": "2026-11-20 (SAPS Q2 2026/27 release day; outside the May–October 2026 pilot window)",
+    "publication": "iol",
+    "created_at_sast": "2026-11-20T10:59:00+02:00",
+    "scope": "IOL Q2 2026/27 murder year-on-year figure (Se-Anne Rall)",
+    "stop_rule": "Owner-directed error log of the Q2 2026/27 murder year-on-year figure; one free article per outlet",
+    "popia": "PASS draft: public journalists and public officials in their public role only; no private individuals named",
+    "access_notes": [
+      "Both articles were free to read in full on 20 Nov 2026 (WebFetch and curl). No paywall."
+    ],
+    "sample_frame": "purposive",
+    "official_source": {
+      "saps_tables_pdf": "https://www.saps.gov.za/services/downloads/2026/2026-2027_-_2nd_Quarter_WEB.pdf",
+      "saps_stats_page": "https://www.saps.gov.za/services/crimestats.php",
+      "saps_speech_index": "https://www.saps.gov.za/newsroom/speech.php",
+      "speech_nid": "72569",
+      "murder_current": 5590,
+      "murder_prior_year": 5794,
+      "count_diff": -204,
+      "percent_change": "-3,5%"
+    }
+  },
+  "articles": [
+    {
+      "id": "A-IOL-2026-11-20-MURDER-DECLINE",
+      "publication_id": "iol",
+      "person_id": "se_anne_rall",
+      "byline": "Se-Anne Rall",
+      "headline": "SA records 1,600 fewer murders, but 5,590 people killed in three months",
+      "url": "https://iol.co.za/news/crime-and-courts/2026-11-20-sa-records-1600-fewer-murders-but-5590-people-killed-in-three-months/",
+      "published_at": "2026-11-20T08:05:14+00:00",
+      "published_at_sast": "2026-11-20T10:05:14+02:00",
+      "access": "full_text_webfetch",
+      "body_chars": 6018,
+      "note": "Free full text on 20 Nov 2026 (WebFetch and curl). JSON-LD datePublished 2026-11-20T08:05:14+0000 (10:05:14 SAST). Byline Se-Anne Rall. No paywall. wordCount in JSON-LD is 1003.",
+      "sample_frame": "purposive"
+    }
+  ],
+  "public_posts": [],
+  "balanced_controls": [],
+  "findings": [
+    {
+      "id": "F-IOL-Q2-MURDER-1600",
+      "article_id": "A-IOL-2026-11-20-MURDER-DECLINE",
+      "person_id": "se_anne_rall",
+      "actor": "SAPS",
+      "direction": "FOR",
+      "driver": "factual_error",
+      "quote": "South Africa recorded 5,590 murders between July and September 2026, an average of 60 people killed every day, despite a decline of more than 1,600 murders compared with the same period last year.",
+      "url": "https://iol.co.za/news/crime-and-courts/2026-11-20-sa-records-1600-fewer-murders-but-5590-people-killed-in-three-months/",
+      "published_at": "2026-11-20T08:05:14+00:00",
+      "published_at_sast": "2026-11-20T10:05:14+02:00",
+      "fact_label": "Not established",
+      "steelman_for": "The article correctly reports the official current count (5,590 murders in July–September 2026, about 60 a day) and several category changes that match the official SAPS tables. It is covering a ministerial briefing, and the Acting Minister's official speech used the same “over 1 600 fewer murders than the same period last year” wording. A fair reading is that the outlet was reporting what was said at the release, and that a year-on-year decline in murder did occur.",
+      "steelman_against": "The headline and body state as fact that South Africa recorded more than 1,600 fewer murders than in the same period last year. The official SAPS Q2 2026/27 tables in the same release show 5,590 murders against 5,794 in July–September 2025, a drop of 204 (−3.5%). That overstates the official year-on-year decline about eightfold. The 1,600 figure is not marked as a quotation, and the article does not set it against the official table figures.",
+      "evidence_notes": "Official SAPS Q2 2026/27 statistical tables (PDF, Crime situation, July 2022–September 2026 comparison), checked from the primary document at https://www.saps.gov.za/services/downloads/2026/2026-2027_-_2nd_Quarter_WEB.pdf: Murder 5,590 (July to September 2026) against 5,794 (July to September 2025), count difference -204, percentage change -3,5%. Label: Proven. The same release's other category changes used in these articles also match the tables: carjacking -16,8%, truck hijacking -27,9%, robbery at residential premises -7,0%, robbery at non-residential premises -7,1%, sexual offences -2,7%. Label: Proven. Acting Police Minister Firoz Cachalia's official speech of 20 Nov 2026 (SAPS newsroom speech list, nid 72569, title published on https://www.saps.gov.za/newsroom/speech.php) states: \"I am pleased to note the decline in murder that started in 2024-25 has continued unabated. This means that between 1 July and 30 September this year, there were over 1 600 fewer murders than the same period last year.\" The same speech correctly states the current count: \"During this quarter, 5,590 murders were recorded\". The speech is Proven as a record of what was said; it does not override the statistical tables when the two conflict. No correction, clarification or erratum was present on the article page, or on the official speech page, when fetched on 20 Nov 2026. Figures were read from the SAPS PDF and speech, not from a secondary register. The quoted lede was fetched from the free IOL page on 20 Nov 2026. The same “more than 1,600 fewer murders” claim is also in the headline and is repeated later in the body: “Between July and September, South Africa recorded more than 1,600 fewer murders than during the corresponding period last year.” The 1,600 year-on-year decline claim is Not established against the Proven official tables. Actor is SAPS (direction FOR) because the published line, taken as a statement of official crime statistics, inflates the police service's year-on-year murder-decline record. The scored actor is the institution whose statistics are being reported, not the minister as a private person. The journalists appear to have followed the ministerial briefing rather than independently inventing the 1,600 figure; the finding scores the published line, not intent. No named private individuals are recorded.",
+      "target_inferred": false,
+      "target_context_quote": null,
+      "byline": "Se-Anne Rall",
+      "weight": 2.0,
+      "signed_score": 2.0,
+      "methodology_version": "0.5-draft",
+      "coder": "mediawatch-sa-watch",
+      "created_at": "2026-11-20T10:59:00+02:00",
+      "publication_id": "iol",
+      "public_post_id": null,
+      "credit": null,
+      "sample_frame": "purposive",
+      "accountability_status": "bias",
+      "access_limit": null
+    }
+  ]
+}
