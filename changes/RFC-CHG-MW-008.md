@@ -45,6 +45,8 @@
 | `tests/test_site.py` | Drop the two strict xfails; expect DI/Newsday schema to pass. Official-wording test looks for “sibling crime register”. |
 | `changes/RFC-CHG-MW-007.md` | Wording only, on this branch: “sibling crime register” in place of the leftover nickname. 007 history is not amended. |
 | `changes/RFC-CHG-MW-008.md` | This record. |
+
+**Superseded wording:** the “sibling crime register” wording in the METHODOLOGY, build_site, test_site and RFC-CHG-MW-007 rows above was superseded by the CHG-MW-007 review fix `ecb4214`, merged forward at `b34c700`, which uses “the project's other registers” and adds negative asserts so no register nickname is published.
 | `docs/STATUS.md` | Change-log row. |
 
 ---
