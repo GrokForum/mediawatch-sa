@@ -193,6 +193,24 @@ def test_threshold_function():
         "findings_only", "findings_only", "provisional", "provisional", "full", "full"]
 
 
+def test_provisional_badge_text_is_locked():
+    """The visible status labels are a closed set; do not reword without a change record."""
+    assert build_site.badge("provisional") == '<span class="badge provisional">provisional</span>'
+    assert build_site.badge("findings_only") == '<span class="badge findings_only">findings only</span>'
+    assert build_site.badge("full") == '<span class="badge full">score</span>'
+    note = (
+        "Score shown only when n &ge; 10; 5&ndash;9 is provisional; under 5 shows findings only. "
+        "Accountability-exempt findings are listed but not counted."
+    )
+    html = build_site.scorecard_table([
+        {"actor": "ANC", "for": 0, "against": 6, "n": 6, "score": -1.0,
+         "flag": "provisional", "suppressed": "", "pending_drivers": 0,
+         "frames": {"keyword": 6}},
+    ], "publication")
+    assert note in html
+    assert ">provisional</span>" in html
+
+
 def test_thresholds_applied_on_scorecards(site):
     out, _ = site
     seen = 0

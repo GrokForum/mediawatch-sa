@@ -110,3 +110,33 @@ def test_recoded_csv_rows_record_the_frozen_weight_note():
         for r in recoded:
             assert "Weight and signed_score are frozen" in r["evidence_notes"]
             assert ".Driver recoded" not in r["evidence_notes"]
+
+
+def test_historical_article_rows_are_frozen():
+    """Historical article rows stay unchanged; later v1 additions may appear after this freeze."""
+    expected = json.loads((ROOT / "tests" / "frozen_articles_v008.json").read_text(encoding="utf-8"))
+    assert len(expected) >= 70
+    fields = ("id", "publication_id", "person_id", "headline", "url", "published_at", "access", "sample_frame")
+    current = {}
+    for fn in (
+        "data/news24_pilot_findings.json",
+        "data/dailyinvestor_pilot_findings.json",
+        "data/newsday_pilot_findings.json",
+    ):
+        doc = json.loads((ROOT / fn).read_text(encoding="utf-8"))
+        for a in doc.get("articles", []):
+            current[(fn, a["id"])] = {k: a.get(k) or (a.get("title") if k == "headline" else "") or ("" if k != "person_id" else a.get(k)) for k in fields}
+            current[(fn, a["id"])]["person_id"] = a.get("person_id")
+            current[(fn, a["id"])]["headline"] = a.get("headline") or a.get("title") or ""
+            current[(fn, a["id"])]["url"] = a.get("url")
+            current[(fn, a["id"])]["published_at"] = a.get("published_at") or ""
+            current[(fn, a["id"])]["access"] = a.get("access") or ""
+            current[(fn, a["id"])]["sample_frame"] = a.get("sample_frame") or ""
+            current[(fn, a["id"])]["publication_id"] = a.get("publication_id")
+            current[(fn, a["id"])]["id"] = a["id"]
+    for row in expected:
+        key = (row["source"], row["id"])
+        assert key in current, key
+        for k in fields:
+            assert current[key][k] == row[k], (key, k, current[key][k], row[k])
+
