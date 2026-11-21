@@ -1,6 +1,6 @@
 # RFC-CHG-MW-007 — Official wording rule and Q2 2026/27 murder-figure findings (DEV)
 
-**Status:** Local branch `dev/chg-mw-007-police-wording`. Not pushed; no PR; not merged; not deployed.  
+**Status:** Branch `dev/chg-mw-007-police-wording`. Public inside draft [PR #7](https://github.com/GrokForum/mediawatch-sa/pull/7) (merged into `dev/chg-mw-008-collectors` at `be75ded`); not merged to `main`; not deployed.  
 **Environment:** DEV — branch `dev/chg-mw-007-police-wording`, created from `origin/main`.  
 **Pre-change SHA (rollback base):** `8294282db5e2e9774e89695e8b75e0e4c16a759b` (`main` after PR #3).  
 **Date:** 20 Nov 2026 (Africa/Johannesburg)  
@@ -20,7 +20,7 @@
 
 ## Goal
 
-Log a verified factual error in IOL and EWN reporting of SAPS Q2 2026/27 murder statistics, and add the shared “official wording vs media wording” rule (the same rule as the KTB and CrimeWatch registers) to the MediaWatch methodology.
+Log a verified factual error in IOL and EWN reporting of SAPS Q2 2026/27 murder statistics, and add the shared “official wording vs media wording” rule (the same rule as the project's other registers) to the MediaWatch methodology.
 
 ---
 
@@ -77,4 +77,4 @@ Or delete the branch `dev/chg-mw-007-police-wording`. If this RFC is later merge
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Owner GO was given to log the error, watch, and add the same official-wording rule as the KTB register (20 Nov 2026). Owner GO is still required before merge or deploy.
+Author: the bot. Sign-off is by someone other than the author. Owner GO was given to log the error, watch, and add the same official-wording rule as the project's other registers (20 Nov 2026). Owner GO is still required before merge or deploy.
