@@ -73,7 +73,7 @@ Or delete the branch `dev/chg-mw-007-police-wording`. If this RFC is later merge
 - Existing pilot findings and their methodology_version values (0.3-draft / 0.4-draft).
 - Open RFCs on other branches (nightly live check, public manifest, privacy page).
 - Editor-in-chief still blank for EWN in `publications.csv`.
-- No search-engine indexing request, no merge, no Pages settings change, no deploy, no push, no PR.
+- No search-engine indexing request, no merge, no Pages settings change, no deploy. (This branch was not pushed on its own; it became public inside draft [PR #7](https://github.com/GrokForum/mediawatch-sa/pull/7) through the 008 merge `be75ded`.)
 
 ## Sign-off
 
