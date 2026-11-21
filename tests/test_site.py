@@ -11,6 +11,7 @@ import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
+from urllib.parse import unquote
 
 import pytest
 
@@ -58,6 +59,7 @@ def test_build_succeeds(site):
     assert (out / "corrections" / "index.html").exists()
     assert (out / "method" / "index.html").exists()
     assert (out / "coverage" / "index.html").exists()
+    assert (out / "privacy" / "index.html").exists()
     for pid in build_site.PILOT:
         assert (out / "p" / pid / "index.html").exists()
     assert stats["findings_rendered"] > 0
@@ -285,7 +287,7 @@ def test_no_seed_or_fetched_or_private_paths_in_output(site):
             m = bad.search(p.read_text(encoding="utf-8"))
             assert not m, (p, m.group(0))
     allowed_top = {"index.html", "robots.txt", "assets", "p", "w", "a", "x", "i", "f",
-                   "method", "corrections", "coverage", "manifest.json"}
+                   "method", "corrections", "coverage", "privacy", "manifest.json"}
     assert {c.name for c in out.iterdir()} <= allowed_top
 
 
@@ -346,6 +348,130 @@ def test_crlf_preserved_on_data_csvs():
         assert b"\r\n" in raw, p.name
         assert raw.count(b"\n") == raw.count(b"\r\n"), p.name
 
+
+# ------------------------------------------------------------------ privacy (RFC-CHG-MW-005)
+CONTACT_PLACEHOLDER = "[contact address to be confirmed by the owner before publication]"
+
+
+def test_privacy_page_present_with_required_topics(site):
+    out, _ = site
+    path = out / "privacy" / "index.html"
+    assert path.is_file()
+    h = text_of(path)
+    vis = visible_text(h).lower()
+    assert "what is published" in vis
+    assert "private" in vis and "never named" in vis
+    assert "public" in vis and "role" in vis
+    assert "correction" in vis and "removal" in vis
+    assert '<meta name="robots" content="noindex, nofollow">' in h
+    assert "Draft preview (DEV)" in h
+    assert "MediaWatch SA (draft)" in text_of(path).split("<title>")[1].split("</title>")[0]
+    # Information Regulator is a public body, linked as a right of complaint.
+    assert "https://inforegulator.org.za/" in h
+    # Responsible party named as the publisher, not a private person.
+    assert "GrokForum" in h
+    assert "taken off the published pages at the next build" in vis
+    assert "repository history" in vis and "caches" in vis
+
+
+def test_privacy_linked_from_every_footer(site):
+    out, _ = site
+    for p in pages(out):
+        h = text_of(p)
+        assert re.search(r'<a href="(?:(?:../)*)privacy/index.html">Privacy</a>', h), p
+
+
+def test_contact_address_on_corrections_and_privacy(site):
+    out, _ = site
+    mailto = 'href="mailto:privacy@grokforum.site"'
+    for rel in ("corrections/index.html", "privacy/index.html"):
+        h = text_of(out / rel)
+        assert "privacy@grokforum.site" in h, rel
+        assert mailto in h, rel
+        assert CONTACT_PLACEHOLDER not in h, rel
+        assert "contact-placeholder" not in h, rel
+
+
+def test_confirmed_privacy_address_in_output(site):
+    out, _ = site
+    blob = "\n".join(p.read_text(encoding="utf-8") for p in out.rglob("*") if p.is_file())
+    assert "privacy@grokforum.site" in blob.lower()
+    assert CONTACT_PLACEHOLDER not in blob
+
+
+ALLOWED_EMAIL = "privacy@grokforum.site"
+_AT_CODES = re.compile(r"&#0*64;|&#x0*40;|&commat;|%40", re.I)
+_AT_WORDS = re.compile(r"\s*\[\s*at\s*\]\s*|\s*\(\s*at\s*\)\s*", re.I)
+_EMAIL_RE = re.compile(r"[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}", re.I)
+_MAILTO_RE = re.compile(r"mailto:([^\"\'\s<>]+)", re.I)
+
+
+def decode_email_obfuscation(text: str) -> str:
+    """Decode common email hide-outs before scanning (entities, %40, [at] / (at))."""
+    s = text.replace("&commat;", "@").replace("&COMMAT;", "@")
+    s = html.unescape(s)
+    s = _AT_CODES.sub("@", s)
+    s = unquote(s)
+    s = _AT_WORDS.sub("@", s)
+    return s
+
+
+def foreign_emails(text: str) -> list[str]:
+    """Email addresses and mailto targets in text other than the role address."""
+    decoded = decode_email_obfuscation(text)
+    found = []
+    for match in _EMAIL_RE.finditer(decoded):
+        addr = match.group(0).rstrip(".,;:").lower()
+        if addr != ALLOWED_EMAIL:
+            found.append(addr)
+    for match in _MAILTO_RE.finditer(decoded):
+        target = match.group(1).split("?", 1)[0].strip().lower()
+        target = decode_email_obfuscation(target)
+        if target.startswith("mailto:"):
+            target = target[7:]
+        if "@" in target and target != ALLOWED_EMAIL:
+            found.append(target)
+    unique = []
+    for addr in found:
+        if addr not in unique:
+            unique.append(addr)
+    return unique
+
+
+def test_email_obfuscation_decoder_catches_variants():
+    # Assemble the foreign address at runtime so this tracked file contains
+    # no email literal other than the allowed role address.
+    local, domain = "alert", "example.com"
+    expected = f"{local}@{domain}"
+    variants = {
+        f"{local}&#64;{domain}": expected,
+        f"{local}&#x40;{domain}": expected,
+        f"{local}%40{domain}": expected,
+        f"{local}&commat;{domain}": expected,
+        f"{local} [at] {domain}": expected,
+        f"{local}(at){domain}": expected,
+    }
+    for raw, expected in variants.items():
+        decoded = decode_email_obfuscation(raw)
+        assert expected in decoded, (raw, decoded)
+        assert foreign_emails(raw) == [expected]
+        assert foreign_emails(f"mailto:{raw}") == [expected]
+    assert foreign_emails("Contact privacy@grokforum.site") == []
+    assert foreign_emails('href="mailto:privacy@grokforum.site"') == []
+    assert foreign_emails("privacy&#64;grokforum.site") == []
+    assert foreign_emails("privacy [at] grokforum.site") == []
+
+
+def test_only_allowed_email_in_built_site(site):
+    """Walk the built site; any email or mailto other than the role address fails."""
+    out, _ = site
+    offenders = []
+    for path in sorted(p for p in out.rglob("*") if p.is_file()):
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        found = foreign_emails(raw)
+        if found:
+            offenders.append((str(path.relative_to(out)), found))
+    assert offenders == [], offenders
 
 # ------------------------------------------------------------------ manifest (RFC-CHG-MW-004)
 def test_manifest_json_present_and_valid(site):
