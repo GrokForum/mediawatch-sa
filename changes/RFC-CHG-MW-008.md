@@ -175,6 +175,11 @@ Responds to further notes on the 008 head `90c06534a0c8a2accf113c9418e5016c0d529
 
 Rollback for this follow-up: `90c06534a0c8a2accf113c9418e5016c0d52904a`. Local DEV only; not pushed; not merged; not deployed.
 
+
+## Review follow-up 4 (21 Nov 2026)
+
+Locks the scorecard badge text (`provisional`, `findings only`, `score`) and the n-threshold note with a unit test. Rollback: `b0973f3610a7612d6ecd58693440ac130110ec0e`. Local DEV only; not pushed; not merged; not deployed.
+
 ## Sign-off
 
 Author: the bot. Sign-off is by someone other than the author. Owner direction (relayed) was to do this work on a local branch only. Owner GO is still required, naming the head, before push, PR, merge to `main`, or deploy.
