@@ -313,6 +313,27 @@ def frames_text(frames):
     return ", ".join(f"{k} {v}" for k, v in sorted(frames.items())) or "-"
 
 
+
+def format_pilot_actor_rollup(docs, excluded):
+    """Stable per-outlet actor n/status lines from the same scorecards the site publishes."""
+    flag_label = {"full": "scored", "provisional": "provisional", "findings_only": "findings-only"}
+    flag_order = {"full": 0, "provisional": 1, "findings_only": 2}
+    names = {"news24": "News24", "daily_investor": "Daily Investor", "newsday": "Newsday"}
+    lines = []
+    for pid in PILOT:
+        fs = []
+        for f in docs[pid]["findings"]:
+            if f["id"] in excluded:
+                continue
+            f = dict(f)
+            f["publication_id"] = f.get("publication_id") or pid
+            fs.append(f)
+        rows = sorted(scorecards(fs), key=lambda r: (flag_order[r["flag"]], -r["n"], r["actor"]))
+        parts = [f"{r['actor']} n={r['n']} {flag_label[r['flag']]}" for r in rows]
+        lines.append(f"**{names[pid]}:** " + "; ".join(parts) + ".")
+    return lines
+
+
 def scorecard_table(rows, level):
     if not rows:
         return '<p class="note">No findings shown.</p>'

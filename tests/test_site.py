@@ -736,3 +736,17 @@ def test_coded_clean_article_pages_exist(site):
     h = visible_text(text_of(path))
     assert "Coded clean" in h
     assert "sample denominator" in h
+
+
+def test_rfc_009_actor_counts_match_site_rollup():
+    """RFC-CHG-MW-009 actor n/status must be generated from the same roll-up as the site."""
+    rfc = (ROOT / "changes" / "RFC-CHG-MW-009.md").read_text(encoding="utf-8")
+    _, _, docs, excluded, _, _ = build_site.load()
+    for line in build_site.format_pilot_actor_rollup(docs, excluded):
+        assert line in rfc, line
+    # The reviewer's News24 counted figures must appear (paywalled findings excluded).
+    assert "AfriForum n=10 scored" in rfc
+    assert "Solidarity n=5 provisional" in rfc
+    assert "DA n=3 findings-only" in rfc
+    assert "Cyril Ramaphosa n=2 findings-only" in rfc
+

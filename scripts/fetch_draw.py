@@ -303,6 +303,7 @@ def main(argv=None) -> int:
     paywalled = sampler.load_paywall_urls()
     drawn_norm = {sampler._norm(r["url"]) for r in draw_rows}
     unused = remainders_by_stratum(candidates, rule, paywalled, drawn_norm)
+    all_attempts = []
 
     run_id = args.run_id or f"fetch-draw-{collect.fmt_sast()}"
     errors = collect.ErrorLog(Path(args.errors), run_id)
@@ -398,6 +399,19 @@ def main(argv=None) -> int:
             current = nxt["url"]
             depth += 1
         url, fr, depth = chosen
+        for attempt_index, (aurl, astatus, aerr) in enumerate(attempted):
+            accepted = aurl == url and astatus == "fetched"
+            all_attempts.append({
+                "algorithm_id": rule["algorithm_id"],
+                "outlet_id": oid,
+                "iso_week": week,
+                "draw_index": idx,
+                "attempt_index": attempt_index,
+                "url": aurl,
+                "outcome": "accepted" if accepted else "rejected",
+                "reason": (fr.get("access") if accepted else (aerr or astatus or "rejected")),
+                "replacement_depth_final": depth,
+            })
         rel = ""
         if fr["status"] == "fetched" and fr["body"]:
             out_dir = FETCHED / oid
@@ -449,6 +463,15 @@ def main(argv=None) -> int:
     ok = sum(1 for r in status_rows if r["status"] == "fetched")
     pw = sum(1 for r in status_rows if r["status"] == "paywalled")
     print(f"wrote {len(status_rows)} rows ({ok} fetched, {pw} still paywalled) to {out_path}", file=sys.stderr)
+    attempts_path = Path(args.out).with_name(Path(args.out).stem.replace("_fetch_status", "") + "_replacement_attempts.csv")
+    if "fetch_status" in Path(args.out).name:
+        attempts_path = Path(args.out).with_name(Path(args.out).name.replace("fetch_status", "replacement_attempts"))
+    with attempts_path.open("w", encoding="utf-8", newline="") as fh:
+        fields = ["algorithm_id", "outlet_id", "iso_week", "draw_index", "attempt_index", "url", "outcome", "reason", "replacement_depth_final"]
+        w = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
+        w.writeheader()
+        w.writerows(all_attempts)
+    print(f"wrote {len(all_attempts)} replacement attempts to {attempts_path}", file=sys.stderr)
     return 0
 
 
