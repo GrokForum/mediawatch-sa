@@ -595,7 +595,10 @@ def test_method_page_has_official_wording_section(site):
     assert "official wording vs media wording" in h
     assert "what was charged" in h and "what happened" in h
     assert "factual error" in h
-    assert "sibling crime register" in h
+    assert "project's other registers" in h
+    assert "ktb" not in h and "crimewatch" not in h
+    src_m = (ROOT / "docs" / "METHODOLOGY.md").read_text(encoding="utf-8")
+    assert "KTB" not in src_m and "CrimeWatch" not in src_m
     src = (ROOT / "docs" / "METHODOLOGY.md").read_text(encoding="utf-8")
     assert src.split("**Version:**", 1)[1].lstrip().startswith("0.5-draft")
     assert "## 5b. Official wording vs media wording" in src

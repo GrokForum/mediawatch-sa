@@ -144,7 +144,7 @@ The site generator (`scripts/build_site.py`) applies the same rule and the test 
 
 ## 5b. Official wording vs media wording
 
-This rule is shared with the sibling crime register so the public registers treat official wording the same way.
+This rule is shared with the project's other registers so they all treat official wording the same way.
 
 When SAPS, the NPA or a charge sheet names an offence, that wording records **what was charged**, not **what happened**. The existence of the charge is **Proven** as a charge. It does not, by itself, prove or disprove the underlying acts.
 
@@ -158,7 +158,7 @@ A gap in either direction — downplaying a charge or an injury, or inflating on
 
 The same rule applies to official statistics and media reports of them. If an outlet misreports an official figure, that is a **factual_error**. The official table figure, checked in the primary statistical release, is **Proven**. A ministerial speech or briefing note is also a primary record of what was said, but it does not override the statistical tables when the two conflict.
 
-Example, logged in this version: IOL and EWN reported that South Africa recorded “more than 1,600 fewer murders” year on year in the second quarter of 2026/27. The official SAPS tables in that release show 5,590 murders in July–September 2026 against 5,794 in July–September 2025, a drop of 204 (−3.5%). The 1,600 year-on-year claim is **Not established** against those tables. (The same incorrect year-on-year wording also appears in the Acting Minister’s official speech; the speech does not replace the tables.)
+Example, logged in this version: IOL and EWN reported that South Africa recorded “more than 1,600 fewer murders” year on year in the second quarter of 2026/27. The official SAPS tables in that release show 5,590 murders in July–September 2026 against 5,794 in July–September 2025, a drop of 204 (−3.5%). The 1,600 year-on-year claim is **Not established** (contradicted by the Proven SAPS tables). (The same incorrect year-on-year wording also appears in the Acting Minister’s official speech; the speech does not replace the tables.)
 
 ---
 
@@ -322,4 +322,4 @@ Re-audit trigger: any existing AGAINST finding on a governing actor must be re-c
 
 Breaking changes to weights, labels, or the secondary axis map bump `methodology_version` (and `left_right_method` version when only the secondary changes) and freeze prior scores as `score_run` / `lean_score_run` snapshots. Never silently rewrite historical public scores. Never rewrite primary scores to absorb lean.
 
-0.5-draft (20 Nov 2026) adds §5b (official wording vs media wording) and is shared with the sibling crime register. Prior findings keep the methodology_version they were coded under. Historical public scores are not rewritten.
+0.5-draft (20 Nov 2026) adds §5b (official wording vs media wording) and is shared with the project's other registers. Prior findings keep the methodology_version they were coded under. Historical public scores are not rewritten.
