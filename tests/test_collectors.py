@@ -17,6 +17,7 @@ import sys
 sys.path.insert(0, str(ROOT / "scripts"))
 import collect
 import sample_neutral_random as sampler
+import fetch_draw
 
 # Committed fake-name fixture for synthetic draw tests. The real denylist
 # (tests/private_names.local.txt) is gitignored and is required only for a live draw.
@@ -527,4 +528,63 @@ def test_collect_main_does_not_write_when_coverage_fails(tmp_path, monkeypatch):
     ])
     assert rc == 1
     assert locked.read_text(encoding="utf-8") == "sentinel-before\n"
+
+
+def test_isAccessibleForFree_false_is_paywalled():
+    html = """<html><script type="application/ld+json">
+    {"@type":"NewsArticle","isAccessibleForFree":false,"articleBody":"x"}
+    </script></html>"""
+    access, reason = fetch_draw.is_free_access(html, "x" * 2000, "https://www.news24.com/politics/example-20260501-0001")
+    assert access == "paywalled"
+    assert "isAccessibleForFree=false" in reason
+
+
+def test_isAccessibleForFree_true_is_not_paywalled_by_that_flag():
+    html = """<html><script type="application/ld+json">
+    {"@type":"NewsArticle","isAccessibleForFree":true,"articleBody":"%s"}
+    </script><div class="article-locked"></div></html>""" % ("body " * 400)
+    access, reason = fetch_draw.is_free_access(html, "body " * 400, "https://www.news24.com/politics/example-20260501-0001")
+    assert access == "full_text_curl"
+    assert "isAccessibleForFree=false" not in reason
+
+
+def test_article_locked_css_alone_is_not_a_paywall():
+    html = "<html><div class=\"article-locked\">%s</div></html>" % ("free text " * 400)
+    body = "free text " * 400
+    access, reason = fetch_draw.is_free_access(html, body, "https://www.news24.com/politics/example-20260501-0001")
+    assert access == "full_text_curl"
+
+
+def test_replacement_attempts_file_replays_pop0_chain():
+    path = ROOT / "data" / "sampling" / "neutral_random_v1_replacement_attempts.csv"
+    rows = list(csv.DictReader(path.open(encoding="utf-8")))
+    assert rows
+    assert sum(1 for r in rows if r["outcome"] == "rejected") == 119
+    # A known replaced slot: first attempt is the original drawn URL; last is the fetched URL.
+    status = { (r["outlet_id"], r["iso_week"], r["draw_index"]): r
+               for r in csv.DictReader((ROOT / "data" / "sampling" / "neutral_random_v1_fetch_status.csv").open(encoding="utf-8")) }
+    by_slot = {}
+    for r in rows:
+        by_slot.setdefault((r["outlet_id"], r["iso_week"], r["draw_index"]), []).append(r)
+    replaced = 0
+    for key, attempts in by_slot.items():
+        attempts.sort(key=lambda r: int(r["attempt_index"]))
+        st = status[key]
+        depth = int(st.get("replacement_depth") or 0)
+        if depth == 0:
+            assert len(attempts) == 1 and attempts[0]["outcome"] == "accepted"
+            continue
+        replaced += 1
+        assert attempts[0]["url"] == (st.get("original_url") or st["url"])
+        assert attempts[0]["outcome"] == "rejected"
+        assert attempts[-1]["url"] == st["url"]
+        assert attempts[-1]["outcome"] == "accepted"
+        assert len(attempts) == depth + 1
+    assert replaced == 36
+
+
+def test_check_staged_denylist_fails_closed_when_missing(tmp_path, monkeypatch):
+    import check_staged_denylist as chk
+    monkeypatch.setattr(chk, "NAMES", tmp_path / "absent.txt")
+    assert chk.main() == 1
 

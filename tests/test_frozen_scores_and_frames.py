@@ -58,7 +58,11 @@ def test_historical_csv_weights_and_json_signed_scores_are_frozen():
             for r in csv.DictReader(path.open(encoding="utf-8")):
                 current[(fn, r["id"])] = (_num(r.get("weight")), _num(r.get("signed_score")))
     got = {(row["source"], row["id"]): (_num(row["weight"]), _num(row["signed_score"])) for row in expected}
-    assert current == got
+    # Historical rows stay frozen. Later coding passes may add findings.
+    missing = set(got) - set(current)
+    assert not missing, missing
+    changed = {k: (got[k], current[k]) for k in got if current[k] != got[k]}
+    assert not changed, changed
 
 
 def test_nine_pre_v1_rows_are_tagged_legacy_neutral():
