@@ -613,6 +613,24 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 1
+    rule_path = DATA / "sampling" / "neutral_random_v1.json"
+    if rule_path.is_file() and (
+        out_path.resolve() == LOCKED_CANDIDATES.resolve()
+        or not args.outlets
+    ):
+        rule = json.loads(rule_path.read_text(encoding="utf-8"))
+        locked = rule.get("candidate_counts") or {}
+        if locked:
+            current: dict[str, int] = {}
+            for it in all_items:
+                oid = getattr(it, "outlet_id", None) or (it.get("outlet_id") if isinstance(it, dict) else "")
+                if oid:
+                    current[oid] = current.get(oid, 0) + 1
+            try:
+                assert_candidate_coverage(current, locked)
+            except AssertionError as exc:
+                print(f"{exc}; refusing to write {out_path}", file=sys.stderr)
+                return 1
     write_candidates_csv(out_path, all_items)
     print(f"wrote {len(all_items)} candidates to {args.out}", file=sys.stderr)
     if errors.count:

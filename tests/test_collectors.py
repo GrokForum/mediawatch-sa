@@ -17,6 +17,11 @@ import sys
 sys.path.insert(0, str(ROOT / "scripts"))
 import collect
 import sample_neutral_random as sampler
+import fetch_draw
+
+# Committed fake-name fixture for synthetic draw tests. The real denylist
+# (tests/private_names.local.txt) is gitignored and is required only for a live draw.
+SYNTHETIC_NAMES = ROOT / "tests" / "fixtures" / "synthetic_private_names.txt"
 
 SRC = (ROOT / "scripts" / "collect.py").read_text(encoding="utf-8")
 
@@ -147,8 +152,8 @@ def test_neutral_random_v1_is_reproducible():
         for n in (1, 2, 3)
     ]
     # 1 June 2026 is a Monday, same ISO week as 2 and 3 June.
-    a, _ = sampler.draw(candidates, rule, set())
-    b, _ = sampler.draw(candidates, rule, set())
+    a, _ = sampler.draw(candidates, rule, set(), names_path=SYNTHETIC_NAMES)
+    b, _ = sampler.draw(candidates, rule, set(), names_path=SYNTHETIC_NAMES)
     assert a == b
     assert len(a) == 2
     assert {row["url"] for row in a} <= {c["url"] for c in candidates}
@@ -179,7 +184,7 @@ def test_neutral_random_excludes_known_paywall():
         },
     ]
     paywalled = {"https://www.news24.com/opinions/columnists/paywalled-20260505-0001"}
-    drawn, excluded = sampler.draw(candidates, rule, paywalled)
+    drawn, excluded = sampler.draw(candidates, rule, paywalled, names_path=SYNTHETIC_NAMES)
     assert len(excluded) == 1
     assert [r["url"] for r in drawn] == ["https://www.news24.com/politics/free-20260505-0002"]
 
@@ -247,13 +252,7 @@ def test_private_name_terms_are_dropped_from_the_draw(tmp_path):
     ]
     names = tmp_path / "names.txt"
     names.write_text("ZZZPRIVATEQQQ\n", encoding="utf-8")
-    # Point the loader at the fixture file.
-    orig = sampler.load_private_name_terms
-    sampler.load_private_name_terms = lambda path=None: orig(names)
-    try:
-        drawn, _ = sampler.draw(candidates, rule, set())
-    finally:
-        sampler.load_private_name_terms = orig
+    drawn, _ = sampler.draw(candidates, rule, set(), names_path=names)
     assert [r["url"] for r in drawn] == ["https://newsday.co.za/south-africa/1/ordinary-story/"]
 
 
@@ -373,3 +372,219 @@ def test_load_private_name_terms_fails_if_file_missing(tmp_path):
     missing = tmp_path / "does-not-exist.txt"
     with pytest.raises(FileNotFoundError, match="required"):
         sampler.load_private_name_terms(missing)
+
+
+def test_read_capped_default_limit_is_five_million():
+    """Catch a read_capped revert (uncapped read) or a raised MAX_RESPONSE_BYTES."""
+    import inspect
+    default = inspect.signature(collect.read_capped).parameters["limit"].default
+    assert default == 5_000_000
+    assert collect.MAX_RESPONSE_BYTES == 5_000_000
+    assert default == collect.MAX_RESPONSE_BYTES
+    # Calling without an explicit limit must use that 5 MB cap.
+    ok = io.BytesIO(b"x" * 5_000_000)
+    assert len(collect.read_capped(ok)) == 5_000_000
+    too_big = io.BytesIO(b"x" * (5_000_000 + 1))
+    with pytest.raises(collect.ResponseTooLarge, match="5000000"):
+        collect.read_capped(too_big)
+
+
+def test_draw_fails_closed_when_names_file_missing(tmp_path):
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    candidates = [
+        {
+            "outlet_id": "newsday",
+            "url": "https://newsday.co.za/south-africa/1/ordinary-story/",
+            "title": "ordinary",
+            "published_at": "2026-06-02T09:00:00+0200",
+            "date_source": "rss_pubDate",
+            "source_url": "",
+            "source_kind": "rss",
+        }
+    ]
+    missing = tmp_path / "does-not-exist.txt"
+    with pytest.raises(FileNotFoundError, match="required"):
+        sampler.draw(candidates, rule, set(), names_path=missing)
+
+
+def test_paywalled_draw_is_replaced_by_unused0_of_its_own_stratum():
+    """A later-found paywall is replaced by unused[0] of that outlet-week, in sort order."""
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    # 2026-05-04 is Monday of 2026-W19; 2026-05-11 is 2026-W20.
+    week19 = [
+        {
+            "outlet_id": "newsday",
+            "url": f"https://newsday.co.za/south-africa/{n}/story-{n}/",
+            "title": f"t{n}",
+            "published_at": f"2026-05-0{n}T09:00:00+0200",
+            "date_source": "rss_pubDate",
+            "source_url": "",
+            "source_kind": "rss",
+        }
+        for n in (4, 5, 6, 7)
+    ]
+    week20 = {
+        "outlet_id": "newsday",
+        "url": "https://newsday.co.za/south-africa/11/story-11/",
+        "title": "other-week",
+        "published_at": "2026-05-11T09:00:00+0200",
+        "date_source": "rss_pubDate",
+        "source_url": "",
+        "source_kind": "rss",
+    }
+    candidates = week19 + [week20]
+    # Pretend the draw took the 2nd and 4th of W19 (05 and 07 May).
+    drawn_urls = {
+        "https://newsday.co.za/south-africa/5/story-5/",
+        "https://newsday.co.za/south-africa/7/story-7/",
+    }
+    unused = sampler.remainders_by_stratum(
+        candidates, rule, set(), drawn_urls, names_path=SYNTHETIC_NAMES
+    )
+    pool = unused[("newsday", "2026-W19")]
+    assert [r["url"] for r in pool] == [
+        "https://newsday.co.za/south-africa/4/story-4/",
+        "https://newsday.co.za/south-africa/6/story-6/",
+    ]
+    # The drawn 5 May URL is later found paywalled: replace with unused[0] of W19.
+    nxt, rest = sampler.take_replacement(pool)
+    assert nxt["url"] == "https://newsday.co.za/south-africa/4/story-4/"
+    assert [r["url"] for r in rest] == ["https://newsday.co.za/south-africa/6/story-6/"]
+    # Another week's remainder is not the replacement.
+    other = unused[("newsday", "2026-W20")]
+    assert [r["url"] for r in other] == ["https://newsday.co.za/south-africa/11/story-11/"]
+    assert nxt["url"] not in {r["url"] for r in other}
+
+
+def test_take_replacement_returns_none_when_stratum_exhausted():
+    nxt, rest = sampler.take_replacement([])
+    assert nxt is None
+    assert rest == []
+
+
+def test_sampler_main_does_not_write_when_candidates_hash_mismatches(tmp_path):
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    rule["candidates_sha256"] = "0" * 64
+    rule_path = tmp_path / "rule.json"
+    rule_path.write_text(json.dumps(rule), encoding="utf-8")
+    out = tmp_path / "draw.csv"
+    cand = ROOT / "data" / "sampling" / "neutral_random_candidates_v1.csv"
+    rc = sampler.main([
+        "--rule", str(rule_path),
+        "--candidates", str(cand),
+        "--out", str(out),
+        "--names", str(SYNTHETIC_NAMES),
+    ])
+    assert rc == 1
+    assert not out.exists()
+
+
+def test_sampler_refuses_locked_draw_write_on_draw_hash_mismatch(tmp_path, monkeypatch):
+    rule = json.loads((ROOT / "data" / "sampling" / "neutral_random_v1.json").read_text(encoding="utf-8"))
+    # Candidates hash is valid; pretend the would-be draw does not match the pin.
+    locked = tmp_path / "neutral_random_draw_v1.csv"
+    locked.write_text("sentinel-before\n", encoding="utf-8")
+    monkeypatch.setattr(sampler, "LOCKED_DRAW", locked)
+    # Draw an empty payload that cannot match the locked draw hash.
+    monkeypatch.setattr(sampler, "draw", lambda *a, **k: ([], []))
+    rc = sampler.main([
+        "--rule", str(ROOT / "data" / "sampling" / "neutral_random_v1.json"),
+        "--candidates", str(ROOT / "data" / "sampling" / "neutral_random_candidates_v1.csv"),
+        "--out", str(locked),
+        "--names", str(SYNTHETIC_NAMES),
+    ])
+    assert rc == 1
+    assert locked.read_text(encoding="utf-8") == "sentinel-before\n"
+
+
+def test_collect_main_does_not_write_when_coverage_fails(tmp_path, monkeypatch):
+    locked = tmp_path / "neutral_random_candidates_v1.csv"
+    locked.write_text("sentinel-before\n", encoding="utf-8")
+    monkeypatch.setattr(collect, "LOCKED_CANDIDATES", locked)
+
+    cfg = tmp_path / "collectors.json"
+    cfg.write_text(json.dumps({
+        "outlets": {
+            "newsday": {"name": "Newsday", "rss": ["https://newsday.co.za/feed/"], "sitemaps": []}
+        }
+    }), encoding="utf-8")
+
+    orig_collect = collect.Collector.collect_outlet
+
+    def few(self, outlet_id, window_start, window_end):
+        return []
+
+    monkeypatch.setattr(collect.Collector, "collect_outlet", few)
+    rc = collect.main([
+        "--config", str(cfg),
+        "--errors", str(tmp_path / "errors.csv"),
+        "--out", str(locked),
+        "--from", "2026-05-01",
+        "--to", "2026-05-01",
+        "--outlets", "newsday",
+        "--delay", "0",
+        "--run-id", "test-coverage-no-write",
+        "--overwrite-locked-candidates",
+    ])
+    assert rc == 1
+    assert locked.read_text(encoding="utf-8") == "sentinel-before\n"
+
+
+def test_isAccessibleForFree_false_is_paywalled():
+    html = """<html><script type="application/ld+json">
+    {"@type":"NewsArticle","isAccessibleForFree":false,"articleBody":"x"}
+    </script></html>"""
+    access, reason = fetch_draw.is_free_access(html, "x" * 2000, "https://www.news24.com/politics/example-20260501-0001")
+    assert access == "paywalled"
+    assert "isAccessibleForFree=false" in reason
+
+
+def test_isAccessibleForFree_true_is_not_paywalled_by_that_flag():
+    html = """<html><script type="application/ld+json">
+    {"@type":"NewsArticle","isAccessibleForFree":true,"articleBody":"%s"}
+    </script><div class="article-locked"></div></html>""" % ("body " * 400)
+    access, reason = fetch_draw.is_free_access(html, "body " * 400, "https://www.news24.com/politics/example-20260501-0001")
+    assert access == "full_text_curl"
+    assert "isAccessibleForFree=false" not in reason
+
+
+def test_article_locked_css_alone_is_not_a_paywall():
+    html = "<html><div class=\"article-locked\">%s</div></html>" % ("free text " * 400)
+    body = "free text " * 400
+    access, reason = fetch_draw.is_free_access(html, body, "https://www.news24.com/politics/example-20260501-0001")
+    assert access == "full_text_curl"
+
+
+def test_replacement_attempts_file_replays_pop0_chain():
+    path = ROOT / "data" / "sampling" / "neutral_random_v1_replacement_attempts.csv"
+    rows = list(csv.DictReader(path.open(encoding="utf-8")))
+    assert rows
+    assert sum(1 for r in rows if r["outcome"] == "rejected") == 119
+    # A known replaced slot: first attempt is the original drawn URL; last is the fetched URL.
+    status = { (r["outlet_id"], r["iso_week"], r["draw_index"]): r
+               for r in csv.DictReader((ROOT / "data" / "sampling" / "neutral_random_v1_fetch_status.csv").open(encoding="utf-8")) }
+    by_slot = {}
+    for r in rows:
+        by_slot.setdefault((r["outlet_id"], r["iso_week"], r["draw_index"]), []).append(r)
+    replaced = 0
+    for key, attempts in by_slot.items():
+        attempts.sort(key=lambda r: int(r["attempt_index"]))
+        st = status[key]
+        depth = int(st.get("replacement_depth") or 0)
+        if depth == 0:
+            assert len(attempts) == 1 and attempts[0]["outcome"] == "accepted"
+            continue
+        replaced += 1
+        assert attempts[0]["url"] == (st.get("original_url") or st["url"])
+        assert attempts[0]["outcome"] == "rejected"
+        assert attempts[-1]["url"] == st["url"]
+        assert attempts[-1]["outcome"] == "accepted"
+        assert len(attempts) == depth + 1
+    assert replaced == 36
+
+
+def test_check_staged_denylist_fails_closed_when_missing(tmp_path, monkeypatch):
+    import check_staged_denylist as chk
+    monkeypatch.setattr(chk, "NAMES", tmp_path / "absent.txt")
+    assert chk.main() == 1
+

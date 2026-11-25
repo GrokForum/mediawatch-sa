@@ -193,6 +193,24 @@ def test_threshold_function():
         "findings_only", "findings_only", "provisional", "provisional", "full", "full"]
 
 
+def test_provisional_badge_text_is_locked():
+    """The visible status labels are a closed set; do not reword without a change record."""
+    assert build_site.badge("provisional") == '<span class="badge provisional">provisional</span>'
+    assert build_site.badge("findings_only") == '<span class="badge findings_only">findings only</span>'
+    assert build_site.badge("full") == '<span class="badge full">score</span>'
+    note = (
+        "Score shown only when n &ge; 10; 5&ndash;9 is provisional; under 5 shows findings only. "
+        "Accountability-exempt findings are listed but not counted."
+    )
+    html = build_site.scorecard_table([
+        {"actor": "ANC", "for": 0, "against": 6, "n": 6, "score": -1.0,
+         "flag": "provisional", "suppressed": "", "pending_drivers": 0,
+         "frames": {"keyword": 6}},
+    ], "publication")
+    assert note in html
+    assert ">provisional</span>" in html
+
+
 def test_thresholds_applied_on_scorecards(site):
     out, _ = site
     seen = 0
@@ -581,7 +599,10 @@ def test_method_page_has_official_wording_section(site):
     assert "official wording vs media wording" in h
     assert "what was charged" in h and "what happened" in h
     assert "factual error" in h
-    assert "sibling crime register" in h
+    assert "project's other registers" in h
+    assert "ktb" not in h and "crimewatch" not in h
+    src_m = (ROOT / "docs" / "METHODOLOGY.md").read_text(encoding="utf-8")
+    assert "KTB" not in src_m and "CrimeWatch" not in src_m
     src = (ROOT / "docs" / "METHODOLOGY.md").read_text(encoding="utf-8")
     assert src.split("**Version:**", 1)[1].lstrip().startswith("0.5-draft")
     assert "## 5b. Official wording vs media wording" in src
@@ -817,3 +838,14 @@ def test_later_md_parks_next_outlets():
     assert "eNCA" in text and "SABC News" in text and "EWN" in text and "Newzroom Afrika" in text
     assert "mail_guardian" in text
 
+def test_rfc_009_actor_counts_match_site_rollup():
+    """RFC-CHG-MW-009 actor n/status must be generated from the same roll-up as the site."""
+    rfc = (ROOT / "changes" / "RFC-CHG-MW-009.md").read_text(encoding="utf-8")
+    _, _, docs, excluded, _, _ = build_site.load()
+    for line in build_site.format_pilot_actor_rollup(docs, excluded):
+        assert line in rfc, line
+    # The reviewer's News24 counted figures must appear (paywalled findings excluded).
+    assert "AfriForum n=10 scored" in rfc
+    assert "Solidarity n=5 provisional" in rfc
+    assert "DA n=3 findings-only" in rfc
+    assert "Cyril Ramaphosa n=2 findings-only" in rfc

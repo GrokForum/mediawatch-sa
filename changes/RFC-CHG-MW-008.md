@@ -45,6 +45,8 @@
 | `tests/test_site.py` | Drop the two strict xfails; expect DI/Newsday schema to pass. Official-wording test looks for “sibling crime register”. |
 | `changes/RFC-CHG-MW-007.md` | Wording only, on this branch: “sibling crime register” in place of the leftover nickname. 007 history is not amended. |
 | `changes/RFC-CHG-MW-008.md` | This record. |
+
+**Superseded wording:** the “sibling crime register” wording in the METHODOLOGY, build_site, test_site and RFC-CHG-MW-007 rows above was superseded by the CHG-MW-007 review fix `ecb4214`, merged forward at `b34c700`, which uses “the project's other registers” and adds negative asserts so no register nickname is published.
 | `docs/STATUS.md` | Change-log row. |
 
 ---
@@ -147,6 +149,38 @@ Responds to reviewer B's blocking notes on this change, on top of the rebuilt 00
 7. `sample_neutral_random.load_private_name_terms` fails if the denylist file is missing, instead of drawing unfiltered.
 
 Rollback for this follow-up: `6b5d88f17bf86648e860415759cf123b0575fc59`. Local DEV only; not pushed; not merged; not deployed.
+
+
+## Review follow-up 2 (20 Nov 2026)
+
+Responds to reviewer A's notes on the 008 head `fee8916a40a02f222eed88491bb560c71e7fe190`.
+
+1. `draw()` now takes an optional `names_path`. The two synthetic tests (`test_neutral_random_v1_is_reproducible` and `test_neutral_random_excludes_known_paywall`) use the committed fixture `tests/fixtures/synthetic_private_names.txt` (fake tokens only). A live draw, and `load_private_name_terms()` with the default path, still fail closed if `tests/private_names.local.txt` is missing.
+2. A unit test asserts that `read_capped`'s default `limit` is exactly `5_000_000`.
+3. `remainders_by_stratum` and `take_replacement` encode the locked remainder rule: a later-found paywalled draw is replaced by `unused[0]` of its own outlet-week stratum in the original sort order, not a new random pick.
+
+These tests were also run in a fresh git worktree that did not contain the gitignored denylist file.
+
+Rollback for this follow-up: `fee8916a40a02f222eed88491bb560c71e7fe190`. Local DEV only; not pushed; not merged; not deployed.
+
+
+## Review follow-up 3 (20 Nov 2026)
+
+Responds to further notes on the 008 head `90c06534a0c8a2accf113c9418e5016c0d52904a`. The 003, 004 and 005 heads are not changed.
+
+1. The synthetic draw tests still use `tests/fixtures/synthetic_private_names.txt`, so `python -m pytest -q` on a fresh checkout (as in `pages.yml`) stays green without the gitignored denylist. A live draw still fails closed if that file is missing. Proven in a fresh git worktree.
+2. `test_read_capped_default_limit_is_five_million` calls `read_capped` with the default limit: 5,000,000 bytes pass and 5,000,001 bytes fail. A revert of the cap, or a raised `MAX_RESPONSE_BYTES`, fails the test.
+3. `test_frozen_scores_and_frames` now also freezes historical article rows (`tests/frozen_articles_v008.json`). Later additions may appear; the frozen rows must not change.
+4. At runtime, `sample_neutral_random.main` verifies the locked candidate (and, when writing the locked draw, draw) sha256 pins, and `collect.main` calls `assert_candidate_coverage`, both exiting non-zero *before writing any output*.
+5. `SameHostRedirectHandler` also refuses an https-to-http downgrade and a port change (tests included). This is done here, not on the passed 003 head.
+6. The STATUS row for the 003 follow-up now says it is not pushed; the local 003 head is ahead of the remote `3ea260f`.
+
+Rollback for this follow-up: `90c06534a0c8a2accf113c9418e5016c0d52904a`. Local DEV only; not pushed; not merged; not deployed.
+
+
+## Review follow-up 4 (21 Nov 2026)
+
+Locks the scorecard badge text (`provisional`, `findings only`, `score`) and the n-threshold note with a unit test. Rollback: `b0973f3610a7612d6ecd58693440ac130110ec0e`. Local DEV only; not pushed; not merged; not deployed.
 
 ## Sign-off
 

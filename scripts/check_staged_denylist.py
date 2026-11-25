@@ -16,8 +16,9 @@ NAMES = ROOT / "tests" / "private_names.local.txt"
 
 def terms() -> list[str]:
     if not NAMES.is_file():
-        print("check_staged_denylist: no local denylist present; skip", file=sys.stderr)
-        return []
+        raise FileNotFoundError(
+            f"check_staged_denylist: denylist is required at {NAMES}; refusing to skip"
+        )
     out = []
     for line in NAMES.read_text(encoding="utf-8").splitlines():
         line = line.strip()
@@ -27,9 +28,14 @@ def terms() -> list[str]:
 
 
 def main() -> int:
-    names = terms()
+    try:
+        names = terms()
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
     if not names:
-        return 0
+        print("check_staged_denylist: denylist is empty; refusing to skip", file=sys.stderr)
+        return 1
     diff = subprocess.check_output(["git", "diff", "--cached", "-U0", "--"], cwd=ROOT)
     # Do not print the matching term.
     text = diff.decode("utf-8", "replace").lower()

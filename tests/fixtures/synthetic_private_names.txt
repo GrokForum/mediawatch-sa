@@ -1,0 +1,2 @@
+# Synthetic denylist for unit tests only. These tokens are not real names.
+ZZZSYNTHETICPRIVATEAAA

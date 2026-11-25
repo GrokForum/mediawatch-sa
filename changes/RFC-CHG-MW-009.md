@@ -47,12 +47,18 @@ Every one of the 172 locked pilot slots was fetched as free full text (`full_tex
 
 | Outlet | Sampled | Fetched | Paywalled-replaced | Coded | Clean | New v1 findings | Actors now provisional | Actors now scored |
 |--------|---------|---------|--------------------|-------|-------|-----------------|------------------------|-------------------|
-| News24 | 60 | 60 | 36 (max replacement depth 13; JSON-LD `isAccessibleForFree` only) | 60 | 60 | 0 | Solidarity *n*=8, DA *n*=7, ANC *n*=5 (all pre-existing) | AfriForum *n*=14 (pre-existing) |
+| News24 | 60 | 60 | 36 (max replacement depth 13; JSON-LD `isAccessibleForFree` only) | 60 | 60 | 0 | Solidarity *n*=5, ANC *n*=5 (pre-existing counted findings) | AfriForum *n*=10 (pre-existing counted findings) |
 | Daily Investor | 60 | 60 | 0 | 60 (59 new + 1 already coded tide article, not re-found) | 58 | 1 (`F-DI-NRV1-01`, ANC, `headline_body_gap`) | Ramaphosa *n*=5 (unchanged), ANC *n*=5 (was 4) | none |
 | Newsday | 52 | 52 | 0 | 52 | 46 | 7 (on 6 articles; Phala Phala carries two) | ANC *n*=7 (was 4), AfriForum *n*=5 (unchanged) | none |
 | **Pilot total** | **172** | **172** | **36** | **172** | **164** | **8** | — | — |
 
-News24 Trump / US government and Cyril Ramaphosa remain findings-only at *n*=4. Newsday EFF, Ramaphosa and DA remain findings-only at *n*=4. No finding was added to push an actor over a threshold. Daily Investor and Newsday registration CTAs, related lists and comments were cut before coding (they are not the article body). Historical signed scores were not rewritten.
+Published scorecard *n* (generated from the same `build_site.scorecards` roll-up the site uses, counting only rendered findings; paywalled findings are excluded):
+
+**News24:** AfriForum n=10 scored; ANC n=5 provisional; Solidarity n=5 provisional; Trump / US government n=4 findings-only; DA n=3 findings-only; AgriSA n=2 findings-only; Cyril Ramaphosa n=2 findings-only; Takealot / Naspers n=2 findings-only; unspecified (AfriMAGA) n=2 findings-only; EFF n=1 findings-only; GNU n=1 findings-only.
+**Daily Investor:** ANC n=5 provisional; Ramaphosa n=5 provisional; AfriForum n=2 findings-only; DA n=2 findings-only; GNU n=2 findings-only; Solidarity n=2 findings-only; Trump/US n=2 findings-only.
+**Newsday:** ANC n=7 provisional; AfriForum n=5 provisional; DA n=4 findings-only; EFF n=4 findings-only; Ramaphosa n=4 findings-only; GNU n=2 findings-only; Trump/US n=2 findings-only; SAAI n=1 findings-only; Solidarity n=1 findings-only.
+
+News24 DA is findings-only at *n*=3; Cyril Ramaphosa is findings-only at *n*=2; Trump / US government is findings-only at *n*=4. Newsday EFF, Ramaphosa and DA remain findings-only at *n*=4. No finding was added to push an actor over a threshold. A unit test checks that these *n* and status labels still match the site roll-up. Daily Investor and Newsday registration CTAs, related lists and comments were cut before coding (they are not the article body). Historical signed scores were not rewritten.
 
 New finding quotes were taken from the free fetch on this change and checked against the cleaned body (typographic punctuation included) before the JSON was written.
 
@@ -73,7 +79,7 @@ New finding quotes were taken from the free fetch on this change and checked aga
 
 ## Paywall and replacement
 
-A drawn URL that is paywalled, 404, or not an article is replaced with the next unused URL from the same outlet-week stratum in the original sort order (the pre-registered rule). Teasers never stand in for a paywalled body. News24 access is judged from JSON-LD `isAccessibleForFree` (the `article-locked` CSS hook also appears on free articles and is not used alone). Daily Investor and Newsday are fetched without registering.
+A drawn URL that is paywalled, 404, or not an article is replaced with the first unused URL from the start of the same outlet-week stratum in the original sort order (unused[0], pop(0); the pre-registered rule). Intermediate attempts are in `data/sampling/neutral_random_v1_replacement_attempts.csv`. Teasers never stand in for a paywalled body. News24 access is judged from JSON-LD `isAccessibleForFree` (the `article-locked` CSS hook also appears on free articles and is not used alone). Daily Investor and Newsday are fetched without registering.
 
 ---
 

@@ -1,6 +1,6 @@
 # RFC-CHG-MW-010 — Phase-2 trio sample (Daily Maverick, GroundUp, The Citizen) (DEV)
 
-**Status:** Local branch `dev/chg-mw-010-phase2-trio`. Not pushed; no PR; not merged; not deployed.  
+**Status:** Local branch `dev/chg-mw-010-phase2-trio`. Merged `dev/chg-mw-009-pilot-register` at `350c1d08f9b76dec17abca9769918f58402b2157` (25 Nov 2026). Not pushed; no PR; not merged to `main`; not deployed.  
 **Environment:** DEV — branch `dev/chg-mw-010-phase2-trio`, created from `dev/chg-mw-009-pilot-register` at `c0cc4dc79003ee1de1f38bae7b73ffb5d7cf6c5c`.  
 **Pre-change SHA (rollback base):** `c0cc4dc79003ee1de1f38bae7b73ffb5d7cf6c5c`.  
 **Date:** 20 Nov 2026 (Africa/Johannesburg)  
@@ -124,8 +124,12 @@ If a later re-read shows a missed driver, that is a forward commit on this branc
 
 ## Rollback
 
-Git: return this branch to `c0cc4dc79003ee1de1f38bae7b73ffb5d7cf6c5c`. Forward-only: no rebase, amend, or force. Never on `main`.
+Git: the original CHG-MW-010 coding returns this branch to `c0cc4dc79003ee1de1f38bae7b73ffb5d7cf6c5c`. The 25 Nov 2026 merge of `dev/chg-mw-009-pilot-register` rolls back by reverting that merge commit, returning the branch to `9e7a3427436bac29feb6c5b9f063e292ea559fe8`. Forward-only: no rebase, amend, or force. Never on `main`.
+
+## Current state (25 Nov 2026, Africa/Johannesburg)
+
+This branch is still local only: not pushed; no PR; not merged to `main`; not deployed. On 25 Nov 2026 it was brought up to date by merging `dev/chg-mw-009-pilot-register` at `350c1d08f9b76dec17abca9769918f58402b2157` (forward-only). That merge carries the CHG-MW-007 review fix `ecb4214` (“the project's other registers”; “Not established (contradicted by the Proven SAPS tables)”) and later 008/009 review follow-ups (replacement-attempt logging in `scripts/fetch_draw.py`, the locked provisional badge test, and RFC actor-n generated from the site roll-up). Review of this merge head is still pending (Reviewer A, Janus/critic). Owner GO naming the exact head is still required before push, PR, merge to `main`, or deploy.
 
 ## Sign-off
 
-Author: the bot. Sign-off is by someone other than the author. Owner direction was to do this work on a local branch only, on top of `c0cc4dc`. Owner GO is still required, naming the head, before push, PR, merge to `main`, or deploy. A separate owner sign-off that the pilot has been reviewed is required before phase-2 scores are published.
+Author: the bot. Sign-off is by someone other than the author. Owner direction was to do this work on a local branch only, first on top of `c0cc4dc`, then by merging the later 009 head. Owner GO is still required, naming the head, before push, PR, merge to `main`, or deploy. A separate owner sign-off that the pilot has been reviewed is required before phase-2 scores are published.
