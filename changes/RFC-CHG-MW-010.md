@@ -28,7 +28,7 @@ Code the locked `neutral_random_v1` draws for Daily Maverick, GroundUp and The C
 
 | File | Change |
 |------|--------|
-| `scripts/fetch_draw.py` | Exit non-zero when collector errors were logged (fail-closed). Default `--out` is `data/sampling/neutral_random_v1_fetch_status_phase2.csv` so a bare run does not overwrite the 009 status table. |
+| `scripts/fetch_draw.py` | Exit non-zero when collector errors were logged (fail-closed). Default `--out` is `data/sampling/neutral_random_v1_fetch_status_phase2.csv` so a bare run does not overwrite the 009 status table. `--outlets` is required: aligning it with the phase-2 `--out` default would still let a bare run start a live fetch and overwrite the locked 010 status table. |
 | `data/sampling/neutral_random_v1_fetch_status_phase2.csv` | **New.** Fetch outcomes for the 180 trio slots (URLs and metadata only; no bodies). Run `fetch-010-2026-11-20`. All 180 slots `full_text_curl`. |
 | `data/dailymaverick_phase2_findings.json` / `.csv` | 60 v1 articles, 60 coded-clean rows, 0 findings. |
 | `data/groundup_phase2_findings.json` / `.csv` | 60 v1 articles, 60 coded-clean rows, 0 findings. |
@@ -128,11 +128,15 @@ Git: the original CHG-MW-010 coding returns this branch to `c0cc4dc79003ee1de1f3
 
 ## Current state (25 Nov 2026, Africa/Johannesburg)
 
-CHG-MW-007, CHG-MW-008, CHG-MW-009 and the later-list are on `main` via PRs #7, #8 and #9 (`origin/main` `14f60a7c1ee925811ae9106398df6cf45c5b4f2a`). This branch was brought up to date by forward-merging that `main` on 25 Nov 2026 (Africa/Johannesburg). A push and a draft PR happen only on an owner GO naming the exact head. Not merged to `main`; not deployed. Reviewer A recorded a plain PASS and the critic reviewer a PASS_WITH_CONCERNS on `af9ac89`; reviewer verdicts are bound to the PR head.
+CHG-MW-007, CHG-MW-008, CHG-MW-009 and the later-list are on `main` via PRs #7, #8 and #9 (`origin/main` `14f60a7c1ee925811ae9106398df6cf45c5b4f2a`). This branch was brought up to date by forward-merging that `main` on 25 Nov 2026 (Africa/Johannesburg). A push and a draft PR happen only on an owner GO naming the exact head. Not merged to `main`; not deployed. Reviewer A recorded a plain PASS and the critic reviewer a PASS_WITH_CONCERNS on `af9ac89`, then the same pair of verdicts on `d9e49bf`; reviewer verdicts are bound to the PR head.
 
 ## Review follow-up (25 Nov 2026, Africa/Johannesburg)
 
 Addressed the critic reviewer's PASS_WITH_CONCERNS on `af9ac89ae98cd66b907d2f999abc863302c42f83` (Reviewer A had a plain PASS on the same head). Writer (`w/`) pages now apply the same coverage gate as publication pages: phase-2 findings are listed and are kept out of writer scorecards. A unit test injects a `person_id` on `F-CIT-NRV1-02` (test-only; committed data is unchanged) and fails if a phase-2 score row is published. `fetch_draw.main` is tested to return 1 when collector errors were logged, and the default `--out` path is the 010 phase-2 status table. The finding-page Signed score is labelled as that finding's signed weight, not a mean. Storing a separate `lastmod` column beside `published_at` was skipped: the locked phase-2 status table already records the chosen timestamp in `published_at` and the rule in `date_source` (`url` or `lastmod_or_pub`); widening that locked table is not a small, safe change. Rollback for this follow-up: `af9ac89ae98cd66b907d2f999abc863302c42f83`.
+
+## Review follow-up 2 (25 Nov 2026, Africa/Johannesburg)
+
+Addressed the critic reviewer's PASS_WITH_CONCERNS on `d9e49bf28858daffe7331cdfce2e4ee25ec12518` (Reviewer A had a PASS on the same head). The `fetch_draw.main` fail-closed test now points `load_private_name_terms` at the committed synthetic names fixture, so it does not need the gitignored local denylist and passes in a clean clone. `--outlets` is required rather than defaulting to the phase-2 trio: that is the safer option, because a matching default would still let a bare run overwrite the locked 010 status table and start a live fetch. The writer-page test helper allows a mixed writer's non-phase-2 scorecard and fails only when a score row counts phase-2 findings, matching `scripts/build_site.py`. Rollback for this follow-up: `d9e49bf28858daffe7331cdfce2e4ee25ec12518`.
 
 ## Sign-off
 

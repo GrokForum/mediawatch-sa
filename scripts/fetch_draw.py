@@ -291,7 +291,11 @@ def main(argv=None) -> int:
     parser.add_argument("--candidates", default=str(DATA / "sampling" / "neutral_random_candidates_v1.csv"))
     parser.add_argument("--draw", default=str(DATA / "sampling" / "neutral_random_draw_v1.csv"))
     parser.add_argument("--out", default=str(DEFAULT_OUT))
-    parser.add_argument("--outlets", default="news24,daily_investor,newsday")
+    parser.add_argument(
+        "--outlets",
+        required=True,
+        help="Comma-separated outlet ids. Required so a bare run cannot fetch or overwrite a locked status table.",
+    )
     parser.add_argument("--errors", default=str(DATA / "collector_errors.csv"))
     parser.add_argument("--run-id", default="")
     parser.add_argument("--delay", type=float, default=0.2)

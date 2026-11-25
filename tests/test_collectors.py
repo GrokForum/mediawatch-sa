@@ -593,8 +593,19 @@ def test_fetch_draw_out_default_is_phase2_status():
     assert fetch_draw.DEFAULT_OUT == fetch_draw.DATA / "sampling" / "neutral_random_v1_fetch_status_phase2.csv"
 
 
+def test_fetch_draw_outlets_is_required(tmp_path):
+    """A bare run must not pick an outlet list by default."""
+    with pytest.raises(SystemExit):
+        fetch_draw.main(["--out", str(tmp_path / "unused-fetch-status.csv"), "--delay", "0"])
+
+
 def test_fetch_draw_main_returns_1_when_errors_logged(tmp_path, monkeypatch):
-    """scripts/fetch_draw.py exits 1 when collector errors were logged (fail-closed)."""
+    """scripts/fetch_draw.py exits 1 when collector errors were logged (fail-closed).
+
+    remainders_by_stratum would otherwise load the gitignored local denylist;
+    this test points that call at the committed synthetic fixture so a clean
+    clone (no tests/private_names.local.txt) still reaches the return-1 assertion.
+    """
     orig = collect.ErrorLog.__init__
 
     def init_with_logged_error(self, path, run_id):
@@ -602,6 +613,12 @@ def test_fetch_draw_main_returns_1_when_errors_logged(tmp_path, monkeypatch):
         self.count = 1
 
     monkeypatch.setattr(collect.ErrorLog, "__init__", init_with_logged_error)
+    real_terms = sampler.load_private_name_terms
+    monkeypatch.setattr(
+        fetch_draw.sampler,
+        "load_private_name_terms",
+        lambda path=None: real_terms(SYNTHETIC_NAMES),
+    )
     out = tmp_path / "neutral_random_v1_fetch_status_phase2.csv"
     err = tmp_path / "collector_errors.csv"
     rc = fetch_draw.main([

@@ -866,20 +866,77 @@ def test_phase2_writer_scorecards_are_gated(tmp_path, monkeypatch):
     _assert_no_phase2_writer_scores(out)
 
 
+def test_phase2_mixed_writer_keeps_non_phase2_scorecard(tmp_path, monkeypatch):
+    """A writer with both pilot and phase-2 findings still publishes a scorecard
+    from the non-phase-2 findings only. The helper must allow that."""
+    real_load = build_site.load
+
+    def load_mixed():
+        pubs, people, docs, excluded, detected, listed = real_load()
+        n24 = next(
+            f for f in docs["news24"]["findings"]
+            if build_site.in_score(f) and f["id"] not in excluded
+        )
+        n24["person_id"] = "mixed_writer_test"
+        hit = False
+        for f in docs["citizen"]["findings"]:
+            if f["id"] == "F-CIT-NRV1-02":
+                f["person_id"] = "mixed_writer_test"
+                hit = True
+        assert hit, "F-CIT-NRV1-02 missing from citizen findings"
+        return pubs, people, docs, excluded, detected, listed
+
+    monkeypatch.setattr(build_site, "load", load_mixed)
+    out = tmp_path / "_site"
+    build_site.build(out)
+    wpage = out / "w" / "mixed_writer_test" / "index.html"
+    assert wpage.is_file()
+    raw = text_of(wpage)
+    h = visible_text(raw)
+    assert "F-CIT-NRV1-02" in raw
+    assert "Scorecard by named actor" in raw
+    assert "listed but not scored" in h
+    assert 'class="score-row"' in raw
+    _assert_no_phase2_writer_scores(out)
+
+
 def _assert_no_phase2_writer_scores(out):
+    """Fail only on phase-2 score rows. A mixed writer's non-phase-2 scorecard is allowed."""
+    by_id = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        for f in doc["findings"]:
+            row = dict(f)
+            row["publication_id"] = row.get("publication_id") or pid
+            by_id[row["id"]] = row
     wroot = out / "w"
     if not wroot.exists():
         return
-    hrefs = tuple(f"p/{pid}/" for pid in build_site.PHASE2)
     for wdir in sorted(wroot.iterdir()):
         page = wdir / "index.html"
         if not page.is_file():
             continue
         raw = text_of(page)
-        if any(href in raw for href in hrefs):
+        ids = set(re.findall(r"f/([^/]+)/index\.html", raw))
+        phase2 = [by_id[i] for i in ids if i in by_id and by_id[i].get("publication_id") in build_site.PHASE2]
+        other = [by_id[i] for i in ids if i in by_id and by_id[i].get("publication_id") not in build_site.PHASE2]
+        rows = []
+        for m in re.finditer(r'<tr class="score-row"([^>]*)>', raw):
+            attrs = dict(re.findall(r'data-([a-z]+)="([^"]*)"', m.group(1)))
+            if attrs.get("level") == "person":
+                rows.append((html.unescape(attrs.get("actor") or ""), attrs.get("n") or "0"))
+        if phase2 and not other:
+            assert not rows, wdir.name
             assert 'class="score-row"' not in raw, wdir.name
-            assert 'data-level="person"' not in raw, wdir.name
             assert "Scorecard by named actor" not in raw, wdir.name
+        elif phase2 and other:
+            expected = defaultdict(int)
+            for f in other:
+                if build_site.in_score(f):
+                    expected[f["actor"]] += 1
+            for actor, n in rows:
+                assert actor in expected, (wdir.name, actor)
+                assert int(n) == expected[actor], (wdir.name, actor, n, expected[actor])
 
 
 def test_finding_signed_score_is_the_finding_weight_not_a_mean(site):
