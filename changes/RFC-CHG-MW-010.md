@@ -128,7 +128,7 @@ Git: the original CHG-MW-010 coding returns this branch to `c0cc4dc79003ee1de1f3
 
 ## Current state (25 Nov 2026, Africa/Johannesburg)
 
-This branch is still local only: not pushed; no PR; not merged to `main`; not deployed. On 25 Nov 2026 it was brought up to date by merging `dev/chg-mw-009-pilot-register` at `350c1d08f9b76dec17abca9769918f58402b2157` (forward-only). That merge carries the CHG-MW-007 review fix `ecb4214` (“the project's other registers”; “Not established (contradicted by the Proven SAPS tables)”) and later 008/009 review follow-ups (replacement-attempt logging in `scripts/fetch_draw.py`, the locked provisional badge test, and RFC actor-n generated from the site roll-up). Review of this merge head is still pending (Reviewer A, Janus/critic). Owner GO naming the exact head is still required before push, PR, merge to `main`, or deploy.
+This branch is still local only: not pushed; no PR; not merged to `main`; not deployed. On 25 Nov 2026 it was brought up to date by merging `dev/chg-mw-009-pilot-register` at `350c1d08f9b76dec17abca9769918f58402b2157` (forward-only). That merge carries the CHG-MW-007 review fix `ecb4214` (“the project's other registers”; “Not established (contradicted by the Proven SAPS tables)”) and later 008/009 review follow-ups (replacement-attempt logging in `scripts/fetch_draw.py`, the locked provisional badge test, and RFC actor-n generated from the site roll-up). Review of this merge head is still pending (Reviewer A, critic reviewer). Owner GO naming the exact head is still required before push, PR, merge to `main`, or deploy.
 
 ## Sign-off
 
