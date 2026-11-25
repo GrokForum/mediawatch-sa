@@ -28,6 +28,9 @@ import sample_neutral_random as sampler
 
 UA = collect.DEFAULT_UA
 FETCHED = DATA / "fetched_articles" / "neutral_random_v1"
+# 010 phase-2 trio status; a bare run must not overwrite the 009 pilot table.
+DEFAULT_OUT = DATA / "sampling" / "neutral_random_v1_fetch_status_phase2.csv"
+
 STATUS_FIELDS = [
     "algorithm_id",
     "seed",
@@ -287,8 +290,12 @@ def main(argv=None) -> int:
     parser.add_argument("--rule", default=str(DATA / "sampling" / "neutral_random_v1.json"))
     parser.add_argument("--candidates", default=str(DATA / "sampling" / "neutral_random_candidates_v1.csv"))
     parser.add_argument("--draw", default=str(DATA / "sampling" / "neutral_random_draw_v1.csv"))
-    parser.add_argument("--out", default=str(DATA / "sampling" / "neutral_random_v1_fetch_status.csv"))
-    parser.add_argument("--outlets", default="news24,daily_investor,newsday")
+    parser.add_argument("--out", default=str(DEFAULT_OUT))
+    parser.add_argument(
+        "--outlets",
+        required=True,
+        help="Comma-separated outlet ids. Required so a bare run cannot fetch or overwrite a locked status table.",
+    )
     parser.add_argument("--errors", default=str(DATA / "collector_errors.csv"))
     parser.add_argument("--run-id", default="")
     parser.add_argument("--delay", type=float, default=0.2)
@@ -472,6 +479,9 @@ def main(argv=None) -> int:
         w.writeheader()
         w.writerows(all_attempts)
     print(f"wrote {len(all_attempts)} replacement attempts to {attempts_path}", file=sys.stderr)
+    if errors.count:
+        print(f"{errors.count} collector error(s) logged; exiting non-zero", file=sys.stderr)
+        return 1
     return 0
 
 

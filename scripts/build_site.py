@@ -41,12 +41,18 @@ SITE_SRC = ROOT / "site"
 
 ALLOWED_LABELS = ("Proven", "Established", "Alleged", "Disputed", "Not established")
 PILOT = ("news24", "daily_investor", "newsday")
+# Phase-2 trio: locked v1 sample coded; findings visible; scores not published
+# until the owner signs off that the pilot has been reviewed.
+PHASE2 = ("daily_maverick", "groundup", "citizen")
 # Error-watch outlets logged outside the scored three-outlet pilot (findings only until n allows a score).
 WATCH = ("iol", "ewn")
 FINDINGS_FILES = {
     "news24": "news24_pilot_findings.json",
     "daily_investor": "dailyinvestor_pilot_findings.json",
     "newsday": "newsday_pilot_findings.json",
+    "daily_maverick": "dailymaverick_phase2_findings.json",
+    "groundup": "groundup_phase2_findings.json",
+    "citizen": "citizen_phase2_findings.json",
     "iol": "iol_watch_findings.json",
     "ewn": "ewn_watch_findings.json",
 }
@@ -405,6 +411,9 @@ MANIFEST_INPUTS = (
     "data/news24_pilot_findings.json",
     "data/dailyinvestor_pilot_findings.json",
     "data/newsday_pilot_findings.json",
+    "data/dailymaverick_phase2_findings.json",
+    "data/groundup_phase2_findings.json",
+    "data/citizen_phase2_findings.json",
 )
 
 
@@ -513,7 +522,7 @@ def build(out_dir):
     items = {}       # key -> item dict
     findings = []    # rendered findings
     excluded_counts = Counter()
-    for pid in PILOT + WATCH:
+    for pid in PILOT + PHASE2 + WATCH:
         doc = docs[pid]
         arts = {a["id"]: a for a in doc.get("articles", [])}
         posts = {p["id"]: p for p in doc.get("public_posts", [])}
@@ -638,11 +647,15 @@ def build(out_dir):
         return "".join(rows)
     home = f"""<h1>South African media bias register (pilot)</h1>
 <p>MediaWatch SA records bias <strong>for or against named actors</strong> (parties, governments, organisations and public figures in their public role). Each finding quotes the exact line, links the source, gives a fact label and sets out the strongest case on both sides.</p>
-<p>The pilot covers three outlets. The register will grow in phases to cover South African media broadly; see the <a href="coverage/index.html">coverage plan</a>.</p>
+<p>The scored pilot covers three outlets. A phase-2 trio is listed separately; it is not yet past the coverage gate. The register will grow in phases to cover South African media broadly; see the <a href="coverage/index.html">coverage plan</a>.</p>
 <h2>Pilot publications</h2>
 <table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">v1 sample (coded)</th><th class="num">Coded clean</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
 <tbody>{pub_rows(PILOT, with_sample=True)}</tbody></table>
 <p class="note">The locked <code>neutral_random_v1</code> sample covers 1 May&ndash;20 November 2026 (Africa/Johannesburg). Every coded article counts in the sample size, including coded-and-clean articles that produced no finding. Earlier keyword and other-frame findings remain on the scorecard. Only content the public can read free is judged. Findings that rested on a paywalled piece are excluded and not scored. Where a News24 slot was paywalled, the pre-registered replacement from the same week was used.</p>
+<h2>Phase 2 (not yet past the coverage gate)</h2>
+<p>Daily Maverick, GroundUp and The Citizen have a locked <code>neutral_random_v1</code> sample in this change. Findings from that sample are shown. Outlet and per-actor scores are <strong>not published</strong> until the owner signs off that the pilot has been reviewed.</p>
+<table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">v1 sample (coded)</th><th class="num">Coded clean</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
+<tbody>{pub_rows(PHASE2, with_sample=True)}</tbody></table>
 <h2>Error watch (outside the pilot sample)</h2>
 <p>These findings were logged against official records after the May&ndash;October 2026 pilot window. They are shown as findings only. They do not expand the scored three-outlet pilot and are not used to claim a publication score for these outlets.</p>
 <table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
@@ -650,7 +663,7 @@ def build(out_dir):
     write("index.html", "Publications", home)
 
     # ---- publication pages
-    for pid in PILOT + WATCH:
+    for pid in PILOT + PHASE2 + WATCH:
         pub = pubs[pid]
         fs = [f for f in findings if f["publication_id"] == pid]
         writers = Counter(f["_person"] for f in fs if f["_person"])
@@ -670,7 +683,7 @@ def build(out_dir):
         for fr in sorted(by_frame):
             frame_html.append(f'<h3>{e(fr)} <span class="note">({e(FRAME_NOTES.get(fr, ""))})</span></h3>'
                               + findings_table(by_frame[fr], "../../"))
-        st = v1_sample_stats(docs[pid], excluded) if pid in PILOT else None
+        st = v1_sample_stats(docs[pid], excluded) if pid in PILOT + PHASE2 else None
         sample_dl = ""
         sample_list = ""
         if st is not None:
@@ -698,14 +711,29 @@ def build(out_dir):
                 '<table><thead><tr><th>Article</th><th>Date (SAST)</th><th>Byline</th><th>Coding</th></tr></thead>'
                 f'<tbody>{"".join(rows)}</tbody></table>'
             )
+        if pid in PHASE2:
+            gate = (
+                '<p class="note"><strong>Phase 2 (not yet past the coverage gate).</strong> '
+                'Findings from the locked v1 sample are shown. Outlet and per-actor scores '
+                'are not published until the owner signs off that the pilot has been reviewed.</p>'
+            )
+            score_block = (
+                '<h2>Scores not published</h2>'
+                '<p>This outlet is in phase 2 and is not yet past the coverage gate. '
+                'Findings are listed below. A later owner sign-off that the pilot has been '
+                'reviewed is required before scores are published.</p>'
+            )
+        else:
+            gate = ""
+            score_block = "<h2>Scorecard by named actor</h2>\n" + scorecard_table(scorecards(fs), "publication")
         body = f"""<h1>{e(pub['name'])}</h1>
+{gate}
 <dl class="ev"><dt>Website</dt><dd><a href="{e(pub['url'])}" rel="nofollow noopener">{e(pub['url'])}</a></dd>
 <dt>Owner group</dt><dd>{e(pub.get('owner_group'))} <span class="badge">{e(pub.get('owner_fact_label'))}</span></dd>
 <dt>Editor</dt><dd>{e(pub.get('editor_in_chief'))}{editor_sources(pub)}</dd>
 {sample_dl}
 <dt>Excluded (paywalled)</dt><dd>{excluded_counts[pid]} finding(s) rested on paywalled pieces and are not shown or scored.</dd></dl>
-<h2>Scorecard by named actor</h2>
-{scorecard_table(scorecards(fs), 'publication')}
+{score_block}
 {sample_list}
 <h2>Writers and editors</h2>
 <table><thead><tr><th>Name</th><th>Public role</th><th class="num">Findings</th></tr></thead><tbody>{''.join(wrows)}</tbody></table>
@@ -739,10 +767,36 @@ def build(out_dir):
             it = items[key]
             its.append(f'<tr><td><a href="../../{item_href(key)}">{e(trim(it["title"], 110))}</a></td><td>{e(it["kind"])}</td>'
                        f'<td>{e(it["date"])}</td><td class="num">{sum(1 for f in fs if f["_item"] == key)}</td></tr>')
+        scored_fs = [f for f in fs if f.get("publication_id") not in PHASE2]
+        phase2_fs = [f for f in fs if f.get("publication_id") in PHASE2]
+        if phase2_fs and not scored_fs:
+            gate = (
+                '<p class="note"><strong>Phase 2 (not yet past the coverage gate).</strong> '
+                'Findings from the locked v1 sample are shown. Outlet and per-actor scores '
+                'are not published until the owner signs off that the pilot has been reviewed.</p>'
+            )
+            score_block = (
+                '<h2>Scores not published</h2>'
+                '<p>This writer\'s findings in this sample are from a phase-2 outlet and '
+                'are not yet past the coverage gate. Findings are listed below. A later '
+                'owner sign-off that the pilot has been reviewed is required before scores '
+                'are published.</p>'
+            )
+        else:
+            gate = ""
+            if phase2_fs:
+                gate = (
+                    '<p class="note"><strong>Phase 2 findings on this page are listed but not '
+                    'scored</strong> until the owner signs off that the pilot has been reviewed.</p>'
+                )
+            score_block = (
+                "<h2>Scorecard by named actor</h2>\n"
+                + scorecard_table(scorecards(scored_fs or fs, person_level=True), "person")
+            )
         body = f"""<h1>{e(p['full_name'])}</h1>
+{gate}
 <dl class="ev"><dt>Public role</dt><dd>{e(p['role'])}{(' &middot; ' + e(pub['name'])) if pub else ''}</dd>{handle_html}</dl>
-<h2>Scorecard by named actor</h2>
-{scorecard_table(scorecards(fs, person_level=True), 'person')}
+{score_block}
 <h2>Articles and public posts</h2>
 <table><thead><tr><th>Item</th><th>Type</th><th>Date (SAST)</th><th class="num">Findings</th></tr></thead><tbody>{''.join(its)}</tbody></table>
 <h2>Findings</h2>
@@ -795,7 +849,7 @@ def build(out_dir):
 <dt>Direction</dt><dd class="{e(f['direction'])}">{e(f['direction'])}</dd>
 <dt>Driver</dt><dd>{driver_html(f)}</dd>
 <dt>Fact label</dt><dd><span class="badge fact-label">{e(f['fact_label'])}</span></dd>
-<dt>Signed score</dt><dd>{signed_html}</dd>
+<dt>Signed score</dt><dd>{signed_html} <span class="note">This finding&rsquo;s signed weight (&minus;2&hellip;+2), not a mean.</span></dd>
 <dt>Status</dt><dd>{e(score_note)}</dd>
 <dt>Date (SAST)</dt><dd>{e(date_of(f, 'published_at_sast', 'published_at'))}</dd>
 <dt>Writer / account</dt><dd>{e(pname or it['byline'] or 'Not linked')}</dd>
@@ -876,7 +930,7 @@ def build(out_dir):
 <p>The aim is to cover South African media broadly. Coverage grows in phases. No dates are promised; each phase starts only when its entry criteria are met.</p>
 <ol>
 <li><strong>Pilot:</strong> News24, Daily Investor and Newsday. Entry: method, fact labels and thresholds stable; free-access check done for each outlet. An error-watch log may add findings-only rows for other outlets without expanding this scored pilot.</li>
-<li><strong>Major national dailies and weeklies (free content only):</strong> entry: pilot reviewed and corrected; neutral-random sampling rule fixed; driver list settled.</li>
+<li><strong>Major national dailies and weeklies (free content only):</strong> entry: pilot reviewed and corrected; neutral-random sampling rule fixed; driver list settled. Daily Maverick, GroundUp and The Citizen have a locked v1 sample in a phase-2 coding pass; they are not yet past this coverage gate, so findings are shown and scores are not published.</li>
 <li><strong>Broadcasters' news sites:</strong> entry: phase 2 reaches minimum samples for its main actors; a rule for transcripts and clips agreed.</li>
 <li><strong>Regional, community, Afrikaans and other-language outlets:</strong> entry: coders able to read the language; translation and quote-fidelity rule agreed.</li>
 <li><strong>Further outlets and journalists' public posts at scale:</strong> entry: earlier phases stable and the corrections process proven.</li>
@@ -899,6 +953,7 @@ def build(out_dir):
             "items": len(items),
             "writers": len(by_person),
             "publications": len(PILOT),
+            "phase2_publications": len(PHASE2),
         },
         "inputs": [
             {"path": rel, "sha256": sha256_file(ROOT / rel)} for rel in MANIFEST_INPUTS

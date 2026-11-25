@@ -60,7 +60,7 @@ def test_build_succeeds(site):
     assert (out / "method" / "index.html").exists()
     assert (out / "coverage" / "index.html").exists()
     assert (out / "privacy" / "index.html").exists()
-    for pid in build_site.PILOT + build_site.WATCH:
+    for pid in build_site.PILOT + build_site.PHASE2 + build_site.WATCH:
         assert (out / "p" / pid / "index.html").exists()
     assert stats["findings_rendered"] > 0
     assert len(list((out / "f").iterdir())) == stats["findings_rendered"]
@@ -235,6 +235,11 @@ def test_publication_scores_recomputed_independently(site):
     excluded = set(stats["excluded"])
     for pid, fn in build_site.FINDINGS_FILES.items():
         doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        h = text_of(out / "p" / pid / "index.html")
+        if pid in build_site.PHASE2:
+            assert 'data-level="publication"' not in h
+            assert "Scorecard by named actor" not in h
+            continue
         acc = defaultdict(list)
         for f in doc["findings"]:
             if f["id"] in excluded or f.get("accountability_status") == "accountability_exempt":
@@ -242,7 +247,6 @@ def test_publication_scores_recomputed_independently(site):
             if f.get("signed_score") is None:
                 continue
             acc[f["actor"]].append(float(f["signed_score"]))
-        h = text_of(out / "p" / pid / "index.html")
         rows = {html.unescape(a): (int(n), s) for a, n, s in
                 re.findall(r'data-level="publication" data-actor="([^"]+)" data-n="(\d+)" data-flag="[^"]+" data-score="([^"]*)"', h)}
         for actor, vals in acc.items():
@@ -741,6 +745,218 @@ def test_coded_clean_article_pages_exist(site):
     assert "sample denominator" in h
 
 
+# ------------------------------------------------------------------ CHG-MW-010 phase-2 trio
+def test_v1_phase2_sample_is_fully_coded():
+    """Every locked v1 phase-2 slot is a fetched article, coded as a finding or clean."""
+    status_path = ROOT / "data" / "sampling" / "neutral_random_v1_fetch_status_phase2.csv"
+    rows = [r for r in csv.DictReader(status_path.open(encoding="utf-8"))
+            if r["outlet_id"] in build_site.PHASE2]
+    assert len(rows) == 180
+    assert all(r["access"] == "full_text_curl" and r["status"] == "fetched" for r in rows)
+
+    docs = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        if pid not in build_site.PHASE2:
+            continue
+        docs[pid] = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+
+    by_url = {}
+    for pid, doc in docs.items():
+        for a in doc["articles"]:
+            if a.get("v1_draw"):
+                by_url[(pid, (a["url"] or "").rstrip("/").lower())] = a
+    assert len(by_url) == 180
+
+    for r in rows:
+        art = by_url[(r["outlet_id"], r["url"].rstrip("/").lower())]
+        assert art.get("algorithm_id") == "neutral_random_v1"
+        assert art.get("access") == "full_text_curl"
+        controls = {c["article_id"] for c in docs[r["outlet_id"]].get("balanced_controls", [])
+                    if c.get("reason") == "coded_clean"}
+        finding_aids = {f["article_id"] for f in docs[r["outlet_id"]]["findings"]}
+        assert art["id"] in controls or art["id"] in finding_aids, art["id"]
+        assert not (art["id"] in controls and art["id"] in finding_aids), art["id"]
+
+
+def test_v1_phase2_finding_quotes_are_exact_and_labelled():
+    allowed = ALLOWED
+    expected = {"F-CIT-NRV1-01", "F-CIT-NRV1-02"}
+    found = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        if pid not in build_site.PHASE2:
+            continue
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        for f in doc["findings"]:
+            if f["id"] in expected:
+                found[f["id"]] = f
+                assert f["quote"].strip()
+                assert f["url"].startswith("https://")
+                assert f["fact_label"] in allowed
+                assert f["steelman_for"].strip() and f["steelman_against"].strip()
+                assert f["methodology_version"] == "0.5-draft"
+                assert f.get("accountability_status") == "bias"
+                assert f.get("coder") == "mediawatch-sa-010"
+    assert set(found) == expected
+    # typographic punctuation from the fetched bodies must be preserved
+    assert "–" in found["F-CIT-NRV1-01"]["quote"]
+    assert "…" in found["F-CIT-NRV1-01"]["quote"]
+    assert "won’t" in found["F-CIT-NRV1-02"]["quote"]
+
+
+def test_phase2_pages_show_findings_but_not_scores(site):
+    out, _ = site
+    home = visible_text(text_of(out / "index.html"))
+    assert "Phase 2 (not yet past the coverage gate)" in home
+    assert "not published" in home.lower() or "are not published" in home
+    for name in ("Daily Maverick", "GroundUp", "The Citizen"):
+        assert name in home
+    for pid, coded, clean, nfind in (
+        ("daily_maverick", 60, 60, 0),
+        ("groundup", 60, 60, 0),
+        ("citizen", 60, 58, 2),
+    ):
+        h = visible_text(text_of(out / "p" / pid / "index.html"))
+        raw = text_of(out / "p" / pid / "index.html")
+        assert "Phase 2 (not yet past the coverage gate)" in h
+        assert "Scores not published" in h
+        assert "Scorecard by named actor" not in h
+        assert 'data-level="publication"' not in raw
+        assert 'class="score-row"' not in raw
+        assert f"{coded} articles coded" in h
+        assert f"{clean} coded clean" in h
+        assert "v1 sample size" in h
+        # Citizen findings must be visible
+        if nfind:
+            assert "F-CIT-NRV1-01" in raw
+            assert "F-CIT-NRV1-02" in raw
+    # Writer pages must not publish phase-2 scores either.
+    _assert_no_phase2_writer_scores(out)
+
+
+def test_phase2_writer_scorecards_are_gated(tmp_path, monkeypatch):
+    """A phase-2 finding with a person_id must get a w/ page that lists the
+    finding and does not publish a person scorecard. The person_id is injected
+    only in this test; committed Citizen data has no person_id."""
+    real_load = build_site.load
+
+    def load_with_person():
+        pubs, people, docs, excluded, detected, listed = real_load()
+        hit = False
+        for f in docs["citizen"]["findings"]:
+            if f["id"] == "F-CIT-NRV1-02":
+                f["person_id"] = "cit_kyle_zeeman"
+                hit = True
+        assert hit, "F-CIT-NRV1-02 missing from citizen findings"
+        return pubs, people, docs, excluded, detected, listed
+
+    monkeypatch.setattr(build_site, "load", load_with_person)
+    out = tmp_path / "_site"
+    build_site.build(out)
+    wpage = out / "w" / "cit_kyle_zeeman" / "index.html"
+    assert wpage.is_file(), "expected a writer page once person_id is set"
+    raw = text_of(wpage)
+    h = visible_text(raw)
+    assert "F-CIT-NRV1-02" in raw
+    assert "Kyle Zeeman" in h
+    assert "Phase 2 (not yet past the coverage gate)" in h
+    assert "Scores not published" in h
+    assert "Scorecard by named actor" not in raw
+    assert 'class="score-row"' not in raw
+    assert 'data-level="person"' not in raw
+    _assert_no_phase2_writer_scores(out)
+
+
+def test_phase2_mixed_writer_keeps_non_phase2_scorecard(tmp_path, monkeypatch):
+    """A writer with both pilot and phase-2 findings still publishes a scorecard
+    from the non-phase-2 findings only. The helper must allow that."""
+    real_load = build_site.load
+
+    def load_mixed():
+        pubs, people, docs, excluded, detected, listed = real_load()
+        n24 = next(
+            f for f in docs["news24"]["findings"]
+            if build_site.in_score(f) and f["id"] not in excluded
+        )
+        n24["person_id"] = "mixed_writer_test"
+        hit = False
+        for f in docs["citizen"]["findings"]:
+            if f["id"] == "F-CIT-NRV1-02":
+                f["person_id"] = "mixed_writer_test"
+                hit = True
+        assert hit, "F-CIT-NRV1-02 missing from citizen findings"
+        return pubs, people, docs, excluded, detected, listed
+
+    monkeypatch.setattr(build_site, "load", load_mixed)
+    out = tmp_path / "_site"
+    build_site.build(out)
+    wpage = out / "w" / "mixed_writer_test" / "index.html"
+    assert wpage.is_file()
+    raw = text_of(wpage)
+    h = visible_text(raw)
+    assert "F-CIT-NRV1-02" in raw
+    assert "Scorecard by named actor" in raw
+    assert "listed but not scored" in h
+    assert 'class="score-row"' in raw
+    _assert_no_phase2_writer_scores(out)
+
+
+def _assert_no_phase2_writer_scores(out):
+    """Fail only on phase-2 score rows. A mixed writer's non-phase-2 scorecard is allowed."""
+    by_id = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        for f in doc["findings"]:
+            row = dict(f)
+            row["publication_id"] = row.get("publication_id") or pid
+            by_id[row["id"]] = row
+    wroot = out / "w"
+    if not wroot.exists():
+        return
+    for wdir in sorted(wroot.iterdir()):
+        page = wdir / "index.html"
+        if not page.is_file():
+            continue
+        raw = text_of(page)
+        ids = set(re.findall(r"f/([^/]+)/index\.html", raw))
+        phase2 = [by_id[i] for i in ids if i in by_id and by_id[i].get("publication_id") in build_site.PHASE2]
+        other = [by_id[i] for i in ids if i in by_id and by_id[i].get("publication_id") not in build_site.PHASE2]
+        rows = []
+        for m in re.finditer(r'<tr class="score-row"([^>]*)>', raw):
+            attrs = dict(re.findall(r'data-([a-z]+)="([^"]*)"', m.group(1)))
+            if attrs.get("level") == "person":
+                rows.append((html.unescape(attrs.get("actor") or ""), attrs.get("n") or "0"))
+        if phase2 and not other:
+            assert not rows, wdir.name
+            assert 'class="score-row"' not in raw, wdir.name
+            assert "Scorecard by named actor" not in raw, wdir.name
+        elif phase2 and other:
+            expected = defaultdict(int)
+            for f in other:
+                if build_site.in_score(f):
+                    expected[f["actor"]] += 1
+            for actor, n in rows:
+                assert actor in expected, (wdir.name, actor)
+                assert int(n) == expected[actor], (wdir.name, actor, n, expected[actor])
+
+
+def test_finding_signed_score_is_the_finding_weight_not_a_mean(site):
+    """The finding page Signed score is this finding's signed weight, not a mean."""
+    out, _ = site
+    page = out / "f" / "F-CIT-NRV1-02" / "index.html"
+    assert page.is_file()
+    raw = text_of(page)
+    assert "<dt>Signed score</dt>" in raw
+    assert "not a mean" in visible_text(raw)
+    assert "signed weight" in visible_text(raw).lower()
+
+
+def test_later_md_parks_next_outlets():
+    text = (ROOT / "docs" / "LATER.md").read_text(encoding="utf-8")
+    assert "Mail & Guardian" in text or "Mail &amp; Guardian" in text
+    assert "IOL" in text
+    assert "eNCA" in text and "SABC News" in text and "EWN" in text and "Newzroom Afrika" in text
+    assert "mail_guardian" in text
+
 def test_rfc_009_actor_counts_match_site_rollup():
     """RFC-CHG-MW-009 actor n/status must be generated from the same roll-up as the site."""
     rfc = (ROOT / "changes" / "RFC-CHG-MW-009.md").read_text(encoding="utf-8")
@@ -752,4 +968,3 @@ def test_rfc_009_actor_counts_match_site_rollup():
     assert "Solidarity n=5 provisional" in rfc
     assert "DA n=3 findings-only" in rfc
     assert "Cyril Ramaphosa n=2 findings-only" in rfc
-
