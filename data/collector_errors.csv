@@ -1,0 +1,3 @@
+logged_at_sast,host,url,error_type,error,outlet_id,run_id
+2026-11-20T20:33:34+0200,www.saps.gov.za,https://www.saps.gov.za/services/crimestats.php,tls,URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1011)>,saps,collect-2026-11-20T2022+0200
+2026-11-20T20:33:34+0200,feeds.24.com,https://feeds.24.com/articles/news24/topstories/rss,tls,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1011)>,news24,collect-2026-11-20T2022+0200

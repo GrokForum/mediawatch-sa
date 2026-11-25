@@ -4,6 +4,7 @@ The fixture is a local HTTP server. These tests do not fetch the production
 site and do not need network access beyond 127.0.0.1.
 """
 import json
+import urllib.request
 import re
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -422,3 +423,40 @@ def test_fail_on_cross_host_redirect(live_server, tmp_path):
     finally:
         other.shutdown()
         other.server_close()
+
+
+def test_https_to_http_redirect_is_refused():
+    handler = check_live.SameHostRedirectHandler()
+    req = urllib.request.Request("https://mediawatch.grokforum.site/method/")
+    with pytest.raises(check_live.SchemeDowngradeError, match="https to http"):
+        handler.redirect_request(
+            req, None, 302, "Found", {}, "http://mediawatch.grokforum.site/method/"
+        )
+
+
+def test_port_change_redirect_is_refused():
+    handler = check_live.SameHostRedirectHandler()
+    req = urllib.request.Request("https://mediawatch.grokforum.site/method/")
+    with pytest.raises(check_live.PortChangeError, match="port change"):
+        handler.redirect_request(
+            req, None, 302, "Found", {}, "https://mediawatch.grokforum.site:8443/method/"
+        )
+
+
+def test_same_host_https_default_port_redirect_is_allowed(monkeypatch):
+    """https://host -> https://host:443 is not a port change (default port)."""
+    handler = check_live.SameHostRedirectHandler()
+    req = urllib.request.Request("https://mediawatch.grokforum.site/method/")
+    called = {}
+
+    def fake_super(self, *args, **kwargs):
+        called["ok"] = True
+        return object()
+
+    monkeypatch.setattr(urllib.request.HTTPRedirectHandler, "redirect_request", fake_super)
+    got = handler.redirect_request(
+        req, None, 302, "Found", {}, "https://mediawatch.grokforum.site:443/method/"
+    )
+    assert called.get("ok") is True
+    assert got is not None
+

@@ -1,0 +1,1214 @@
+[
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-JG-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-JG-02",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-COL-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-COL-02",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-EF-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-COL-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-COL-02",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-02",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-03",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-04",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-05",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-06",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-07",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-08",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-09",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-10",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-11",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-12",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-AB-X-13",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-01",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-02",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-03",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-04",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-05",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-06",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-07",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-08",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-09",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-10",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-11",
+    "weight": 1.0,
+    "signed_score": null
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-12",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-13",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-14",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-15",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-16",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-17",
+    "weight": 1.0,
+    "signed_score": null
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-PDT-X-18",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-NEUT-AB-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-NEUT-CAPA-01",
+    "weight": 1.5,
+    "signed_score": 1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-NEUT-MACU-01",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-CTR-SAAI-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-CTR-PDT-01",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-CTR-AB-X-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-NEUT-AB-X-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-CTR-PDT-X-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-CALLAND-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-AB-X-CALLAND",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-ESKOM-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-SCHREIBER-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-SCHREIBER-02",
+    "weight": 0.5,
+    "signed_score": 0.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-TAKEALOT-01",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-TAKEALOT-02",
+    "weight": 1.5,
+    "signed_score": 1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-FAV-PDT-X-RAMA",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-KC-01",
+    "weight": 2.0,
+    "signed_score": -2.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-KC-02",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-KC-03",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-KC-04",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.json",
+    "id": "F-N24-KC-05",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-02",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-03",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-04",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-05",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-06",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-07",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-08",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-09",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-10",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-11",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-12",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-13",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-14",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-15",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-16",
+    "weight": 0.5,
+    "signed_score": 0.5
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-17",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-18",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.json",
+    "id": "F-DI-19",
+    "weight": 1.25,
+    "signed_score": 1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-01",
+    "weight": 1.5,
+    "signed_score": 1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-02",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-03",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-04",
+    "weight": 1.25,
+    "signed_score": 1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-05",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-06",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-07",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-08",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-09",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-10",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-11",
+    "weight": 0.75,
+    "signed_score": -0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-12",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-13",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-14",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-15",
+    "weight": 0.75,
+    "signed_score": -0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-16",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-17",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-18",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-19",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-20",
+    "weight": 1.0,
+    "signed_score": 1.0
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-21",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-22",
+    "weight": 0.5,
+    "signed_score": 0.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.json",
+    "id": "F-ND-23",
+    "weight": 1.0,
+    "signed_score": -1.0
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-JG-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-JG-02",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-COL-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-COL-02",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-EF-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-COL-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-COL-02",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-02",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-03",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-04",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-05",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-06",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-07",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-08",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-09",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-10",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-11",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-12",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-AB-X-13",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-01",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-02",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-03",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-04",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-05",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-06",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-07",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-08",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-09",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-10",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-11",
+    "weight": "1.0",
+    "signed_score": null
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-12",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-13",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-14",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-15",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-16",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-17",
+    "weight": "1.0",
+    "signed_score": null
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-PDT-X-18",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-NEUT-AB-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-NEUT-CAPA-01",
+    "weight": 1.5,
+    "signed_score": 1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-NEUT-MACU-01",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-CTR-SAAI-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-CTR-PDT-01",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-CTR-AB-X-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-NEUT-AB-X-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-CTR-PDT-X-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-CALLAND-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-AB-X-CALLAND",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-ESKOM-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-SCHREIBER-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-SCHREIBER-02",
+    "weight": 0.5,
+    "signed_score": 0.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-TAKEALOT-01",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-TAKEALOT-02",
+    "weight": 1.5,
+    "signed_score": 1.5
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-FAV-PDT-X-RAMA",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-KC-01",
+    "weight": "2.0",
+    "signed_score": "-2.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-KC-02",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-KC-03",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-KC-04",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/news24_pilot_findings.csv",
+    "id": "F-N24-KC-05",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-01",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-02",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-03",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-04",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-05",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-06",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-07",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-08",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-09",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-10",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-11",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-12",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-13",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-14",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-15",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-16",
+    "weight": 0.5,
+    "signed_score": 0.5
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-17",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-18",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/dailyinvestor_pilot_findings.csv",
+    "id": "F-DI-19",
+    "weight": 1.25,
+    "signed_score": 1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-01",
+    "weight": 1.5,
+    "signed_score": 1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-02",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-03",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-04",
+    "weight": 1.25,
+    "signed_score": 1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-05",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-06",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-07",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-08",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-09",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-10",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-11",
+    "weight": 0.75,
+    "signed_score": -0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-12",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-13",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-14",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-15",
+    "weight": 0.75,
+    "signed_score": -0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-16",
+    "weight": 1.5,
+    "signed_score": -1.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-17",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-18",
+    "weight": 1.25,
+    "signed_score": -1.25
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-19",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-20",
+    "weight": "1.0",
+    "signed_score": "1.0"
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-21",
+    "weight": 0.75,
+    "signed_score": 0.75
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-22",
+    "weight": 0.5,
+    "signed_score": 0.5
+  },
+  {
+    "source": "data/newsday_pilot_findings.csv",
+    "id": "F-ND-23",
+    "weight": "1.0",
+    "signed_score": "-1.0"
+  }
+]
