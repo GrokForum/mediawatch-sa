@@ -509,7 +509,7 @@ def test_manifest_json_present_and_valid(site):
     # Newest rendered finding date (pilot window plus any later error-watch rows).
     assert expected_data_date >= "2026-10-27"
     assert doc["data_window"]["start"] == "2026-05-01"
-    assert doc["data_window"]["end"] == "2026-10-31"
+    assert doc["data_window"]["end"] == "2026-11-20"
     counts = doc["counts"]
     assert counts["html_pages"] == stats["pages"] == len(pages(out))
     assert counts["findings_rendered"] == stats["findings_rendered"]
@@ -647,4 +647,109 @@ def test_q2_murder_stat_findings(site):
     assert (out / "p" / "iol" / "index.html").is_file()
     assert (out / "p" / "ewn" / "index.html").is_file()
 
+
+
+
+# ------------------------------------------------------------------ CHG-MW-009 v1 sample
+def test_data_window_covers_v1_draw():
+    assert build_site.DATA_WINDOW["start"] == "2026-05-01"
+    assert build_site.DATA_WINDOW["end"] == "2026-11-20"
+    assert "November" in build_site.DATA_WINDOW["label"]
+
+
+def test_v1_pilot_sample_is_fully_coded():
+    """Every locked v1 pilot slot is a fetched article, coded as a finding or clean."""
+    status_path = ROOT / "data" / "sampling" / "neutral_random_v1_fetch_status.csv"
+    rows = [r for r in csv.DictReader(status_path.open(encoding="utf-8"))
+            if r["outlet_id"] in build_site.PILOT]
+    assert len(rows) == 172
+    assert all(r["access"] == "full_text_curl" and r["status"] == "fetched" for r in rows)
+
+    docs = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        if pid not in build_site.PILOT:
+            continue
+        docs[pid] = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+
+    by_url = {}
+    for pid, doc in docs.items():
+        for a in doc["articles"]:
+            if a.get("v1_draw"):
+                by_url[(pid, (a["url"] or "").rstrip("/").lower())] = a
+    assert len(by_url) == 172
+
+    for r in rows:
+        art = by_url[(r["outlet_id"], r["url"].rstrip("/").lower())]
+        assert art.get("algorithm_id") == "neutral_random_v1"
+        assert art.get("access") == "full_text_curl"
+        controls = {c["article_id"] for c in docs[r["outlet_id"]].get("balanced_controls", [])
+                    if c.get("reason") == "coded_clean"}
+        finding_aids = {f["article_id"] for f in docs[r["outlet_id"]]["findings"]}
+        assert art["id"] in controls or art["id"] in finding_aids, art["id"]
+        assert not (art["id"] in controls and art["id"] in finding_aids), art["id"]
+
+
+def test_v1_new_finding_quotes_are_exact_and_labelled():
+    allowed = ALLOWED
+    expected = {
+        "F-DI-NRV1-01",
+        "F-ND-NRV1-01", "F-ND-NRV1-02", "F-ND-NRV1-03", "F-ND-NRV1-04",
+        "F-ND-NRV1-05", "F-ND-NRV1-06", "F-ND-NRV1-07",
+    }
+    found = {}
+    for pid, fn in build_site.FINDINGS_FILES.items():
+        if pid not in build_site.PILOT:
+            continue
+        doc = json.loads((ROOT / "data" / fn).read_text(encoding="utf-8"))
+        for f in doc["findings"]:
+            if f["id"] in expected:
+                found[f["id"]] = f
+                assert f["quote"].strip()
+                assert f["url"].startswith("https://")
+                assert f["fact_label"] in allowed
+                assert f["steelman_for"].strip() and f["steelman_against"].strip()
+                assert f["methodology_version"] == "0.5-draft"
+                assert f.get("accountability_status") == "bias"
+    assert set(found) == expected
+
+
+def test_home_and_publication_pages_show_v1_sample_size(site):
+    out, _ = site
+    home = visible_text(text_of(out / "index.html"))
+    assert "v1 sample (coded)" in home
+    assert "Coded clean" in home
+    assert "1 May" in home and "20 November 2026" in home
+    # News24 60/60, Daily Investor 60/58, Newsday 52/46 appear in the home table
+    for pid, coded, clean in (("news24", 60, 60), ("daily_investor", 60, 58), ("newsday", 52, 46)):
+        h = visible_text(text_of(out / "p" / pid / "index.html"))
+        assert f"{coded} articles coded" in h
+        assert f"{clean} coded clean" in h
+        assert "v1 sample size" in h
+        assert "coded-and-clean" in h
+
+
+def test_coded_clean_article_pages_exist(site):
+    out, _ = site
+    # A known clean News24 v1 article should have a page and the clean note
+    doc = json.loads((ROOT / "data" / "news24_pilot_findings.json").read_text(encoding="utf-8"))
+    finding_aids = {f["article_id"] for f in doc["findings"]}
+    clean = next(a for a in doc["articles"] if a.get("v1_draw") and a["id"] not in finding_aids)
+    path = out / "a" / clean["id"] / "index.html"
+    assert path.is_file(), clean["id"]
+    h = visible_text(text_of(path))
+    assert "Coded clean" in h
+    assert "sample denominator" in h
+
+
+def test_rfc_009_actor_counts_match_site_rollup():
+    """RFC-CHG-MW-009 actor n/status must be generated from the same roll-up as the site."""
+    rfc = (ROOT / "changes" / "RFC-CHG-MW-009.md").read_text(encoding="utf-8")
+    _, _, docs, excluded, _, _ = build_site.load()
+    for line in build_site.format_pilot_actor_rollup(docs, excluded):
+        assert line in rfc, line
+    # The reviewer's News24 counted figures must appear (paywalled findings excluded).
+    assert "AfriForum n=10 scored" in rfc
+    assert "Solidarity n=5 provisional" in rfc
+    assert "DA n=3 findings-only" in rfc
+    assert "Cyril Ramaphosa n=2 findings-only" in rfc
 
