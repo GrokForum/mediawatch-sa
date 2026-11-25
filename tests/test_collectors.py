@@ -588,3 +588,29 @@ def test_check_staged_denylist_fails_closed_when_missing(tmp_path, monkeypatch):
     monkeypatch.setattr(chk, "NAMES", tmp_path / "absent.txt")
     assert chk.main() == 1
 
+def test_fetch_draw_out_default_is_phase2_status():
+    assert fetch_draw.DEFAULT_OUT.name == "neutral_random_v1_fetch_status_phase2.csv"
+    assert fetch_draw.DEFAULT_OUT == fetch_draw.DATA / "sampling" / "neutral_random_v1_fetch_status_phase2.csv"
+
+
+def test_fetch_draw_main_returns_1_when_errors_logged(tmp_path, monkeypatch):
+    """scripts/fetch_draw.py exits 1 when collector errors were logged (fail-closed)."""
+    orig = collect.ErrorLog.__init__
+
+    def init_with_logged_error(self, path, run_id):
+        orig(self, path, run_id)
+        self.count = 1
+
+    monkeypatch.setattr(collect.ErrorLog, "__init__", init_with_logged_error)
+    out = tmp_path / "neutral_random_v1_fetch_status_phase2.csv"
+    err = tmp_path / "collector_errors.csv"
+    rc = fetch_draw.main([
+        "--outlets", "no_such_outlet",
+        "--out", str(out),
+        "--errors", str(err),
+        "--delay", "0",
+        "--run-id", "test-fetch-draw-fail-closed",
+    ])
+    assert rc == 1
+    assert out.is_file()  # still wrote; exit is non-zero
+

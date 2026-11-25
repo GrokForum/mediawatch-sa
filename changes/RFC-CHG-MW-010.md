@@ -12,7 +12,7 @@
 
 | Env | What it is | Points at production? |
 |-----|------------|------------------------|
-| DEV | This local branch. Phase-2 coding, the coverage-gate mark, and unit tests can be inspected locally. | No. |
+| DEV | This branch. Phase-2 coding, the coverage-gate mark, and unit tests can be inspected on the branch. | No. |
 | TEST | Not stood up. | — |
 | PROD | GitHub Pages, still deploying from `main`. | Only after a later, named deployment RFC with the owner's own GO on the exact head. Publishing these phase-2 scores also needs a separate owner sign-off that the pilot has been reviewed. |
 
@@ -28,12 +28,12 @@ Code the locked `neutral_random_v1` draws for Daily Maverick, GroundUp and The C
 
 | File | Change |
 |------|--------|
-| `scripts/fetch_draw.py` | Exit non-zero when collector errors were logged (fail-closed). Phase-2 fetch writes a separate status table so the 009 status is not overwritten. |
+| `scripts/fetch_draw.py` | Exit non-zero when collector errors were logged (fail-closed). Default `--out` is `data/sampling/neutral_random_v1_fetch_status_phase2.csv` so a bare run does not overwrite the 009 status table. |
 | `data/sampling/neutral_random_v1_fetch_status_phase2.csv` | **New.** Fetch outcomes for the 180 trio slots (URLs and metadata only; no bodies). Run `fetch-010-2026-11-20`. All 180 slots `full_text_curl`. |
 | `data/dailymaverick_phase2_findings.json` / `.csv` | 60 v1 articles, 60 coded-clean rows, 0 findings. |
 | `data/groundup_phase2_findings.json` / `.csv` | 60 v1 articles, 60 coded-clean rows, 0 findings. |
 | `data/citizen_phase2_findings.json` / `.csv` | 60 v1 articles, 58 coded-clean rows, 2 findings (`F-CIT-NRV1-01`, `F-CIT-NRV1-02`). |
-| `scripts/build_site.py` | Phase-2 trio on the home page and publication pages: findings and v1 sample visible; scorecards omitted; coverage-gate copy. Manifest keeps scored `publications` at 3 and adds `phase2_publications`. |
+| `scripts/build_site.py` | Phase-2 trio on the home page, publication pages, and writer (`w/`) pages: findings and v1 sample visible; scorecards omitted; coverage-gate copy. Manifest keeps scored `publications` at 3 and adds `phase2_publications`. The finding-page Signed score is that finding's signed weight, not a mean. |
 | `tests/test_site.py` | Gate copy; no published phase-2 scores; v1 completeness for the 180; quote typography; `docs/LATER.md` contents. noindex/DRAFT remain. |
 | `docs/LATER.md` | Adds the phase-2 parked-publications section (Mail & Guardian, IOL, and the broadcasters' news sites) to the later-list already on `main` via PR #9. |
 | `changes/RFC-CHG-MW-010.md` | This record, including Citizen lastmod risk, the News24 60/60 sanity check, and collection counts. |
@@ -128,7 +128,11 @@ Git: the original CHG-MW-010 coding returns this branch to `c0cc4dc79003ee1de1f3
 
 ## Current state (25 Nov 2026, Africa/Johannesburg)
 
-CHG-MW-007, CHG-MW-008, CHG-MW-009 and the later-list are on `main` via PRs #7, #8 and #9 (`origin/main` `14f60a7c1ee925811ae9106398df6cf45c5b4f2a`). This branch was brought up to date by forward-merging that `main` on 25 Nov 2026 (Africa/Johannesburg). A push and a draft PR happen only on an owner GO naming the exact head. Not merged to `main`; not deployed. Reviewer A and the critic reviewer have not yet recorded a verdict on this head.
+CHG-MW-007, CHG-MW-008, CHG-MW-009 and the later-list are on `main` via PRs #7, #8 and #9 (`origin/main` `14f60a7c1ee925811ae9106398df6cf45c5b4f2a`). This branch was brought up to date by forward-merging that `main` on 25 Nov 2026 (Africa/Johannesburg). A push and a draft PR happen only on an owner GO naming the exact head. Not merged to `main`; not deployed. Reviewer A recorded a plain PASS and the critic reviewer a PASS_WITH_CONCERNS on `af9ac89`; reviewer verdicts are bound to the PR head.
+
+## Review follow-up (25 Nov 2026, Africa/Johannesburg)
+
+Addressed the critic reviewer's PASS_WITH_CONCERNS on `af9ac89ae98cd66b907d2f999abc863302c42f83` (Reviewer A had a plain PASS on the same head). Writer (`w/`) pages now apply the same coverage gate as publication pages: phase-2 findings are listed and are kept out of writer scorecards. A unit test injects a `person_id` on `F-CIT-NRV1-02` (test-only; committed data is unchanged) and fails if a phase-2 score row is published. `fetch_draw.main` is tested to return 1 when collector errors were logged, and the default `--out` path is the 010 phase-2 status table. The finding-page Signed score is labelled as that finding's signed weight, not a mean. Storing a separate `lastmod` column beside `published_at` was skipped: the locked phase-2 status table already records the chosen timestamp in `published_at` and the rule in `date_source` (`url` or `lastmod_or_pub`); widening that locked table is not a small, safe change. Rollback for this follow-up: `af9ac89ae98cd66b907d2f999abc863302c42f83`.
 
 ## Sign-off
 

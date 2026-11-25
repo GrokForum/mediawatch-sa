@@ -829,6 +829,68 @@ def test_phase2_pages_show_findings_but_not_scores(site):
         if nfind:
             assert "F-CIT-NRV1-01" in raw
             assert "F-CIT-NRV1-02" in raw
+    # Writer pages must not publish phase-2 scores either.
+    _assert_no_phase2_writer_scores(out)
+
+
+def test_phase2_writer_scorecards_are_gated(tmp_path, monkeypatch):
+    """A phase-2 finding with a person_id must get a w/ page that lists the
+    finding and does not publish a person scorecard. The person_id is injected
+    only in this test; committed Citizen data has no person_id."""
+    real_load = build_site.load
+
+    def load_with_person():
+        pubs, people, docs, excluded, detected, listed = real_load()
+        hit = False
+        for f in docs["citizen"]["findings"]:
+            if f["id"] == "F-CIT-NRV1-02":
+                f["person_id"] = "cit_kyle_zeeman"
+                hit = True
+        assert hit, "F-CIT-NRV1-02 missing from citizen findings"
+        return pubs, people, docs, excluded, detected, listed
+
+    monkeypatch.setattr(build_site, "load", load_with_person)
+    out = tmp_path / "_site"
+    build_site.build(out)
+    wpage = out / "w" / "cit_kyle_zeeman" / "index.html"
+    assert wpage.is_file(), "expected a writer page once person_id is set"
+    raw = text_of(wpage)
+    h = visible_text(raw)
+    assert "F-CIT-NRV1-02" in raw
+    assert "Kyle Zeeman" in h
+    assert "Phase 2 (not yet past the coverage gate)" in h
+    assert "Scores not published" in h
+    assert "Scorecard by named actor" not in raw
+    assert 'class="score-row"' not in raw
+    assert 'data-level="person"' not in raw
+    _assert_no_phase2_writer_scores(out)
+
+
+def _assert_no_phase2_writer_scores(out):
+    wroot = out / "w"
+    if not wroot.exists():
+        return
+    hrefs = tuple(f"p/{pid}/" for pid in build_site.PHASE2)
+    for wdir in sorted(wroot.iterdir()):
+        page = wdir / "index.html"
+        if not page.is_file():
+            continue
+        raw = text_of(page)
+        if any(href in raw for href in hrefs):
+            assert 'class="score-row"' not in raw, wdir.name
+            assert 'data-level="person"' not in raw, wdir.name
+            assert "Scorecard by named actor" not in raw, wdir.name
+
+
+def test_finding_signed_score_is_the_finding_weight_not_a_mean(site):
+    """The finding page Signed score is this finding's signed weight, not a mean."""
+    out, _ = site
+    page = out / "f" / "F-CIT-NRV1-02" / "index.html"
+    assert page.is_file()
+    raw = text_of(page)
+    assert "<dt>Signed score</dt>" in raw
+    assert "not a mean" in visible_text(raw)
+    assert "signed weight" in visible_text(raw).lower()
 
 
 def test_later_md_parks_next_outlets():

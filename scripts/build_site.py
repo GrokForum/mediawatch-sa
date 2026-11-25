@@ -767,10 +767,36 @@ def build(out_dir):
             it = items[key]
             its.append(f'<tr><td><a href="../../{item_href(key)}">{e(trim(it["title"], 110))}</a></td><td>{e(it["kind"])}</td>'
                        f'<td>{e(it["date"])}</td><td class="num">{sum(1 for f in fs if f["_item"] == key)}</td></tr>')
+        scored_fs = [f for f in fs if f.get("publication_id") not in PHASE2]
+        phase2_fs = [f for f in fs if f.get("publication_id") in PHASE2]
+        if phase2_fs and not scored_fs:
+            gate = (
+                '<p class="note"><strong>Phase 2 (not yet past the coverage gate).</strong> '
+                'Findings from the locked v1 sample are shown. Outlet and per-actor scores '
+                'are not published until the owner signs off that the pilot has been reviewed.</p>'
+            )
+            score_block = (
+                '<h2>Scores not published</h2>'
+                '<p>This writer\'s findings in this sample are from a phase-2 outlet and '
+                'are not yet past the coverage gate. Findings are listed below. A later '
+                'owner sign-off that the pilot has been reviewed is required before scores '
+                'are published.</p>'
+            )
+        else:
+            gate = ""
+            if phase2_fs:
+                gate = (
+                    '<p class="note"><strong>Phase 2 findings on this page are listed but not '
+                    'scored</strong> until the owner signs off that the pilot has been reviewed.</p>'
+                )
+            score_block = (
+                "<h2>Scorecard by named actor</h2>\n"
+                + scorecard_table(scorecards(scored_fs or fs, person_level=True), "person")
+            )
         body = f"""<h1>{e(p['full_name'])}</h1>
+{gate}
 <dl class="ev"><dt>Public role</dt><dd>{e(p['role'])}{(' &middot; ' + e(pub['name'])) if pub else ''}</dd>{handle_html}</dl>
-<h2>Scorecard by named actor</h2>
-{scorecard_table(scorecards(fs, person_level=True), 'person')}
+{score_block}
 <h2>Articles and public posts</h2>
 <table><thead><tr><th>Item</th><th>Type</th><th>Date (SAST)</th><th class="num">Findings</th></tr></thead><tbody>{''.join(its)}</tbody></table>
 <h2>Findings</h2>
@@ -823,7 +849,7 @@ def build(out_dir):
 <dt>Direction</dt><dd class="{e(f['direction'])}">{e(f['direction'])}</dd>
 <dt>Driver</dt><dd>{driver_html(f)}</dd>
 <dt>Fact label</dt><dd><span class="badge fact-label">{e(f['fact_label'])}</span></dd>
-<dt>Signed score</dt><dd>{signed_html}</dd>
+<dt>Signed score</dt><dd>{signed_html} <span class="note">This finding&rsquo;s signed weight (&minus;2&hellip;+2), not a mean.</span></dd>
 <dt>Status</dt><dd>{e(score_note)}</dd>
 <dt>Date (SAST)</dt><dd>{e(date_of(f, 'published_at_sast', 'published_at'))}</dd>
 <dt>Writer / account</dt><dd>{e(pname or it['byline'] or 'Not linked')}</dd>
