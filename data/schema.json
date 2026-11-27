@@ -397,6 +397,7 @@
             "enum": [
               "keyword",
               "neutral_random",
+              "legacy_neutral",
               "counter_pull",
               "external_seed",
               "purposive",

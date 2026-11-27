@@ -41,10 +41,14 @@ SITE_SRC = ROOT / "site"
 
 ALLOWED_LABELS = ("Proven", "Established", "Alleged", "Disputed", "Not established")
 PILOT = ("news24", "daily_investor", "newsday")
+# Error-watch outlets logged outside the scored three-outlet pilot (findings only until n allows a score).
+WATCH = ("iol", "ewn")
 FINDINGS_FILES = {
     "news24": "news24_pilot_findings.json",
     "daily_investor": "dailyinvestor_pilot_findings.json",
     "newsday": "newsday_pilot_findings.json",
+    "iol": "iol_watch_findings.json",
+    "ewn": "ewn_watch_findings.json",
 }
 FULL_N, PROVISIONAL_N = 10, 5
 FREE_ACCESS = {"full_text_webfetch", "full_text_curl", "partner_content_meta"}
@@ -60,10 +64,21 @@ DRIVER_NAMES = {
 }
 FRAME_NOTES = {
     "keyword": "found by actor/term search",
-    "neutral_random": "date-based politics draw",
+    "neutral_random": "pre-registered seeded draw (neutral_random_v1: 2 URLs per outlet per ISO week)",
+    "legacy_neutral": "older mid-week or informal 'neutral' coding, not drawn with neutral_random_v1",
     "counter_pull": "deliberate search for the opposite direction",
     "external_seed": "re-verified outside seed",
     "purposive": "judgement sample, no pre-registered random rule (frame pending owner acceptance)",
+}
+# METHODOLOGY 8a option (b): weight locked neutral_random highest.
+# legacy_neutral is not treated as the locked v1 frame.
+ROLLUP_B_WEIGHTS = {
+    "neutral_random": 4.0,
+    "counter_pull": 2.0,
+    "keyword": 1.0,
+    "purposive": 1.0,
+    "external_seed": 1.0,
+    "legacy_neutral": 1.0,
 }
 ACCESS_NOTES = {
     "full_text_webfetch": "Free to read: full text was publicly available when coded.",
@@ -175,12 +190,14 @@ def item_key(f):
     return f.get("article_id") or f.get("public_post_id") or f["id"]
 
 
-def scorecards(findings, person_level=False):
+def scorecards(findings, person_level=False, rollup="unweighted"):
     """Primary FOR/AGAINST scorecards per actor.
 
     Publication level (METHODOLOGY 6.3): mean of finding signed scores.
     Person level (6.2): mean of item-level means; suppressed when every
     counted finding is keyword-frame (8a rule 2).
+    rollup='b' applies METHODOLOGY 8a option (b): weight locked
+    neutral_random highest. legacy_neutral does not receive that weight.
     """
     by_actor = defaultdict(list)
     for f in findings:
@@ -199,7 +216,17 @@ def scorecards(findings, person_level=False):
                 means = [sum(v) / len(v) for v in items.values()]
                 mean = sum(means) / len(means)
             else:
-                mean = sum(float(f["signed_score"]) for f in counted) / n
+                if rollup == "b":
+                    weights = [
+                        ROLLUP_B_WEIGHTS.get(f.get("sample_frame") or "", 1.0)
+                        for f in counted
+                    ]
+                    total_w = sum(weights)
+                    mean = sum(
+                        float(f["signed_score"]) * w for f, w in zip(counted, weights)
+                    ) / total_w
+                else:
+                    mean = sum(float(f["signed_score"]) for f in counted) / n
         frames = Counter(f.get("sample_frame") or "unrecorded" for f in counted)
         suppressed = None
         if person_level and counted and set(frames) <= {"keyword"}:
@@ -286,6 +313,27 @@ def frames_text(frames):
     return ", ".join(f"{k} {v}" for k, v in sorted(frames.items())) or "-"
 
 
+
+def format_pilot_actor_rollup(docs, excluded):
+    """Stable per-outlet actor n/status lines from the same scorecards the site publishes."""
+    flag_label = {"full": "scored", "provisional": "provisional", "findings_only": "findings-only"}
+    flag_order = {"full": 0, "provisional": 1, "findings_only": 2}
+    names = {"news24": "News24", "daily_investor": "Daily Investor", "newsday": "Newsday"}
+    lines = []
+    for pid in PILOT:
+        fs = []
+        for f in docs[pid]["findings"]:
+            if f["id"] in excluded:
+                continue
+            f = dict(f)
+            f["publication_id"] = f.get("publication_id") or pid
+            fs.append(f)
+        rows = sorted(scorecards(fs), key=lambda r: (flag_order[r["flag"]], -r["n"], r["actor"]))
+        parts = [f"{r['actor']} n={r['n']} {flag_label[r['flag']]}" for r in rows]
+        lines.append(f"**{names[pid]}:** " + "; ".join(parts) + ".")
+    return lines
+
+
 def scorecard_table(rows, level):
     if not rows:
         return '<p class="note">No findings shown.</p>'
@@ -346,7 +394,7 @@ def date_of(obj, *keys):
 
 
 SAST = ZoneInfo("Africa/Johannesburg")
-DATA_WINDOW = {"start": "2026-05-01", "end": "2026-10-31", "label": "May–October 2026"}
+DATA_WINDOW = {"start": "2026-05-01", "end": "2026-11-20", "label": "May–20 November 2026"}
 # Committed files the generator reads. Paths are relative to the repo root.
 MANIFEST_INPUTS = (
     "data/publications.csv",
@@ -437,6 +485,26 @@ def editor_sources(pub):
 
 
 
+def v1_sample_stats(doc, excluded_ids=frozenset()):
+    """Coded neutral_random_v1 sample: every v1_draw article counts, including clean."""
+    arts = [a for a in doc.get("articles", []) if a.get("v1_draw")]
+    finding_ids = {f.get("article_id") for f in doc.get("findings", [])
+                   if f.get("id") not in excluded_ids}
+    clean = [a for a in arts if a["id"] not in finding_ids]
+    findings = [f for f in doc.get("findings", [])
+                if f.get("id") not in excluded_ids
+                and (f.get("article_id") in {a["id"] for a in arts}
+                     or (f.get("sample_frame") == "neutral_random" and "NRV1" in (f.get("id") or "")))]
+    replaced = sum(1 for a in arts if "Replacement depth" in (a.get("note") or ""))
+    return {
+        "sampled": len(arts),
+        "coded": len(arts),
+        "clean": len(clean),
+        "findings": len(findings),
+        "replaced": replaced,
+    }
+
+
 # ---------------------------------------------------------------- build
 def build(out_dir):
     pubs, people, docs, excluded, detected, listed = load()
@@ -445,7 +513,7 @@ def build(out_dir):
     items = {}       # key -> item dict
     findings = []    # rendered findings
     excluded_counts = Counter()
-    for pid in PILOT:
+    for pid in PILOT + WATCH:
         doc = docs[pid]
         arts = {a["id"]: a for a in doc.get("articles", [])}
         posts = {p["id"]: p for p in doc.get("public_posts", [])}
@@ -497,6 +565,23 @@ def build(out_dir):
             items[key]["findings"].append(f)
             findings.append(f)
 
+        # v1 draw articles, including coded-and-clean rows with no finding
+        for a in doc.get("articles", []):
+            if not a.get("v1_draw"):
+                continue
+            key = ("a", a["id"])
+            items.setdefault(key, {
+                "kind": "article", "id": a["id"], "pub": pid,
+                "title": a.get("headline") or a.get("title") or a["id"],
+                "url": a["url"], "byline": a.get("byline") or "",
+                "person_id": a.get("person_id"),
+                "date": date_of(a, "published_at_sast", "published_at"),
+                "frame": a.get("sample_frame"),
+                "access": ACCESS_NOTES.get(a.get("access"), "Free to read when coded."),
+                "findings": []})
+            items[key]["v1_draw"] = True
+            items[key]["replaced"] = "Replacement depth" in (a.get("note") or "")
+
     git_sha, run_id = build_identity()
     source_dates = []
     for f in findings:
@@ -536,24 +621,36 @@ def build(out_dir):
         return p["full_name"] if p else None
 
     # ---- home
-    rows = []
-    for pid in PILOT:
-        pub = pubs[pid]
-        shown = [f for f in findings if f["publication_id"] == pid]
-        rows.append(f'<tr><td><a href="p/{slug(pid)}/index.html">{e(pub["name"])}</a></td>'
-                    f'<td>{e(pub.get("owner_group"))}</td><td class="num">{len(shown)}</td>'
-                    f'<td class="num">{excluded_counts[pid]}</td></tr>')
+    def pub_rows(ids, with_sample=False):
+        rows = []
+        for pid in ids:
+            pub = pubs[pid]
+            shown = [f for f in findings if f["publication_id"] == pid]
+            sample = ""
+            if with_sample:
+                st = v1_sample_stats(docs[pid], excluded)
+                sample = (f'<td class="num">{st["coded"]}</td>'
+                          f'<td class="num">{st["clean"]}</td>')
+            rows.append(f'<tr><td><a href="p/{slug(pid)}/index.html">{e(pub["name"])}</a></td>'
+                        f'<td>{e(pub.get("owner_group"))}</td>{sample}'
+                        f'<td class="num">{len(shown)}</td>'
+                        f'<td class="num">{excluded_counts[pid]}</td></tr>')
+        return "".join(rows)
     home = f"""<h1>South African media bias register (pilot)</h1>
 <p>MediaWatch SA records bias <strong>for or against named actors</strong> (parties, governments, organisations and public figures in their public role). Each finding quotes the exact line, links the source, gives a fact label and sets out the strongest case on both sides.</p>
 <p>The pilot covers three outlets. The register will grow in phases to cover South African media broadly; see the <a href="coverage/index.html">coverage plan</a>.</p>
 <h2>Pilot publications</h2>
+<table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">v1 sample (coded)</th><th class="num">Coded clean</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
+<tbody>{pub_rows(PILOT, with_sample=True)}</tbody></table>
+<p class="note">The locked <code>neutral_random_v1</code> sample covers 1 May&ndash;20 November 2026 (Africa/Johannesburg). Every coded article counts in the sample size, including coded-and-clean articles that produced no finding. Earlier keyword and other-frame findings remain on the scorecard. Only content the public can read free is judged. Findings that rested on a paywalled piece are excluded and not scored. Where a News24 slot was paywalled, the pre-registered replacement from the same week was used.</p>
+<h2>Error watch (outside the pilot sample)</h2>
+<p>These findings were logged against official records after the May&ndash;October 2026 pilot window. They are shown as findings only. They do not expand the scored three-outlet pilot and are not used to claim a publication score for these outlets.</p>
 <table><thead><tr><th>Publication</th><th>Owner group</th><th class="num">Findings shown</th><th class="num">Excluded (paywalled)</th></tr></thead>
-<tbody>{''.join(rows)}</tbody></table>
-<p class="note">Window: May&ndash;October 2026. Only content the public can read free is judged. Findings that rested on a paywalled piece are excluded and not scored.</p>"""
+<tbody>{pub_rows(WATCH)}</tbody></table>"""
     write("index.html", "Publications", home)
 
     # ---- publication pages
-    for pid in PILOT:
+    for pid in PILOT + WATCH:
         pub = pubs[pid]
         fs = [f for f in findings if f["publication_id"] == pid]
         writers = Counter(f["_person"] for f in fs if f["_person"])
@@ -573,13 +670,43 @@ def build(out_dir):
         for fr in sorted(by_frame):
             frame_html.append(f'<h3>{e(fr)} <span class="note">({e(FRAME_NOTES.get(fr, ""))})</span></h3>'
                               + findings_table(by_frame[fr], "../../"))
+        st = v1_sample_stats(docs[pid], excluded) if pid in PILOT else None
+        sample_dl = ""
+        sample_list = ""
+        if st is not None:
+            sample_dl = (
+                f'<dt>v1 sample size</dt><dd>{st["coded"]} articles coded from the locked '
+                f'<code>neutral_random_v1</code> draw (1 May&ndash;20 Nov 2026). '
+                f'{st["clean"]} coded clean (no finding). {st["findings"]} finding(s) in this sample. '
+                f'{st["replaced"]} slot(s) used a pre-registered replacement after a paywalled or unusable first URL.</dd>'
+            )
+            v1_items = [it for it in items.values() if it["pub"] == pid and it.get("v1_draw")]
+            v1_items.sort(key=lambda it: (it.get("date") or "", it["id"]))
+            rows = []
+            for it in v1_items:
+                nfind = len(it["findings"])
+                status = f'{nfind} finding(s)' if nfind else 'coded clean'
+                rows.append(
+                    f'<tr><td><a href="../../{item_href(("a", it["id"]))}">{e(trim(it["title"], 80))}</a></td>'
+                    f'<td>{e(it.get("date") or "")}</td><td>{e(it.get("byline") or "")}</td>'
+                    f'<td>{status}</td></tr>'
+                )
+            sample_list = (
+                '<h2>v1 sample (including coded-and-clean articles)</h2>'
+                '<p class="note">Each of these articles was fetched free and coded under METHODOLOGY 0.5. '
+                'Clean rows count in the sample denominator and do not produce a finding.</p>'
+                '<table><thead><tr><th>Article</th><th>Date (SAST)</th><th>Byline</th><th>Coding</th></tr></thead>'
+                f'<tbody>{"".join(rows)}</tbody></table>'
+            )
         body = f"""<h1>{e(pub['name'])}</h1>
 <dl class="ev"><dt>Website</dt><dd><a href="{e(pub['url'])}" rel="nofollow noopener">{e(pub['url'])}</a></dd>
 <dt>Owner group</dt><dd>{e(pub.get('owner_group'))} <span class="badge">{e(pub.get('owner_fact_label'))}</span></dd>
 <dt>Editor</dt><dd>{e(pub.get('editor_in_chief'))}{editor_sources(pub)}</dd>
+{sample_dl}
 <dt>Excluded (paywalled)</dt><dd>{excluded_counts[pid]} finding(s) rested on paywalled pieces and are not shown or scored.</dd></dl>
 <h2>Scorecard by named actor</h2>
 {scorecard_table(scorecards(fs), 'publication')}
+{sample_list}
 <h2>Writers and editors</h2>
 <table><thead><tr><th>Name</th><th>Public role</th><th class="num">Findings</th></tr></thead><tbody>{''.join(wrows)}</tbody></table>
 {('<p class="note">' + str(len(unlinked)) + ' finding(s) on items without a linked individual byline are listed below by sample frame.</p>') if unlinked else ''}
@@ -639,7 +766,8 @@ def build(out_dir):
 <dt>Sample frame</dt><dd>{e(it['frame'] or '-')}</dd>
 <dt>Access</dt><dd>{e(it['access'])}</dd></dl>
 <h2>Findings on this item</h2>
-{findings_table(it['findings'], '../../')}"""
+{(('<p class="note">Coded clean: no FOR/AGAINST driver fired. This article counts in the sample denominator.</p>') if it.get('v1_draw') and not it['findings'] else '')}
+{findings_table(it['findings'], '../../') if it['findings'] else ''}"""
         crumbs = [("Publications", "index.html"), (pub["name"], f"p/{slug(pub['id'])}/index.html")]
         if pname:
             crumbs.append((pname, f"w/{slug(it['person_id'])}/index.html"))
@@ -693,7 +821,7 @@ def build(out_dir):
 <h2>What is measured</h2>
 <p>Each finding answers one question: relative to a <strong>named actor</strong>, does this published line (or a public post by a named newsroom figure) work <strong>FOR</strong> or <strong>AGAINST</strong> that actor, and by which driver? Signed scores run from &minus;2 to +2 per actor.</p>
 <h2>Drivers</h2><ul>{drivers}</ul>
-<p class="note">Some Daily Investor and Newsday findings use driver names outside this list. They are shown as recorded, marked &ldquo;driver name pending owner decision&rdquo;.</p>
+<p class="note">Daily Investor and Newsday findings use the official closed driver set. Unofficial names used in the first pilot coding were recoded in CHG-MW-008; historical weights and signed scores were not rewritten.</p>
 <h2>Fact labels (closed set)</h2><ul>{labels}</ul>
 <h2>Thresholds</h2>
 <p>A score is shown only when <em>n</em> &ge; 10 counted findings for that outlet or writer and actor. With 5&ndash;9 it is marked provisional. Under 5, only the findings are shown. Writer scores drawn only from keyword searches are suppressed.</p>
@@ -702,6 +830,9 @@ def build(out_dir):
 <p>Bias is judged only on what the public can read free. Paywalled articles are out of the sample and never scored. A headline, standfirst or teaser never stands in for a paywalled body. No logins, subscriptions or paywall workarounds are used.</p>
 <h2>Accountability reporting</h2>
 <p>Sourced accountability reporting on those in power, with fair right of reply and no loaded driver, is not counted as bias. Such findings stay visible for audit but do not count in the score.</p>
+<h2>Official wording vs media wording</h2>
+<p>A SAPS or NPA charge sheet records what was charged, not what happened. The charge itself is Proven as a charge; it does not prove or disprove the acts. Each injury or act claim is labelled on its own evidence (for example Alleged if only a family member or lobby group asserts it; Established if hospital records or court testimony back it). A gap in either direction &mdash; downplaying or inflating &mdash; is a framing or omission finding once there is an exact quote and a contrary record.</p>
+<p>The same rule applies to official statistics and media reports of them. A misreported official figure is a factual error. The official table figure, checked in the primary release, is Proven. A speech or briefing is a primary record of what was said, but it does not override the statistical tables when the two conflict. This rule is shared with the project's other registers so they all treat official wording consistently.</p>
 <h2>Privacy</h2>
 <p>Journalists, editors and public figures are named in their public role only. Private individuals who appear in stories are described by role, never named. See the <a href="../privacy/index.html">privacy page</a>.</p>"""
     write("method/index.html", "Method", method, [("Method", None)])
@@ -744,7 +875,7 @@ def build(out_dir):
     coverage = """<h1>Coverage plan</h1>
 <p>The aim is to cover South African media broadly. Coverage grows in phases. No dates are promised; each phase starts only when its entry criteria are met.</p>
 <ol>
-<li><strong>Pilot:</strong> News24, Daily Investor and Newsday. Entry: method, fact labels and thresholds stable; free-access check done for each outlet.</li>
+<li><strong>Pilot:</strong> News24, Daily Investor and Newsday. Entry: method, fact labels and thresholds stable; free-access check done for each outlet. An error-watch log may add findings-only rows for other outlets without expanding this scored pilot.</li>
 <li><strong>Major national dailies and weeklies (free content only):</strong> entry: pilot reviewed and corrected; neutral-random sampling rule fixed; driver list settled.</li>
 <li><strong>Broadcasters' news sites:</strong> entry: phase 2 reaches minimum samples for its main actors; a rule for transcripts and clips agreed.</li>
 <li><strong>Regional, community, Afrikaans and other-language outlets:</strong> entry: coders able to read the language; translation and quote-fidelity rule agreed.</li>
