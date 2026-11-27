@@ -1,8 +1,8 @@
 # RFC-CHG-MW-011 — Add Politicsweb as a tracked opinion outlet (DEV)
 
 **Status:** Draft, under review. Branch `dev/chg-mw-011-politicsweb`; it is pushed and opened as a draft PR only on an owner GO naming the head. Not merged; not deployed. No indexing request (`robots.txt` `Disallow: /` and noindex stay).
-**Environment:** DEV — branch created from `origin/main` at `1dcd5b7fcac0cd76d19f80d6b6ecead464cc5014`.
-**Pre-change SHA (rollback base):** `1dcd5b7fcac0cd76d19f80d6b6ecead464cc5014`.
+**Environment:** DEV — branch created from `origin/main` at `1dcd5b7fcac0cd76d19f80d6b6ecead464cc5014`, then forward-merged `origin/main` at `14f60a7c1ee925811ae9106398df6cf45c5b4f2a` (27 Nov 2026, Africa/Johannesburg).
+**Pre-change SHA (rollback base):** `14f60a7c1ee925811ae9106398df6cf45c5b4f2a` (current `main` after the forward-merge).
 **Date:** 22 Nov 2026 (Africa/Johannesburg)
 **Repo:** https://github.com/GrokForum/mediawatch-sa (PUBLIC). This RFC does not change GitHub Pages settings, DNS, or indexing.
 
@@ -10,7 +10,7 @@
 
 ## Goal
 
-Record the owner's decision that Politicsweb (https://www.politicsweb.co.za) is included as a tracked outlet, reversing `plan.md` row 8's exclusion of "Die Gewete / Politicsweb / The Common Sense" as "opinion camps, not news". Opinion outlets are valid for bias measurement. Daily Investor is already covered (active pilot in `data/publications.csv`; collector with `https://dailyinvestor.com/feed/` on CHG-MW-008 / draft PR #7, not merged) — no change for it. This RFC is feasibility and labelling only: no collector, no `publications.csv` row, no site change.
+Record the owner's decision that Politicsweb (https://www.politicsweb.co.za) is included as a tracked outlet, reversing `plan.md` row 8's exclusion of "Die Gewete / Politicsweb / The Common Sense" as "opinion camps, not news". Opinion outlets are valid for bias measurement. Daily Investor is already covered (active pilot in `data/publications.csv`; collector with `https://dailyinvestor.com/feed/` on CHG-MW-008, now on `main` `14f60a7c`) — no change for it. This RFC is feasibility and labelling only: no collector, no `publications.csv` row, no site change.
 
 ## Owner decisions
 
@@ -54,16 +54,27 @@ Politicsweb would be `opinion`. The public publication page would show that labe
 
 ## What this change contains / what stays
 
-This branch adds only `changes/RFC-CHG-MW-011.md`. No collector, no `publications.csv` edit, no `plan.md` or `docs/STATUS.md` edit, no deploy, no push, no indexing request. Die Gewete and The Common Sense stay outside the tracked-outlet list unless the owner later says otherwise (TCS appears here only as a source Politicsweb sometimes reprints).
+This branch adds only `changes/RFC-CHG-MW-011.md`. No collector, no `publications.csv` edit, no `plan.md` or `docs/STATUS.md` edit, no merge to main, no deploy, no indexing request. Die Gewete and The Common Sense stay outside the tracked-outlet list unless the owner later says otherwise (TCS appears here only as a source Politicsweb sometimes reprints).
 
 ## Success
 
 This RFC records the inclusion decision, the OPINION label and `outlet_type` proposal, that METHODOLOGY.md applies unchanged, the future politician-profile register link, the comparison purpose, and the 22 Nov 2026 feasibility evidence.
 
+## Tests
+
+This RFC is documentation only and adds no executable tests. The later implementation RFC (collector and `outlet_type`) must cover at least:
+
+- robots.txt and TLS: the collector uses `https://www.politicsweb.co.za/rss.xml` with TLS verification on, and does not use the atom self-href host that failed verification.
+- Meter exclusion: paywalled, member-only, or meter-locked items, and teasers, are never scored; no login and no bypass.
+- Attribution: Politicsweb's own editorial, columns, analysis and original reporting are scored as the outlet; republished party statements and official speeches are attributed to the issuer; republished commentary from another masthead is attributed to that source, not as Politicsweb's own voice.
+- Exact quotes only: any finding quotes exact words from a fetch done in that change.
+- Fetched article bodies are gitignored and are not committed.
+- No full-text reproduction: the repo and the public site must not reproduce Politicsweb article full text.
+
 ## Rollback
 
-Delete the branch `dev/chg-mw-011-politicsweb`. Base remains `1dcd5b7fcac0cd76d19f80d6b6ecead464cc5014`. Forward-only: no rebase, amend, or force. Never on `main`.
+Delete the branch `dev/chg-mw-011-politicsweb`. Base remains `14f60a7c1ee925811ae9106398df6cf45c5b4f2a`. Forward-only: no rebase, amend, or force. Never on `main`.
 
 ## Sign-off
 
-Sign-off is by someone other than the author (Reviewer A, critic reviewer). Owner GO naming the head is required before push, PR, merge to `main`, or deploy. Implementation (collector and `outlet_type` field) comes in a later, separately reviewed change.
+Sign-off is by someone other than the author (Reviewer A, critic reviewer). Owner GO naming the head is required before merge or deploy. Implementation (collector and `outlet_type` field) comes in a later, separately reviewed change.
