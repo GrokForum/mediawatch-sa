@@ -1,6 +1,6 @@
 # RFC-CHG-MW-SEC-01 — Bump pytest to 9.2.0 (DEV)
 
-**Status:** Draft, under review. Branch `dev/chg-mw-sec-deps-2026-11`; it is opened as a draft PR only on an owner GO naming the head. Not merged; not deployed. No indexing request (`robots.txt` `Disallow: /` and noindex stay).
+**Status:** Opened as draft [PR #12](https://github.com/GrokForum/mediawatch-sa/pull/12) on branch `dev/chg-mw-sec-deps-2026-11`. This change bumps the test-only pytest pin from 8.3.4 to 9.2.0. `robots.txt` stays `Disallow: /` and noindex stays on every page. No indexing request.
 **Environment:** DEV — branch created from `origin/main` at `5ae6eb3d8a7c089e6b478fc8bfb7149e73cfa30f` (27 Nov 2026, Africa/Johannesburg).
 **Pre-change SHA (rollback base):** `5ae6eb3d8a7c089e6b478fc8bfb7149e73cfa30f` (`origin/main` at the start of this change).
 **Date:** 27 Nov 2026 (Africa/Johannesburg)
@@ -68,8 +68,8 @@ Recorded on 27 Nov 2026 (Africa/Johannesburg), pytest 9.2.0:
 
 ## Rollback
 
-Drop the branch `dev/chg-mw-sec-deps-2026-11`, or revert the commit(s) on it. Either restores `pytest==8.3.4` on top of `5ae6eb3d8a7c089e6b478fc8bfb7149e73cfa30f`. Forward-only: no rebase, amend, or force. Never on `main`.
+Before merge: drop the branch `dev/chg-mw-sec-deps-2026-11`, or revert the commit(s) on it. After merge: revert the merge commit. Either restores `pytest==8.3.4` on top of `5ae6eb3d8a7c089e6b478fc8bfb7149e73cfa30f`. Forward-only: no rebase, amend, or force. Never on `main`.
 
 ## Sign-off
 
-Sign-off is by someone other than the author (Reviewer A, critic reviewer). Owner GO naming the head is required before a push, a draft PR, merge, or deploy.
+Sign-off is by someone other than the author (Reviewer A, critic reviewer). Owner GO naming the head is required before merge or deploy.
