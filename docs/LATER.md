@@ -24,6 +24,7 @@ Ideas not worth tackling yet. Each line names what it is and why it waits. Nothi
 - Widen the window beyond May to Oct 2026 for more data points, and add the live monthly intake from November.
 - Roll out to more publications beyond the three pilots, following the coverage plan.
 - Journalists' own public posts (X) as their own evidence stream.
+- **Later phases after the ombud-ruling register (owner, 28 Nov 2026):** extend to all South African online publications, and to foreign reporting on South Africa; each needs its own RFC and an owner GO (see `changes/RFC-CHG-MW-012.md`).
 
 ## Reviewer B round 3 follow-ups (non-blocking)
 - Require the visible DRAFT banner itself, not just any DRAFT marker. This goes with the title-marker fix.
