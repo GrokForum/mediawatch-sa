@@ -1,11 +1,11 @@
 # RFC-CHG-MW-012 — Ombud and press-council findings per publication, last five years (DEV)
 
-**Status:** Draft RFC, for owner decisions and review. Branch `dev/chg-mw-012-ombud-findings`; it is pushed and opened as a draft PR only on an owner GO naming the head. Not merged; not deployed. No indexing request (`robots.txt` `Disallow: /` and noindex stay).
+**Status:** Draft RFC, for owner decisions and review. Decisions 1 and 3 are DECIDED (28 Nov 2026), and the owner added a separate ruling-bias meter (section 7); decisions 2, 4, 5, 6 and 7 and the ruling-meter sub-decisions are still open. Branch `dev/chg-mw-012-ombud-findings`; draft [PR #13](https://github.com/GrokForum/mediawatch-sa/pull/13) is open at `aaac8940ad2ad9dc7d7c8a1e003ef5d973d0e901`, and any later commit is pushed only on an owner GO naming the new head. Not merged; not deployed. No indexing request (`robots.txt` `Disallow: /` and noindex stay).
 **Environment:** DEV. Branch created from `origin/main` at `ddb7e4debb2e5285c4d7fb8fd6263adbddd785f2` (28 Nov 2026, Africa/Johannesburg).
 **Pre-change SHA (rollback base):** `ddb7e4debb2e5285c4d7fb8fd6263adbddd785f2`.
 **Date:** 28 Nov 2026 (Africa/Johannesburg)
 **Repo:** https://github.com/GrokForum/mediawatch-sa (PUBLIC). This RFC does not change GitHub Pages settings, DNS, or indexing.
-**Scope:** RFC only. It adds this file and one `docs/STATUS.md` row. No code, no data, no schema, no site change.
+**Scope:** RFC only. It adds this file, one `docs/STATUS.md` row and one `docs/LATER.md` line. No code, no data, no schema, no site change.
 
 ---
 
@@ -15,7 +15,7 @@ Record the owner's request, in the owner's words:
 
 > "rfc: add ombudsman findings per publication, last 5 years. Too many errors being apologised for, when the harm of the original piece, is done."
 
-and propose a way to publish each tracked publication's ombud and press-council record for the last five years, showing both the finding and how long the original piece stood before any apology or correction. This RFC states what is feasible from free public sources (fetched 28 Nov 2026), proposes a design that fits `docs/METHODOLOGY.md`, and lists the decisions only the owner can make. Decision 3 was made on 28 Nov 2026 and is recorded below; the other six stay open. Nothing is built until the owner decides and a later, separately reviewed change implements it.
+and propose a way to publish each tracked publication's ombud and press-council record for the last five years, showing both the finding and how long the original piece stood before any apology or correction. This RFC states what is feasible from free public sources (fetched 28 Nov 2026), proposes a design that fits `docs/METHODOLOGY.md`, and lists the decisions only the owner can make. Decision 3 (28 Nov 2026, separate datasets) and decision 1 (28 Nov 2026, every outlet with good reach that has rulings in this phase) are recorded below. The owner also asked for a separate bias meter on the rulings themselves, which is designed in section 7 and stays inside the ruling dataset. Nothing is built until the owner decides and a later, separately reviewed change implements it.
 
 ## Feasibility research (fetched 28 Nov 2026, about 11:44–11:58 SAST; TLS verification on; no login; free public pages only)
 
@@ -60,6 +60,48 @@ and propose a way to publish each tracked publication's ombud and press-council 
 | Can the apology date and placement be measured? | Per ruling, by finding the outlet's own page. Feasible, manual, and not on the ruling site. Print placement is often not checkable from free pages (stays Not established). |
 | Is the ruling count a fair comparison between outlets? | **No, not on its own**: volume, complaint rate and membership differ, and settlements are invisible. See the steelman section. |
 
+## Outlet scope for this phase (decision 1, DECIDED 28 Nov 2026)
+
+Owner's words: "Add all outlets with good reach in this phase. Later net(s) will get all online publications in SA and will also examine reports on SA from outside."
+
+**This phase** covers every outlet with good reach that has a ruling in the window, including those not yet in `data/publications.csv`. **Later phases** (each its own RFC and owner GO; recorded in `docs/LATER.md`): (1) all online publications in South Africa; (2) foreign reporting on South Africa.
+
+### Reach criterion (proposed; the threshold and the online rule are open sub-decisions)
+
+No free audited online audience figure was found for South African news sites: the industry web-measurement series published by IAB SA with Narratiive (latest found: August 2022, https://iabsa.net/wp-content/uploads/2024/04/Narratiive_stats_insights_August_2022.pdf) ended when that dashboard closed on 31 Aug 2022. The Reuters Institute Digital News Report 2026 for South Africa (https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/south-africa) is free, but it is a survey of weekly brand use among younger, English-speaking online respondents, shows at most 16 brands in charts, and says it is not audience measurement or a complete list. I used it for its method only and did not read the brand charts. The one free audited source is the Audit Bureau of Circulations (ABC), whose quarterly newspaper tables are published in trade coverage (Q3 2026, 19 Nov 2026: https://www.bizcommunity.com/article/abc-q3-2026-newspapers-circulation-steadies-for-newspaper-category-184036a) and as ABC reports (for example https://amf.org.za/wp-content/uploads/2026/08/Q2-Apr-Jun-2026-Newspaper-Weekend.pdf). Print circulation is a weak and falling proxy: it understates online-first outlets, and Mail & Guardian's Q3 2026 total is 2,515.
+
+An outlet with a ruling in the window is "good reach" and in scope if it meets **any one** of:
+
+| Test | Rule | Source |
+|------|------|--------|
+| R1 print | ABC-audited total circulation of at least 5,000 copies in the latest published quarter (proposed threshold) | ABC quarterly tables (Q3 2026) |
+| R2 broadcast | A national or metro broadcaster, or a national television news channel, that is a BCCSA signatory | BCCSA signatories page |
+| R3 online | Listed in the Reuters Institute 2026 South Africa weekly-reach charts (brands to be read when the data change is built) | Reuters Institute 2026 |
+| R4 named | An outlet the owner names for this phase | Owner instruction |
+
+An outlet that meets none, or whose reach is **Not established**, is listed as a candidate and is not added without the owner's say-so (sub-decision A). Community and local titles are out of this phase by default (sub-decision C).
+
+### Outlets this adds (ombud-level rulings in the window, counted from titles; some titles name two outlets)
+
+Outlets already in `data/publications.csv` that have rulings stay as they are (News24, City Press, Daily Maverick, Sunday Times, TimesLive, Sowetan, Mail & Guardian, The Citizen, Netwerk24, Rapport, Maroela Media, IOL, EWN, GroundUp, Moneyweb, eNCA, SABC News, Newzroom Afrika).
+
+| Outlet (new to the register) | Rulings | Reach evidence | Result |
+|------------------------------|---------|----------------|--------|
+| Sunday World | 13 | ABC Q3 2026: total 7,152 (4,368 paid, 2,784 free) | **Add** (R1) |
+| Daily Sun | 2 | Print ended in December 2024 and ABC lists it "Discontinued" (https://www.media24.com/newspaper/daily-sun/); now a digital-only site; online reach **Not established** | **Add provisionally** (listed as an example in the instruction for this phase; reach Not established, so subject to sub-decision A) |
+| Die Burger | 2 (shared with Netwerk24) | ABC Q3 2026: daily 23,945; Saturday 27,696 | **Add** (R1) |
+| Daily Dispatch | 1 | ABC Q3 2026: total 9,860 | **Add** (R1) |
+| The Witness | 1 (shared ruling) | ABC Q3 2026: daily total 6,102 | **Add** (R1) |
+| Primedia radio (702, Cape Talk, 947) | 22 BCCSA rulings in the window, by title | National-metro radio licensee and BCCSA signatory | **Add** as a broadcast outlet (R2); audience figures are paid and **Not established** |
+| MultiChoice channels, other SABC radio stations | 55 and part of 42 BCCSA titles | BCCSA signatories | **Add** only for news and current-affairs programming (sub-decision D); whether each ruling concerns news was not checked |
+| The South African | 3 | Online-only; 5.05m unique browsers in Aug 2022 (old and closed series); current reach **Not established** | Candidate (sub-decision A) |
+| MyBroadband | 1 | Online-only; 2.57m unique browsers in Aug 2022; current reach **Not established** | Candidate (A) |
+| amaBhungane | 4 | Non-profit investigative outlet; reach **Not established** | Candidate (A) |
+| Financial Mail, Sunday Independent, Briefly News, The Continent, Vrye Weekblad, Bhekisisa | 1, 1, 1, 2, 1, 1 | Not found in the ABC Q3 2026 tables read, or online-only; **Not established** | Candidates (A) |
+| Community and local titles (for example Ladysmith Gazette 2,468; Oudtshoorn Courant 3,984; Overstrand Herald; BloemNews) | 1 each | Local; below the R1 threshold or not in the tables read | Out of this phase (C) |
+
+Adding an outlet to `publications.csv` is a data change and comes in the later data change (012a); this RFC records the decision and the list.
+
 ## Proposed design
 
 ### 1. New record type: `ombud_ruling` (separate from `findings`)
@@ -103,7 +145,7 @@ On each publication page, a block headed **Press-council and ombud record (accou
 
 ### 3. Relationship to the bias meter
 
-- **Decided by the owner, 28 Nov 2026 (decision 3):** the ruling record is a **separate dataset** that never feeds the bias scores, roll-ups or findings. It is kept in its own file and display, as the secondary lean is. It produces no signed score, no driver weight and no contribution to any publication×actor mean.
+- **Decided by the owner, 28 Nov 2026 (decision 3):** the ruling record is a **separate dataset** that never feeds the media bias scores, roll-ups or findings. It is kept in its own files and display, as the secondary lean is. The `ombud_ruling` rows carry no score and make no contribution to any media publication×actor mean. (The ruling-bias meter in section 7 scores the ruling text inside that same dataset and is likewise never merged with the media meter.)
 - The two datasets are not merged and do not cross-reference. A ruling is not evidence for a bias finding, a bias finding does not cite a ruling, and neither dataset carries a field or link that points into the other. Every bias finding stands on its own fetched free evidence under §5, whatever any ombud has ruled on the same article.
 - The existing `factual_error` and `correction` drivers are unchanged by this RFC. A published remedy does not trigger the `correction` driver's +1.0 clawback.
 - Neutral and dismissed results are kept: a dismissed complaint is shown as dismissed, never as a mark against the outlet.
@@ -130,25 +172,62 @@ On each publication page, a block headed **Press-council and ombud record (accou
 - **For the complainant and the reader.** An apology that runs weeks or months after the article, on an inside page or under the headline's reach, leaves the original impression standing, which is the owner's point. Settlements at the Public Advocate stage leave no public record, so the published rulings undercount errors that were quietly fixed. A non-member's record is invisible. A prompt correction can still be too small for the harm.
 - **Normalisation.** Per-outlet complaints received are not published (the dashboard is aggregate): **Not established**. MediaWatch holds no census of each outlet's article output (the pilot register is a locked sample), so rulings per thousand articles is **Not established** and is not shown. What can be shown fairly is the upheld share of rulings decided, the share corrected on the outlet's own initiative, and the jurisdiction line. If the owner wants a volume base, a published, free output figure per outlet would be needed first.
 
-## Decisions for the owner (decision 3 decided 28 Nov 2026; the other six open)
+### 7. Ruling-bias meter (inside the ruling dataset; added on the owner's instruction, 28 Nov 2026)
 
-1. **Sources in scope.** Proposed first: Press Council (all four ruling types) and the BCCSA (including its appeals). Later: Independent Media's ombud (once its site is reachable), and any in-house register that proves to be public. Which outlets not yet in `publications.csv` appear in the rulings (for example Sunday World, Daily Sun, amaBhungane, Sunday Independent) and whether to add them; and whether Cape Town News (named by a sister register) should be added.
+Owner's words: "You can add a bias meter on ombud rulings, they're also human."
+
+**Boundary (keeps decision 3).** This is a second meter that lives wholly inside the ruling dataset. It has its own files, its own actor ids, its own roll-ups and its own display block, headed "Ruling record: bias in the rulings (about the rulings, not the media)". It is never merged with the media bias meter and never cross-referenced to it: no media finding id appears in a ruling finding, no ruling id or ruling finding appears in a media finding, the two use separate actor id spaces with no join, and no figure combines them. A reader compares the two views for themselves.
+
+**Question each ruling finding answers.** Relative to a named actor, does this passage of the ruling (its reasoning or its directions) work FOR or AGAINST that actor, and by which driver? The ruling's reasoning is scored against the record before the body (the complaint, the response, the article as the ruling quotes it, and any free public primary record). It is **not** a judgment of the adjudicator as a person.
+
+**Same rules as the media meter.** The METHODOLOGY drivers, weights (§3), signed score (§4), evidence gates (§5), free-content rule (§5a), fact labels (§2), steelman protocol (§7) and POPIA rules (§8) apply unchanged, read for a ruling:
+
+| Driver | Read for a ruling |
+|--------|-------------------|
+| `loaded_label` | The ruling uses a pejorative coinage or loaded term about a party that is not its own self-description |
+| `one_sided_sourcing` | The reasoning rests on one party's submissions on a contested point, without testing them against the other side or the record |
+| `missing_right_of_reply` | A party was not given the chance to answer an adverse point the ruling relies on |
+| `omission` | A material fact in the record is left out of the reasoning |
+| `framing` | Word choice or narrative that steers beyond what the record shows |
+| `headline_body_gap` | The ruling's summary or headline is stronger or different than its reasoning and findings |
+| `factual_error` | The ruling states a demonstrable false fact, checked against the record |
+| `correction` | A later appeal or variation corrects the ruling; links only to the original ruling finding inside this dataset |
+
+A ruling that applies the code to the record, hears both sides and gives sourced, proportionate reasons produces **no row** (neutrality produces no row), mirroring §8b: sourced reasoning is not bias. Every row has an exact quote from the ruling, its URL, its date, the body and office as printed, a fact label on any factual claim, and both steelmen. The steelman for the ruling states the strongest fair reading under which it correctly applies the code; the steelman against states the strongest fair reading under which it misreads the record or loads the dice.
+
+**Actors the meter can score.**
+- **The outlet** (the publication or broadcaster the ruling is about).
+- **The complainant, only if** it is an organisation, a public body or a public figure acting in a public role. A **private complainant is never an actor and stays unnamed**; a ruling that favours a private complainant is scored for its effect on the outlet only.
+- The body and the office-holders are the **source** of the text, not scored actors. Ombud, deputy ombud, panel and chair of appeals are public office-holders and may be named in that role, as published on the ruling.
+
+**Roll-ups and minimum n.** The unit is body × actor (for example Press Council × a named outlet, BCCSA × a named broadcaster), the counterpart of publication × actor. §6.4 applies to the number of findings: under 5 shows the findings only with no score, 5 to 9 is provisional, 10 or more is a public score. Proposed extra guard: a score needs findings from at least three distinct rulings, so one long ruling cannot make a score. Confidence follows §6.5 (dual-coded 10% sample, Cohen's kappa on the actor, direction and driver triple), and every AGAINST finding is dual-coded before display (proposed, sub-decision I). A ruling reversed or varied on appeal keeps its original rows and gains a `correction` row; the display uses the final ruling.
+
+**Defamation care.** Score the reasoning against the record, not the person. Wording is "the ruling at paragraph N works AGAINST the outlet because it …", never "the ombud is biased". Quotes are short and exact; each finding shows the appeal status; the body is invited to respond through the contact address before any score is published, and is shown a pre-publication notice (sub-decision H). No finding is made about an adjudicator's motives, health, family, affiliations or conduct outside the ruling.
+
+**Open sub-decisions for this meter.** (E) Name individual office-holders in any roll-up (default no: body and office level only; a named person only if the owner decides and n is at least 10). (F) Coding frame: all rulings in the window (about 440 across the Press Council and the BCCSA, as counted above) or a locked random draw by stratum, as the pilot did (§8a). (G) Driver weights: the same as the media meter (proposed) or ruling-specific. (H) Pre-publication notice to the body. (I) Dual-code every AGAINST finding. (J) Whether appeal stages are scored as rulings of their own (proposed) or only the final ruling. (K) Whether BCCSA entertainment and harm-to-children rulings are in the frame, or news and current affairs only (linked to D).
+
+## Decisions for the owner (decisions 1 and 3 decided 28 Nov 2026; the others open)
+
+1. **Sources and outlets in scope. DECIDED by the owner, 28 Nov 2026.** In the owner's words: "Add all outlets with good reach in this phase. Later net(s) will get all online publications in SA and will also examine reports on SA from outside." This phase covers every outlet with good reach that has rulings in the window (criterion and outlet list in "Outlet scope for this phase" above). Sources remain the Press Council (all four ruling types) and the BCCSA (including its appeals), with Independent Media's ombud later once its site is reachable. Later phases, each its own RFC and owner GO: all South African online publications, and foreign reporting on South Africa (also in `docs/LATER.md`). Sub-decisions still open: **A** how to treat online-only outlets whose reach is Not established (candidates above); **B** the R1 threshold (proposed 5,000 copies); **C** community and local titles (default out); **D** which broadcast programmes (news and current affairs only, proposed).
 2. **Window.** Proposed: rulings dated 1 Nov 2021 to 30 Nov 2026 on first load, then a rolling five years, refreshed monthly. Alternatives: window by article date; a longer span.
-3. **Do rulings feed scores? DECIDED by the owner, 28 Nov 2026.** No. In the owner's words: "Rulings are 3rd party and often subjective, despite requirement to be objective. Your suggestion is approved, a separate record of ruling sheds light on those, while your bias meter sheds light on bias. 2 different datasets, not to be merged." Rulings are a separate dataset that never feeds bias scores, roll-ups or findings, and the rulings are not used as evidence for a bias finding. Options (C) (an upheld ruling opens a candidate finding) and (D) (a remedy counts as a `correction` clawback), and the evidence route under (B), are rejected. Steelman: the ruling bodies are valuable as a public record of what was found and directed, but they are third parties whose rulings can be subjective, so MediaWatch keeps them visible without letting them stand in for its own evidence. Keeping the datasets apart also protects the outlet from a ruling counting twice, and protects the ruling record from MediaWatch's own coding. The cost is that a reader must compare the two views themselves.
+3. **Do rulings feed scores? DECIDED by the owner, 28 Nov 2026.** No: rulings never feed the media bias scores, roll-ups or findings. (The owner then added a separate ruling-bias meter, section 7, which stays inside the ruling dataset.) In the owner's words: "Rulings are 3rd party and often subjective, despite requirement to be objective. Your suggestion is approved, a separate record of ruling sheds light on those, while your bias meter sheds light on bias. 2 different datasets, not to be merged." Rulings are a separate dataset that never feeds bias scores, roll-ups or findings, and the rulings are not used as evidence for a bias finding. Options (C) (an upheld ruling opens a candidate finding) and (D) (a remedy counts as a `correction` clawback), and the evidence route under (B), are rejected. Steelman: the ruling bodies are valuable as a public record of what was found and directed, but they are third parties whose rulings can be subjective, so MediaWatch keeps them visible without letting them stand in for its own evidence. Keeping the datasets apart also protects the outlet from a ruling counting twice, and protects the ruling record from MediaWatch's own coding. The cost is that a reader must compare the two views themselves.
 4. **Accuracy-only errors.** A sister register offered three identity errors in one outlet's explainer (a judge's first name and a gendered pronoun) as candidate findings; they are unscored accuracy slips with no for/against direction. Should a separate, unscored `accuracy_note` type join this accountability record, or stay out? This RFC does not add it.
 5. **Scope of "per publication".** Publication-level only (proposed), or also per outlet group (for example Media24, Arena, Independent Media)?
 6. **Bylines.** Store only (proposed), or also show a per-journalist list? Complaints are lodged against publications, so the default is no per-journalist roll-up.
 7. **Prominence parity.** Use the Council's placement guidance as the test (proposed), and show print placement as "not established" unless a free, public copy exists.
+8. **Ruling-bias meter (new, 28 Nov 2026).** Approved in principle by the owner ("You can add a bias meter on ombud rulings, they're also human."); the design is section 7 and sub-decisions E to K are open.
 
 ## What this change contains / what stays
 
-This branch adds `changes/RFC-CHG-MW-012.md` and one row in `docs/STATUS.md`. It changes no code, data, schema, workflow, site page, `robots.txt`, `CNAME` or GitHub setting, and no collector runs. `docs/METHODOLOGY.md` is unchanged here; a later change would add a section describing the ruling record as a separate dataset. No score, weight or roll-up changes, so no prior score is frozen or rewritten. The two meters and their files are untouched.
+This branch adds `changes/RFC-CHG-MW-012.md`, one row in `docs/STATUS.md` and one line in `docs/LATER.md`. It changes no code, data, schema, workflow, site page, `robots.txt`, `CNAME` or GitHub setting, and no collector runs. `docs/METHODOLOGY.md` is unchanged here; a later change would add a section describing the ruling record as a separate dataset. No score, weight or roll-up changes, so no prior score is frozen or rewritten. The two meters and their files are untouched.
 
 ## Later work (each a separate RFC, reviewed, with an owner GO)
 
 1. **Schema and data (CHG-MW-012a).** `data/ombud_rulings.csv`, validation in `scripts/validate_schema.py`, `outlet_type`-style jurisdiction field on `publications.csv`, a methodology section.
 2. **Collector (CHG-MW-012b).** Reads the Press Council and BCCSA listings, one request at a time with a pause, an identifying user agent, robots.txt checked first, TLS verification on, and errors written to `data/collector_errors.csv`. It stores structure, not full ruling text.
 3. **Site block (CHG-MW-012c).** The per-publication display above, behind the same noindex and draft marker.
+4. **Ruling-bias meter (CHG-MW-012d).** Own schema and files, a METHODOLOGY section for the ruling meter, a pilot on a locked draw of rulings, dual coding, and the separation tests below.
+5. **Later phases.** All South African online publications, and foreign reporting on South Africa, each its own RFC (also in `docs/LATER.md`).
 
 Tests those changes must cover at least:
 
@@ -158,13 +237,14 @@ Tests those changes must cover at least:
 - A dismissed ruling is shown as dismissed and adds no negative mark.
 - A private complainant is never stored by name (test with a synthetic name built at run time).
 - The accountability record never changes a bias score, and the frozen historical scores stay byte-identical.
-- The two datasets stay unmerged: no `ombud_ruling` field names an actor, score or finding id; no findings file references a `ruling_id`; the site build never joins them into a score.
+- The two datasets stay unmerged: the `ombud_ruling` table carries no actor, score or media finding id; no media findings file references a `ruling_id` or a ruling finding; no ruling-meter file references a media finding id or media actor id; the two use separate actor id spaces; the site build never joins or sums them.
+- Ruling meter: a private complainant is never an actor; an office-holder is never a scored actor; min-n and the three-distinct-rulings guard hold; a ruling with sound reasoning produces no row; a reversed ruling gains a `correction` row inside the ruling dataset only.
 - Lag arithmetic (three segments) on fixed dated examples, and `not_found` is shown as Not established.
 - No full-text reproduction of any ruling or article; fetched text stays gitignored.
 
 ## Success
 
-This RFC records the owner's request, the 28 Nov 2026 feasibility evidence with URLs, what is and is not established, the proposed record type and display, how it relates to the bias meter (decided: separate datasets, never merged) and the five fact labels, the POPIA and defamation guards, both steelmen, and the remaining open owner decisions.
+This RFC records the owner's request, the 28 Nov 2026 feasibility evidence with URLs, what is and is not established, the proposed record type and display, how it relates to the bias meter (decided: separate datasets, never merged), the reach criterion and outlet list (decision 1), the separate ruling-bias meter with its defamation care and minimum-n rules, the five fact labels, the POPIA guards, both steelmen, and the remaining open owner decisions.
 
 ## Tests
 
