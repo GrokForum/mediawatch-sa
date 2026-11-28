@@ -142,6 +142,30 @@ def test_noindex_everywhere(site):
     assert "User-agent: *" in robots and "Disallow: /" in robots
 
 
+WATCH_DIRECTORY_HREF = "https://watch.grokforum.site/"
+WATCH_DIRECTORY_LABEL = "Part of the Watch network — watch.grokforum.site"
+WATCH_DIRECTORY_FOOTER = (
+    f'<p><a href="{WATCH_DIRECTORY_HREF}">{WATCH_DIRECTORY_LABEL}</a></p>'
+)
+
+
+def test_watch_network_footer_on_every_page(site):
+    """Every built HTML page has the plain Watch-directory footer link (RFC-CHG-MW-013)."""
+    out, _ = site
+    for p in pages(out):
+        h = text_of(p)
+        assert WATCH_DIRECTORY_FOOTER in h, p
+        assert f'href="{WATCH_DIRECTORY_HREF}"' in h, p
+        assert WATCH_DIRECTORY_LABEL in visible_text(h), p
+        assert '<meta name="robots" content="noindex, nofollow">' in h, p
+        assert "Draft preview (DEV)" in visible_text(h), p
+        # No query, fragment or other href variant of the directory link.
+        for href in re.findall(r'href="(https://watch\.grokforum\.site/[^"]*)"', h):
+            assert href == WATCH_DIRECTORY_HREF, (p, href)
+    robots = (out / "robots.txt").read_text(encoding="utf-8")
+    assert "User-agent: *" in robots and "Disallow: /" in robots
+
+
 def test_no_external_assets_or_scripts(site):
     out, _ = site
     for p in pages(out):
