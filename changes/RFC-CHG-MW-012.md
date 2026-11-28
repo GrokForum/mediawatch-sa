@@ -15,7 +15,7 @@ Record the owner's request, in the owner's words:
 
 > "rfc: add ombudsman findings per publication, last 5 years. Too many errors being apologised for, when the harm of the original piece, is done."
 
-and propose a way to publish each tracked publication's ombud and press-council record for the last five years, showing both the finding and how long the original piece stood before any apology or correction. This RFC states what is feasible from free public sources (fetched 28 Nov 2026), proposes a design that fits `docs/METHODOLOGY.md`, and lists the decisions only the owner can make. Nothing is built until the owner decides and a later, separately reviewed change implements it.
+and propose a way to publish each tracked publication's ombud and press-council record for the last five years, showing both the finding and how long the original piece stood before any apology or correction. This RFC states what is feasible from free public sources (fetched 28 Nov 2026), proposes a design that fits `docs/METHODOLOGY.md`, and lists the decisions only the owner can make. Decision 3 was made on 28 Nov 2026 and is recorded below; the other six stay open. Nothing is built until the owner decides and a later, separately reviewed change implements it.
 
 ## Feasibility research (fetched 28 Nov 2026, about 11:44–11:58 SAST; TLS verification on; no login; free public pages only)
 
@@ -103,9 +103,9 @@ On each publication page, a block headed **Press-council and ombud record (accou
 
 ### 3. Relationship to the bias meter
 
-- It is a **separate accountability record**, kept in its own file and display, as the secondary lean is. It produces no signed score, no driver weight and no contribution to any publication×actor mean.
-- If a ruling concerns a named actor (for example it found a headline stated an allegation about a named public body as fact), MediaWatch may open a normal finding under §5 on the ordinary gates: fetched free article, exact quote, steelmen. The ruling is **evidence for** that finding, not the finding itself.
-- Any link into the existing `factual_error` and `correction` drivers changes how scores move, so it needs the owner's decision (open decision 3). Options are listed below. Note the existing `correction` driver gives a +1.0 partial clawback for a published correction (§4), which is the opposite pole to the owner's concern that the apology does not undo the harm.
+- **Decided by the owner, 28 Nov 2026 (decision 3):** the ruling record is a **separate dataset** that never feeds the bias scores, roll-ups or findings. It is kept in its own file and display, as the secondary lean is. It produces no signed score, no driver weight and no contribution to any publication×actor mean.
+- The two datasets are not merged and do not cross-reference. A ruling is not evidence for a bias finding, a bias finding does not cite a ruling, and neither dataset carries a field or link that points into the other. Every bias finding stands on its own fetched free evidence under §5, whatever any ombud has ruled on the same article.
+- The existing `factual_error` and `correction` drivers are unchanged by this RFC. A published remedy does not trigger the `correction` driver's +1.0 clawback.
 - Neutral and dismissed results are kept: a dismissed complaint is shown as dismissed, never as a mark against the outlet.
 
 ### 4. Fact labels
@@ -130,11 +130,11 @@ On each publication page, a block headed **Press-council and ombud record (accou
 - **For the complainant and the reader.** An apology that runs weeks or months after the article, on an inside page or under the headline's reach, leaves the original impression standing, which is the owner's point. Settlements at the Public Advocate stage leave no public record, so the published rulings undercount errors that were quietly fixed. A non-member's record is invisible. A prompt correction can still be too small for the harm.
 - **Normalisation.** Per-outlet complaints received are not published (the dashboard is aggregate): **Not established**. MediaWatch holds no census of each outlet's article output (the pilot register is a locked sample), so rulings per thousand articles is **Not established** and is not shown. What can be shown fairly is the upheld share of rulings decided, the share corrected on the outlet's own initiative, and the jurisdiction line. If the owner wants a volume base, a published, free output figure per outlet would be needed first.
 
-## Open decisions for the owner
+## Decisions for the owner (decision 3 decided 28 Nov 2026; the other six open)
 
 1. **Sources in scope.** Proposed first: Press Council (all four ruling types) and the BCCSA (including its appeals). Later: Independent Media's ombud (once its site is reachable), and any in-house register that proves to be public. Which outlets not yet in `publications.csv` appear in the rulings (for example Sunday World, Daily Sun, amaBhungane, Sunday Independent) and whether to add them; and whether Cape Town News (named by a sister register) should be added.
 2. **Window.** Proposed: rulings dated 1 Nov 2021 to 30 Nov 2026 on first load, then a rolling five years, refreshed monthly. Alternatives: window by article date; a longer span.
-3. **Do rulings feed scores?** Options: **(A)** never; **(B)** reference only — a ruling id may be attached as evidence to an ordinary `factual_error`, `omission` or `missing_right_of_reply` finding, with no score effect of its own (proposed default); **(C)** an upheld ruling opens a candidate finding that must pass the normal coding gates; **(D)** a published remedy counts as a `correction` clawback (+1.0). The owner's concern argues against (D) without a cap. Needs the owner's decision.
+3. **Do rulings feed scores? DECIDED by the owner, 28 Nov 2026.** No. In the owner's words: "Rulings are 3rd party and often subjective, despite requirement to be objective. Your suggestion is approved, a separate record of ruling sheds light on those, while your bias meter sheds light on bias. 2 different datasets, not to be merged." Rulings are a separate dataset that never feeds bias scores, roll-ups or findings, and the rulings are not used as evidence for a bias finding. Options (C) (an upheld ruling opens a candidate finding) and (D) (a remedy counts as a `correction` clawback), and the evidence route under (B), are rejected. Steelman: the ruling bodies are valuable as a public record of what was found and directed, but they are third parties whose rulings can be subjective, so MediaWatch keeps them visible without letting them stand in for its own evidence. Keeping the datasets apart also protects the outlet from a ruling counting twice, and protects the ruling record from MediaWatch's own coding. The cost is that a reader must compare the two views themselves.
 4. **Accuracy-only errors.** A sister register offered three identity errors in one outlet's explainer (a judge's first name and a gendered pronoun) as candidate findings; they are unscored accuracy slips with no for/against direction. Should a separate, unscored `accuracy_note` type join this accountability record, or stay out? This RFC does not add it.
 5. **Scope of "per publication".** Publication-level only (proposed), or also per outlet group (for example Media24, Arena, Independent Media)?
 6. **Bylines.** Store only (proposed), or also show a per-journalist list? Complaints are lodged against publications, so the default is no per-journalist roll-up.
@@ -142,7 +142,7 @@ On each publication page, a block headed **Press-council and ombud record (accou
 
 ## What this change contains / what stays
 
-This branch adds `changes/RFC-CHG-MW-012.md` and one row in `docs/STATUS.md`. It changes no code, data, schema, workflow, site page, `robots.txt`, `CNAME` or GitHub setting, and no collector runs. `docs/METHODOLOGY.md` is unchanged here; a later change would add the accountability-record section and bump the methodology version, freezing prior scores as `score_run` snapshots. The two meters and their files are untouched.
+This branch adds `changes/RFC-CHG-MW-012.md` and one row in `docs/STATUS.md`. It changes no code, data, schema, workflow, site page, `robots.txt`, `CNAME` or GitHub setting, and no collector runs. `docs/METHODOLOGY.md` is unchanged here; a later change would add a section describing the ruling record as a separate dataset. No score, weight or roll-up changes, so no prior score is frozen or rewritten. The two meters and their files are untouched.
 
 ## Later work (each a separate RFC, reviewed, with an owner GO)
 
@@ -158,12 +158,13 @@ Tests those changes must cover at least:
 - A dismissed ruling is shown as dismissed and adds no negative mark.
 - A private complainant is never stored by name (test with a synthetic name built at run time).
 - The accountability record never changes a bias score, and the frozen historical scores stay byte-identical.
+- The two datasets stay unmerged: no `ombud_ruling` field names an actor, score or finding id; no findings file references a `ruling_id`; the site build never joins them into a score.
 - Lag arithmetic (three segments) on fixed dated examples, and `not_found` is shown as Not established.
 - No full-text reproduction of any ruling or article; fetched text stays gitignored.
 
 ## Success
 
-This RFC records the owner's request, the 28 Nov 2026 feasibility evidence with URLs, what is and is not established, the proposed record type and display, how it relates to the bias meter and the five fact labels, the POPIA and defamation guards, both steelmen, and the open owner decisions.
+This RFC records the owner's request, the 28 Nov 2026 feasibility evidence with URLs, what is and is not established, the proposed record type and display, how it relates to the bias meter (decided: separate datasets, never merged) and the five fact labels, the POPIA and defamation guards, both steelmen, and the remaining open owner decisions.
 
 ## Tests
 
