@@ -294,7 +294,8 @@ def page(title, body, depth, crumbs=(), build_meta=None):
 {body}
 </main>
 <footer><div class="wrap">MediaWatch SA: bias FOR or AGAINST named actors, with the exact line, the source link and both sides' strongest case for every finding. Only free public content is judged; paywalled pieces are never scored.{stamp}
-<p class="footer-nav"><a href="{up}privacy/index.html">Privacy</a></p></div></footer>
+<p class="footer-nav"><a href="{up}privacy/index.html">Privacy</a></p>
+<p><a href="https://watch.grokforum.site/">Part of the Watch network — watch.grokforum.site</a></p></div></footer>
 </body>
 </html>
 """
