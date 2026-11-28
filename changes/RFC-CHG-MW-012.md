@@ -1,6 +1,6 @@
 # RFC-CHG-MW-012 — Ombud and press-council findings per publication, last five years (DEV)
 
-**Status:** Draft RFC, for owner decisions and review. Decisions 1 and 3 are DECIDED (28 Nov 2026), and the owner added a separate ruling-bias meter (section 7); decisions 2, 4, 5, 6 and 7 and the ruling-meter sub-decisions are still open. Branch `dev/chg-mw-012-ombud-findings`; draft [PR #13](https://github.com/GrokForum/mediawatch-sa/pull/13) is open at `aaac8940ad2ad9dc7d7c8a1e003ef5d973d0e901`, and any later commit is pushed only on an owner GO naming the new head. Not merged; not deployed. No indexing request (`robots.txt` `Disallow: /` and noindex stay).
+**Status:** Draft RFC, for owner decisions and review. Decisions 1 and 3 are DECIDED (28 Nov 2026), and the owner added a separate ruling-bias meter (section 7); decisions 2 and 4 to 8, the outlet sub-decisions A to D and L, and the ruling-meter sub-decisions E to K are still open. Branch `dev/chg-mw-012-ombud-findings`, opened as draft [PR #13](https://github.com/GrokForum/mediawatch-sa/pull/13); any later commit is pushed only on an owner GO naming the new head. No indexing request (`robots.txt` `Disallow: /` and noindex stay).
 **Environment:** DEV. Branch created from `origin/main` at `ddb7e4debb2e5285c4d7fb8fd6263adbddd785f2` (28 Nov 2026, Africa/Johannesburg).
 **Pre-change SHA (rollback base):** `ddb7e4debb2e5285c4d7fb8fd6263adbddd785f2`.
 **Date:** 28 Nov 2026 (Africa/Johannesburg)
@@ -42,13 +42,13 @@ and propose a way to publish each tracked publication's ombud and press-council 
 - **Listing.** WordPress, with one category per broadcaster (for example e.tv, SABC radio and TV, MultiChoice, 702, 947) and a public JSON listing. A "Judgments" page says uploads are still in progress, so the archive may be incomplete. Rulings are titled "Adjudication No: nn/A/year" or "Case number: nn/year", with complainant, broadcaster, programme, broadcast date and time, the code clauses and the finding in the text.
 - **Counts.** Posts dated 1 Nov 2021 to 30 Nov 2026 (REST total 207): 2021 (Nov–Dec) 2, 2022 46, 2023 27, 2024 51, 2025 38, 2026 (to 23 Nov) 43. Title matches (rough; dismissals and upheld together): eNCA 23, SABC titles 42, MultiChoice/DStv titles 55, Newzroom Afrika 6. Upheld per broadcaster is **Not established**, as above.
 - **Appeal.** Appeals exist (for example a 2026 appeal that succeeded against eNCA on the comment clause: https://www.bccsa.co.za/2026/11/23/case-number-03-2026-afriforum-vs-enca-comment/). Appeal posts are listed alongside first-instance rulings, so appeal outcomes need linking by case.
-- **Coverage.** The BCCSA signatories page lists television and radio broadcasters. Whether Newzroom Afrika is bound is **Not established** from the fetched list, although rulings name it.
+- **Coverage.** The BCCSA signatories page (https://www.bccsa.co.za/signatories/, HTTP 200, page dated 15 Oct 2026) lists television broadcasters (MultiChoice (DStv) subscription, e.tv, SABC 1, 2 and 3) and radio broadcasters (including 702, 947, 567 Cape Talk and the public SABC stations). Newzroom Afrika is **not listed in its own name**, so its signatory status in its own name is **Not established**. The rulings in the window name "MultiChoice Newzroom Afrika" as the respondent (for example https://www.bccsa.co.za/?p=6687), and MultiChoice (DStv) is a listed signatory. eNCA is likewise not listed by name; the rulings name eNCA, and e.tv and MultiChoice (DStv) are listed.
 
 ### In-house ombuds
 
 - **News24** has a named public editor who also serves City Press and the group's English brands, and the group says it operates under the Press Council's rules (https://www.news24.com/citypress/news/your-voice-matters-meet-our-new-ombud-and-public-editor-20250912-0687, from a search excerpt). No public register of the public editor's findings was found: **Not established**. Formal complaints go to the Press Council, so those rulings are already in scope above.
 - **Daily Maverick** has no named ombud; it publishes a corrections policy (https://www.dailymaverick.co.za/article/2026-02-17-daily-mavericks-approach-to-corrections-press-council-and-press-ombud-rulings/) with a 48-hour target for straightforward factual disputes and notes on each corrected article. That makes its own corrections visible per article, but there is no findings register.
-- **Independent Media** has its own Group Ombud and says rulings are published on its website (https://iol.co.za/iol-complaints-procedure/, s.7.2). robots.txt at https://www.independentmediaombud.co.za/robots.txt returned 200 with no blanket disallow; the homepage returned 503 "Maintenance Mode" at fetch time. Counts: **Not established**.
+- **Independent Media** has its own Group Ombud and says rulings are published on its website (https://iol.co.za/iol-complaints-procedure/, s.7.2; the page returned HTTP 403 to my fetch, so this is from a search excerpt). robots.txt at https://www.independentmediaombud.co.za/robots.txt returned 200 with no blanket disallow; the homepage returned 503 "Maintenance Mode" at fetch time. Counts: **Not established**.
 - **Everyone else** (Mail & Guardian, TimesLive, The Citizen, EWN, SABC News and others): no in-house findings register was checked this turn. **Not established**.
 
 ### What the research means for the request
@@ -68,37 +68,75 @@ Owner's words: "Add all outlets with good reach in this phase. Later net(s) will
 
 ### Reach criterion (proposed; the threshold and the online rule are open sub-decisions)
 
-No free audited online audience figure was found for South African news sites: the industry web-measurement series published by IAB SA with Narratiive (latest found: August 2022, https://iabsa.net/wp-content/uploads/2024/04/Narratiive_stats_insights_August_2022.pdf) ended when that dashboard closed on 31 Aug 2022. The Reuters Institute Digital News Report 2026 for South Africa (https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/south-africa) is free, but it is a survey of weekly brand use among younger, English-speaking online respondents, shows at most 16 brands in charts, and says it is not audience measurement or a complete list. I used it for its method only and did not read the brand charts. The one free audited source is the Audit Bureau of Circulations (ABC), whose quarterly newspaper tables are published in trade coverage (Q3 2026, 19 Nov 2026: https://www.bizcommunity.com/article/abc-q3-2026-newspapers-circulation-steadies-for-newspaper-category-184036a) and as ABC reports (for example https://amf.org.za/wp-content/uploads/2026/08/Q2-Apr-Jun-2026-Newspaper-Weekend.pdf). Print circulation is a weak and falling proxy: it understates online-first outlets, and Mail & Guardian's Q3 2026 total is 2,515.
+No free audited online audience figure was found for South African news sites: the industry web-measurement series published by IAB SA with Narratiive (latest found: August 2022, https://iabsa.net/wp-content/uploads/2024/04/Narratiive_stats_insights_August_2022.pdf) ended when that dashboard closed on 31 Aug 2022. The Reuters Institute Digital News Report 2026 for South Africa (https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/south-africa) is free and has two weekly-reach charts, which I read live on 28 Nov 2026 (about 12:30 SAST) from their public data tables: offline (https://datawrapper.dwcdn.net/ZsCTY/2/dataset.csv) and online (https://datawrapper.dwcdn.net/vKvmI/4/dataset.csv). Each lists 16 brands with the share of respondents who used the brand for news in the last week. It is a survey of mostly English speakers, not audience measurement, and not a complete list of brands, so a brand missing from a chart is **Not established**, not low reach. The free audited source is the Audit Bureau of Circulations (ABC), whose quarterly newspaper tables I read through trade coverage (Q3 2026, 19 Nov 2026: https://www.bizcommunity.com/article/abc-q3-2026-newspapers-circulation-steadies-for-newspaper-category-184036a). Those are print tables only; ABC magazine and digital tables were not read. Print circulation is a weak and falling proxy: it understates online-first outlets, and Mail & Guardian's Q3 2026 total is 2,515.
 
-An outlet with a ruling in the window is "good reach" and in scope if it meets **any one** of:
+An outlet is "good reach" and in scope if it meets **any one** of the tests below. Each test is run for each outlet with a named source; a test with no free source is **Not established**, not a fail.
 
 | Test | Rule | Source |
 |------|------|--------|
-| R1 print | ABC-audited total circulation of at least 5,000 copies in the latest published quarter (proposed threshold) | ABC quarterly tables (Q3 2026) |
-| R2 broadcast | A national or metro broadcaster, or a national television news channel, that is a BCCSA signatory | BCCSA signatories page |
-| R3 online | Listed in the Reuters Institute 2026 South Africa weekly-reach charts (brands to be read when the data change is built) | Reuters Institute 2026 |
-| R4 named | An outlet the owner names for this phase | Owner instruction |
+| R1 print | ABC-audited total circulation of at least 5,000 copies in the latest published quarter (proposed threshold, sub-decision B) | ABC Q3 2026 newspaper tables (https://www.bizcommunity.com/article/abc-q3-2026-newspapers-circulation-steadies-for-newspaper-category-184036a) |
+| R2 broadcast | A national or metro broadcaster, or a national television news channel, that is a BCCSA signatory | BCCSA signatories page (https://www.bccsa.co.za/signatories/) |
+| R3 reach survey | Listed in either Reuters Institute 2026 South Africa weekly-reach chart (16 brands each; share of the survey sample using the brand for news in the last week) | Offline https://datawrapper.dwcdn.net/ZsCTY/2/dataset.csv; online https://datawrapper.dwcdn.net/vKvmI/4/dataset.csv (read 28 Nov 2026) |
+| R4 named | An outlet the owner names for this phase | Owner instruction; none named so far |
 
-An outlet that meets none, or whose reach is **Not established**, is listed as a candidate and is not added without the owner's say-so (sub-decision A). Community and local titles are out of this phase by default (sub-decision C).
+The two Reuters charts as read (percent using the brand for news in the last week). Offline: eNCA 47, SABC News 46, Sunday Times 27, Metro FM 24, local radio news 22, BBC News 22, CNN 21, Newzroom Afrika 17, other regional or local newspaper 17, Sowetan 15, The Citizen 14, community newspaper 12, Ukhozi FM 12, Isolezwe 11, SAfm 10, The Star 10. Online: News24 61, eNCA 52, SABC News 43, Daily Sun 29, BBC News 23, CNN.com 20, The South African 18, The Citizen 16, Daily Maverick 15, Netwerk24 14, Mail & Guardian 12, TimesLive 12, SowetanLive 12, Al Jazeera 12, IOL 11, community newspaper 11.
 
-### Outlets this adds (ombud-level rulings in the window, counted from titles; some titles name two outlets)
+Community and local titles are out of this phase by default (sub-decision C).
 
-Outlets already in `data/publications.csv` that have rulings stay as they are (News24, City Press, Daily Maverick, Sunday Times, TimesLive, Sowetan, Mail & Guardian, The Citizen, Netwerk24, Rapport, Maroela Media, IOL, EWN, GroundUp, Moneyweb, eNCA, SABC News, Newzroom Afrika).
+### The stay list is grandfathered
 
-| Outlet (new to the register) | Rulings | Reach evidence | Result |
-|------------------------------|---------|----------------|--------|
-| Sunday World | 13 | ABC Q3 2026: total 7,152 (4,368 paid, 2,784 free) | **Add** (R1) |
-| Daily Sun | 2 | Print ended in December 2024 and ABC lists it "Discontinued" (https://www.media24.com/newspaper/daily-sun/); now a digital-only site; online reach **Not established** | **Add provisionally** (listed as an example in the instruction for this phase; reach Not established, so subject to sub-decision A) |
-| Die Burger | 2 (shared with Netwerk24) | ABC Q3 2026: daily 23,945; Saturday 27,696 | **Add** (R1) |
-| Daily Dispatch | 1 | ABC Q3 2026: total 9,860 | **Add** (R1) |
-| The Witness | 1 (shared ruling) | ABC Q3 2026: daily total 6,102 | **Add** (R1) |
-| Primedia radio (702, Cape Talk, 947) | 22 BCCSA rulings in the window, by title | National-metro radio licensee and BCCSA signatory | **Add** as a broadcast outlet (R2); audience figures are paid and **Not established** |
-| MultiChoice channels, other SABC radio stations | 55 and part of 42 BCCSA titles | BCCSA signatories | **Add** only for news and current-affairs programming (sub-decision D); whether each ruling concerns news was not checked |
-| The South African | 3 | Online-only; 5.05m unique browsers in Aug 2022 (old and closed series); current reach **Not established** | Candidate (sub-decision A) |
-| MyBroadband | 1 | Online-only; 2.57m unique browsers in Aug 2022; current reach **Not established** | Candidate (A) |
-| amaBhungane | 4 | Non-profit investigative outlet; reach **Not established** | Candidate (A) |
-| Financial Mail, Sunday Independent, Briefly News, The Continent, Vrye Weekblad, Bhekisisa | 1, 1, 1, 2, 1, 1 | Not found in the ABC Q3 2026 tables read, or online-only; **Not established** | Candidates (A) |
-| Community and local titles (for example Ladysmith Gazette 2,468; Oudtshoorn Courant 3,984; Overstrand Herald; BloemNews) | 1 each | Local; below the R1 threshold or not in the tables read | Out of this phase (C) |
+The 22 outlets already in `data/publications.csv` are **grandfathered**: this RFC does not remove any of them, whatever the tests show. Each is still run through R1 to R4 below, and any that would fail, or is Not established, on today's free evidence is flagged as an owner decision (sub-decision L: keep all, which is the proposed default, or review those flagged). "Rulings" counts ombud-level rulings in the window by title; "0" means none found by title, so the reach columns are shown for information only.
+
+| Outlet | Rulings | R1 print (ABC Q3 2026) | R2 BCCSA | R3 Reuters 2026 | Today |
+|--------|---------|------------------------|----------|-----------------|-------|
+| News24 | 37 | n/a (online) | n/a | online 61 | Passes (R3) |
+| City Press | 15 | Not in the ABC tables read | n/a | Not listed | **Flag L: no test passes on free evidence** |
+| Netwerk24 | 2 | n/a (online; Die Burger print is a separate title) | n/a | online 14 | Passes (R3) |
+| Rapport | 1 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+| IOL | 3 | n/a (online) | n/a | online 11 | Passes (R3) |
+| Daily Maverick | 19 | Weekly Saturday title 8,201 | n/a | online 15 | Passes (R1, R3) |
+| TimesLive | 11 | n/a (online) | n/a | online 12 | Passes (R3) |
+| Sunday Times | 16 | 41,681 | n/a | offline 27 | Passes (R1, R3) |
+| Mail & Guardian | 8 | 2,515, **below R1** | n/a | online 12 | Passes on **R3 only**; **Flag L: fails R1, kept by R3** |
+| Business Day | 0 | 11,629 | n/a | Not listed | Passes (R1) |
+| eNCA | 23 | n/a | Not listed by name; e.tv and MultiChoice (DStv) are listed signatories and the rulings are decided against eNCA | offline 47; online 52 | Passes (R3); R2 by name Not established |
+| SABC News | 42 (SABC titles, all programmes) | n/a | SABC 1, 2 and 3 and the public SABC radio stations are listed | offline 46; online 43 | Passes (R2, R3) |
+| The Citizen | 7 | 19,211 | n/a | offline 14; online 16 | Passes (R1, R3) |
+| Maroela Media | 3 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+| Moneyweb | 1 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+| GroundUp | 2 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+| Sowetan | 1 | 8,867 | n/a | offline 15; online 12 | Passes (R1, R3) |
+| BizNews | 0 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+| Daily Investor | 0 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+| Newzroom Afrika | 6 | n/a | **Not listed in its own name: Not established.** Rulings name "MultiChoice Newzroom Afrika"; MultiChoice (DStv) is a listed signatory | offline 17 | Passes (R3); **Flag L: R2 in own name Not established** |
+| EWN | 2 | n/a | n/a (its operator's radio stations are listed signatories; EWN is not named) | Not listed | **Flag L: Not established** |
+| Newsday | 0 | Not in the ABC tables read | n/a | Not listed | **Flag L: Not established** |
+
+Summary: 13 of the 22 pass at least one test on today's free evidence (News24, Netwerk24, IOL, Daily Maverick, TimesLive, Sunday Times, Mail & Guardian, Business Day, eNCA, SABC News, The Citizen, Sowetan, Newzroom Afrika). Mail & Guardian passes only on R3, and Newzroom Afrika's R2 status in its own name is Not established. Nine are flagged L as Not established or no test passed (City Press, Rapport, Maroela Media, Moneyweb, GroundUp, BizNews, Daily Investor, EWN, Newsday). None is dropped.
+
+### Outlets this phase would add (new to the register), run through the same tests
+
+Outlets that pass at least one test today are proposed as additions (the data change comes later, 012a). Outlets that pass no test, or only R3 as an online-first title, are **candidates** for sub-decision A.
+
+| Outlet | Rulings | R1 print | R2 BCCSA | R3 Reuters 2026 | R4 | Result |
+|--------|---------|----------|----------|-----------------|----|--------|
+| Sunday World | 13 | 7,152 (4,368 paid, 2,784 free) | n/a | Not listed | no | **Add** (R1) |
+| Die Burger | 2 (shared with Netwerk24) | Daily 23,945; Saturday 27,696 | n/a | Not listed | no | **Add** (R1) |
+| Daily Dispatch | 1 | 9,860 | n/a | Not listed | no | **Add** (R1) |
+| The Witness | 1 (shared ruling) | Daily 6,102 | n/a | Not listed | no | **Add** (R1) |
+| Primedia radio (702, Cape Talk, 947) | 22 BCCSA rulings by title | n/a | 702, 947 and 567 Cape Talk are listed signatories | Not listed (local radio news is a generic entry) | no | **Add** as broadcast outlets (R2); audience figures are paid and Not established |
+| SABC radio stations (Metro FM, Ukhozi FM, SAfm, 5FM) | part of the 42 SABC titles | n/a | Listed as public radio signatories | Offline: Metro FM 24, Ukhozi FM 12, SAfm 10 | no | **Add** for news and current-affairs programming only (R2, R3; sub-decision D) |
+| MultiChoice channels | 55 BCCSA titles | n/a | MultiChoice (DStv) is a listed signatory | Not listed as its own brand | no | **Add** for news and current-affairs programming only (R2; D); whether each ruling concerns news was not checked |
+| Daily Sun | 2 | ABC lists it "Discontinued" (live-read Q2 2025 table: https://www.bizcommunity.com/article/abc-q2-2025-newspapers-show-growth-despite-closure-of-media-24-titles-402979a); the Media24 page says it is a digital-only brand (https://www.media24.com/newspaper/daily-sun/) | n/a | online 29 | **no** (the owner did not name it; it was an example in the instruction) | **Candidate (A):** meets R3 only, online-first |
+| The South African | 3 | n/a | n/a | online 18 | no | **Candidate (A):** meets R3 only, online-first |
+| MyBroadband | 1 | n/a | n/a | Not listed | no | **Candidate (A):** no test passed; a 2022 closed-series figure (2.57m unique browsers) is not current |
+| amaBhungane | 4 | Not in the ABC tables read | n/a | Not listed | no | **Candidate (A):** no test passed |
+| Financial Mail | 1 | Not in the ABC newspaper tables read (ABC magazine tables not read): Not established | n/a | Not listed | no | **Candidate (A):** no test passed. Business Day, its sister title, is in the register and passes R1 (11,629) |
+| Sunday Independent | 1 | Not in the ABC tables read | n/a | Not listed | no | **Candidate (A):** no test passed |
+| Briefly News, The Continent, Vrye Weekblad, Bhekisisa | 1, 2, 1, 1 | Not in the ABC tables read | n/a | Not listed | no | **Candidates (A):** no test passed |
+| Community and local titles (for example Ladysmith Gazette 2,468; Oudtshoorn Courant 3,984; Overstrand Herald; BloemNews) | 1 each | Below R1 or not in the tables read | n/a | Not listed | no | **Out of this phase (C)** |
+
+Summary: 7 new outlets or groups pass at least one test and are proposed as additions (Sunday World, Die Burger, Daily Dispatch, The Witness, Primedia radio, SABC radio stations, MultiChoice channels; the last two for news only). Two are candidates that meet R3 only (Daily Sun, The South African). Eight are candidates with no test passed (MyBroadband, amaBhungane, Financial Mail, Sunday Independent, Briefly News, The Continent, Vrye Weekblad, Bhekisisa). Local titles are out. Each online-first R3-only title stays a candidate until sub-decision A is made.
 
 Adding an outlet to `publications.csv` is a data change and comes in the later data change (012a); this RFC records the decision and the list.
 
@@ -106,30 +144,40 @@ Adding an outlet to `publications.csv` is a data change and comes in the later d
 
 ### 1. New record type: `ombud_ruling` (separate from `findings`)
 
-One row per ruling decision (first-instance and each appeal stage are separate rows, linked by case). Fields:
+One row per ruling decision **per publication** (first-instance and each appeal stage are separate rows, linked by case; a ruling that names two outlets produces one row per outlet sharing the same `ruling_id`). Fields:
 
 | Field | Meaning |
 |-------|---------|
 | `ruling_id` | Body plus its own case number (Press Council complaint number; BCCSA adjudication or case number) |
 | `body` | `press_council`, `bccsa`, `independent_media_ombud`, or `in_house` |
 | `stage` | `ombud`, `adjudication_panel`, `leave_to_appeal`, `appeals_panel`, `bccsa_adjudicator`, `bccsa_tribunal`, `bccsa_appeal` |
-| `ruling_date`, `ruling_url`, `fetched_on` | Date as printed on the ruling; the fetch date |
-| `publication_id` | Links to `data/publications.csv`; a ruling naming two outlets gets one row per outlet, with a shared `ruling_id` |
-| `article_url`, `article_headline`, `article_published`, `article_access` | Headline quoted exactly. `article_access` follows §5a: if the article is paywalled, the ruling record may still exist, but no article text is read or quoted beyond what the ruling itself quotes |
+| `ruling_date`, `ruling_url`, `fetched_on` | Date as printed on the ruling; the fetch date. `ruling_url` is the ID form with no slug (see 1a) |
+| `publication_id` | Links to `data/publications.csv`. Counts per publication count a shared ruling once for each outlet it names; any total across outlets de-duplicates by `ruling_id` |
+| `article_url`, `article_headline`, `article_published`, `article_access` | Headline quoted exactly, in its redacted form where a private name appears (see 1a). `article_access` follows §5a: if the article is paywalled, the ruling record may still exist, but no article text is read or quoted beyond what the ruling itself quotes |
 | `byline` | Only where the ruling names the author, as a public role. Stored for provenance, not rolled up (see open decision 6) |
-| `complainant_type`, `complainant_label` | `organisation`, `public_body`, `public_figure_in_role`, or `private_person`. Named only for the first three; a private person is stored as "a private complainant" |
+| `complainant_type`, `complainant_label` | `organisation`, `public_body`, `public_figure_in_role`, or `private_person`. Named only for the first three; a private person, including a one-person business, is stored as "a private complainant" (see 1a) |
 | `code_version`, `clauses` | The Press Code in force (a new Code took effect on 30 Sep 2022, so clause numbers differ before it) or the BCCSA code, and the clauses complained of |
 | `sub_findings` | One entry per complaint: clause, upheld or dismissed |
 | `finding` | `upheld`, `partly_upheld`, `dismissed` (ruling level); `appeal_status`; `final_finding` after appeal. A ruling inside its appeal window is `appeal_window_open` and is not counted as final |
 | `sanctions` | Closed list: `reprimand`, `correction`, `retraction`, `explanation`, `apology`, `right_of_reply`, `findings_published`, `takedown`, `fine`, `space_sanction`, `other`, plus the directed placement as quoted |
 | `own_correction_date` | If the outlet corrected on its own before the ruling (the ruling usually says so) |
-| `remedy_date`, `remedy_url`, `remedy_placement`, `remedy_checked_on` | When and where the apology or correction ran, found on the outlet's site. `not_found` is a valid value, with the date checked |
+| `remedy_date`, `remedy_url`, `remedy_placement`, `remedy_checked_on` | When and where the apology or correction ran, found on the outlet's site. `not_found` is a valid value, with the date checked. `remedy_url` follows the same rule as `ruling_url` (see 1a), and a placement quoted from a direction is redacted |
 | `lag_to_ruling_days`, `lag_ruling_to_remedy_days`, `lag_to_remedy_days` | Computed from the three dates: article to ruling, ruling to remedy, article to remedy. Kept as separate segments so a process delay (the complaint window and the appeal window) is not blamed on the outlet |
 | `prominence_parity` | `comparable`, `lesser`, or `not_established`, with the test named (the Council's placement guidance, items 9–10) |
-| `quote`, `steelman_outlet`, `steelman_complainant` | One short exact quote from the ruling; one short paragraph each, as in §7 |
+| `quote`, `steelman_outlet`, `steelman_complainant` | One short exact quote from the ruling, chosen so it carries no private name, or redacted (see 1a); one short paragraph each, as in §7 |
 | `label` | `Proven` (see below) |
 
 Fetched ruling text is stored under the existing gitignored fetched-articles area and never committed; the repo holds the structured row and a short quote only.
+
+### 1a. Redaction rule (private complainants and one-person businesses)
+
+Ruling pages, their URL slugs, headlines, apology headlines and quotes can carry a private complainant's name. No such name is kept in any field of any committed file, in any display, or in this repo's history.
+
+- **Who counts as private.** A natural person who is not a public figure acting in a public role is `private_person`. So is a **one-person business** (a sole proprietor, a professional practising in their own name, or a company whose name is a personal name or whose ruling describes the complainant as its only owner or director). When in doubt, treat the complainant as private and mask. An organisation or public body is named only when it is clearly more than one person or a public institution.
+- **URLs.** Both ruling sites are WordPress, and `https://<host>/?p=<post id>` redirects (HTTP 301, checked 28 Nov 2026 on both) to the full slug URL. `ruling_url` and `remedy_url` are stored in that ID form, which carries no slug, never the slug URL. `article_url` is stored as given unless its slug carries a private name, in which case it is stored as `withheld_private_name` with its SHA-256 for audit. The outlet's own apology page is handled the same way.
+- **Headlines and quotes.** A name is replaced by `[name withheld]` (the mid-cut marker rule in §5 applies to omitted text only). A quote is chosen so it needs no private name; if it cannot be, it is redacted the same way. A sanction placement that quotes a direction naming the complainant ("a headline including the words 'apology' and ...") is redacted.
+- **How it is done.** Redaction happens at ingest, before any row is written. Raw fetched text stays in the gitignored fetched-articles area. Each private name seen at ingest is added to the gitignored local denylist, so the staged denylist check and the pickaxe check block it from any commit.
+- **Linked names.** A public body, a public figure in role, a journalist's byline and an outlet may be named, as in §8. A private complainant's name also never appears in the page title, the file names or the commit messages.
 
 ### 2. Per-publication display
 
@@ -161,7 +209,7 @@ On each publication page, a block headed **Press-council and ombud record (accou
 
 ### 5. POPIA
 
-- Complainants who are private persons stay unnamed, in the record, the page and this repo. Public bodies, organisations, public figures in their public role, journalists and publications may be named, as in §8.
+- Complainants who are private persons, including one-person businesses, stay unnamed, in the record, the page and this repo, and the redaction rule in 1a applies to URLs, headlines and quotes. Public bodies, organisations, public figures in their public role, journalists and publications may be named, as in §8.
 - The Council's complaints are lodged against publications, not individual journalists or editors (https://presscouncilsa.org.za/complaints/). The byline is therefore stored for provenance only; no per-journalist ruling tally is proposed.
 - Ruling pages carry contact details and sometimes private detail; none is stored or pasted. Only the contact address `privacy@grokforum.site` appears in this project.
 - Defamation guard: every statement uses the body's own words ("the Press Ombud found…") with the link, the date, the appeal status and the final outcome, and is updated or removed if the body later varies it. Outlets can ask for a correction through the contact address.
@@ -197,18 +245,18 @@ A ruling that applies the code to the record, hears both sides and gives sourced
 
 **Actors the meter can score.**
 - **The outlet** (the publication or broadcaster the ruling is about).
-- **The complainant, only if** it is an organisation, a public body or a public figure acting in a public role. A **private complainant is never an actor and stays unnamed**; a ruling that favours a private complainant is scored for its effect on the outlet only.
+- **The complainant, only if** it is an organisation, a public body or a public figure acting in a public role. A **private complainant (including a one-person business) is never an actor and stays unnamed**; a ruling that favours a private complainant is scored for its effect on the outlet only.
 - The body and the office-holders are the **source** of the text, not scored actors. Ombud, deputy ombud, panel and chair of appeals are public office-holders and may be named in that role, as published on the ruling.
 
 **Roll-ups and minimum n.** The unit is body × actor (for example Press Council × a named outlet, BCCSA × a named broadcaster), the counterpart of publication × actor. §6.4 applies to the number of findings: under 5 shows the findings only with no score, 5 to 9 is provisional, 10 or more is a public score. Proposed extra guard: a score needs findings from at least three distinct rulings, so one long ruling cannot make a score. Confidence follows §6.5 (dual-coded 10% sample, Cohen's kappa on the actor, direction and driver triple), and every AGAINST finding is dual-coded before display (proposed, sub-decision I). A ruling reversed or varied on appeal keeps its original rows and gains a `correction` row; the display uses the final ruling.
 
-**Defamation care.** Score the reasoning against the record, not the person. Wording is "the ruling at paragraph N works AGAINST the outlet because it …", never "the ombud is biased". Quotes are short and exact; each finding shows the appeal status; the body is invited to respond through the contact address before any score is published, and is shown a pre-publication notice (sub-decision H). No finding is made about an adjudicator's motives, health, family, affiliations or conduct outside the ruling.
+**Defamation care.** Score the reasoning against the record, not the person. Wording is "the ruling at paragraph N works AGAINST the outlet because it …", never "the ombud is biased". Quotes are short and exact; each finding shows the appeal status; whether the body is told before a score is published is open (sub-decision H), and **until the owner decides H, no ruling-meter score is published**; the contact address is open to the body at any time. No finding is made about an adjudicator's motives, health, family, affiliations or conduct outside the ruling.
 
 **Open sub-decisions for this meter.** (E) Name individual office-holders in any roll-up (default no: body and office level only; a named person only if the owner decides and n is at least 10). (F) Coding frame: all rulings in the window (about 440 across the Press Council and the BCCSA, as counted above) or a locked random draw by stratum, as the pilot did (§8a). (G) Driver weights: the same as the media meter (proposed) or ruling-specific. (H) Pre-publication notice to the body. (I) Dual-code every AGAINST finding. (J) Whether appeal stages are scored as rulings of their own (proposed) or only the final ruling. (K) Whether BCCSA entertainment and harm-to-children rulings are in the frame, or news and current affairs only (linked to D).
 
 ## Decisions for the owner (decisions 1 and 3 decided 28 Nov 2026; the others open)
 
-1. **Sources and outlets in scope. DECIDED by the owner, 28 Nov 2026.** In the owner's words: "Add all outlets with good reach in this phase. Later net(s) will get all online publications in SA and will also examine reports on SA from outside." This phase covers every outlet with good reach that has rulings in the window (criterion and outlet list in "Outlet scope for this phase" above). Sources remain the Press Council (all four ruling types) and the BCCSA (including its appeals), with Independent Media's ombud later once its site is reachable. Later phases, each its own RFC and owner GO: all South African online publications, and foreign reporting on South Africa (also in `docs/LATER.md`). Sub-decisions still open: **A** how to treat online-only outlets whose reach is Not established (candidates above); **B** the R1 threshold (proposed 5,000 copies); **C** community and local titles (default out); **D** which broadcast programmes (news and current affairs only, proposed).
+1. **Sources and outlets in scope. DECIDED by the owner, 28 Nov 2026.** In the owner's words: "Add all outlets with good reach in this phase. Later net(s) will get all online publications in SA and will also examine reports on SA from outside." This phase covers every outlet with good reach that has rulings in the window (criterion and outlet list in "Outlet scope for this phase" above). Sources remain the Press Council (all four ruling types) and the BCCSA (including its appeals), with Independent Media's ombud later once its site is reachable. Later phases, each its own RFC and owner GO: all South African online publications, and foreign reporting on South Africa (also in `docs/LATER.md`). Sub-decisions still open: **A** whether an online-first outlet that meets only R3 (survey-based; Daily Sun 29 and The South African 18) is added, and how to treat outlets that meet no test (the candidates above); **B** the R1 threshold (proposed 5,000 copies); **C** community and local titles (default out); **D** which broadcast programmes (news and current affairs only, proposed); **L** the grandfathered stay list: keep all 22 (proposed default) or review those flagged L.
 2. **Window.** Proposed: rulings dated 1 Nov 2021 to 30 Nov 2026 on first load, then a rolling five years, refreshed monthly. Alternatives: window by article date; a longer span.
 3. **Do rulings feed scores? DECIDED by the owner, 28 Nov 2026.** No: rulings never feed the media bias scores, roll-ups or findings. (The owner then added a separate ruling-bias meter, section 7, which stays inside the ruling dataset.) In the owner's words: "Rulings are 3rd party and often subjective, despite requirement to be objective. Your suggestion is approved, a separate record of ruling sheds light on those, while your bias meter sheds light on bias. 2 different datasets, not to be merged." Rulings are a separate dataset that never feeds bias scores, roll-ups or findings, and the rulings are not used as evidence for a bias finding. Options (C) (an upheld ruling opens a candidate finding) and (D) (a remedy counts as a `correction` clawback), and the evidence route under (B), are rejected. Steelman: the ruling bodies are valuable as a public record of what was found and directed, but they are third parties whose rulings can be subjective, so MediaWatch keeps them visible without letting them stand in for its own evidence. Keeping the datasets apart also protects the outlet from a ruling counting twice, and protects the ruling record from MediaWatch's own coding. The cost is that a reader must compare the two views themselves.
 4. **Accuracy-only errors.** A sister register offered three identity errors in one outlet's explainer (a judge's first name and a gendered pronoun) as candidate findings; they are unscored accuracy slips with no for/against direction. Should a separate, unscored `accuracy_note` type join this accountability record, or stay out? This RFC does not add it.
@@ -235,7 +283,7 @@ Tests those changes must cover at least:
 - Fail closed on a host that does not verify, or a 503.
 - A ruling inside its appeal window is not counted as final.
 - A dismissed ruling is shown as dismissed and adds no negative mark.
-- A private complainant is never stored by name (test with a synthetic name built at run time).
+- A private complainant is never stored by name (test with a synthetic name built at run time), including a one-person business, in a URL slug, a headline, a quote, a sanction placement and a file name; `ruling_url` and `remedy_url` are stored in the slug-free ID form; a redacted headline carries `[name withheld]`.
 - The accountability record never changes a bias score, and the frozen historical scores stay byte-identical.
 - The two datasets stay unmerged: the `ombud_ruling` table carries no actor, score or media finding id; no media findings file references a `ruling_id` or a ruling finding; no ruling-meter file references a media finding id or media actor id; the two use separate actor id spaces; the site build never joins or sums them.
 - Ruling meter: a private complainant is never an actor; an office-holder is never a scored actor; min-n and the three-distinct-rulings guard hold; a ruling with sound reasoning produces no row; a reversed ruling gains a `correction` row inside the ruling dataset only.
